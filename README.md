@@ -1,5 +1,30 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Admin product catalog
+
+Product management is available at `/admin/products` for authenticated admin
+accounts. It manages Apparel, Bags, Jewellery, and Home & Gifts, including
+product details, inventory, publishing, optimized images, and product videos.
+
+For a new database, create the database and run `scripts/init-db.sql`. For an
+existing database, run `scripts/product-media-migration.sql` once to add image
+and video metadata and seed the four product categories. Do not run that
+migration on a fresh database that already used the updated `init-db.sql`.
+After the media migration, run `scripts/storefront-flags-migration.sql` once to
+add homepage placement flags and the newsletter subscriber table. The
+newsletter form stores confirmed email sign-ups in MySQL; an email campaign
+provider is not configured.
+With XAMPP, these scripts can be imported from phpMyAdmin after selecting the
+`little_treasures_db` database.
+Configure the MySQL connection and `JWT_SECRET` in `.env.local`, then start the
+app and sign in with an admin account.
+
+Uploaded files are stored outside the public directory in
+`storage/product-media`; back up this directory alongside MySQL. Images are
+validated and converted to WebP (up to 8 MB each); MP4/WebM videos are validated
+and limited to 40 MB each. The app serves video byte ranges for playback seeking.
+Products with order history cannot be hard-deleted; unpublish them instead.
+
 ## Getting Started
 
 First, run the development server:
