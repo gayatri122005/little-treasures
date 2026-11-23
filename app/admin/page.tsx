@@ -87,14 +87,14 @@ export default async function AdminDashboardPage() {
   return (
     <main className="min-h-screen bg-[#FAF7F2] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-[1440px]">
-        <header className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] px-4 py-3 sm:px-6">
+        <header className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] px-4 py-3 sm:px-6">
           <Link href="/admin#overview" className="flex items-center gap-3">
             <span className="flex size-10 items-center justify-center rounded-full bg-[#1E1B18] text-[#F1EBE1]">
               <Icon name="sparkle" className="size-5" />
             </span>
             <span>
               <span className="serif-display block text-xl leading-none text-[#1E1B18]">
-                all the good things
+                Little Treasures
               </span>
               <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.15em] text-[#6E655F]">
                 Admin workspace
@@ -102,6 +102,12 @@ export default async function AdminDashboardPage() {
             </span>
           </Link>
           <div className="flex items-center gap-2">
+            <Link
+              href="/admin/orders"
+              className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#E3D8C9] px-4 text-xs font-semibold text-[#1E1B18] transition-colors hover:border-[#1E1B18]"
+            >
+              ORDERS &amp; PAYMENTS
+            </Link>
             <Link
               href="/admin/products"
               className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#B85042] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#9A3F33]"
@@ -119,7 +125,7 @@ export default async function AdminDashboardPage() {
         </header>
 
         <div className="grid gap-5 lg:grid-cols-[210px_minmax(0,1fr)]">
-          <aside className="h-fit rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-4 lg:sticky lg:top-6">
+          <aside className="h-fit rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 lg:sticky lg:top-6">
             <p className="px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6E655F]">
               Workspace
             </p>
@@ -136,7 +142,7 @@ export default async function AdminDashboardPage() {
                   className={`flex min-h-10 shrink-0 items-center gap-3 rounded-xl px-3 text-xs font-medium transition-colors ${
                     index === 0
                       ? "bg-[#B85042] text-white"
-                      : "text-[#6E655F] hover:bg-[#FFFFFF] hover:text-[#1E1B18]"
+                      : "text-[#6E655F] hover:bg-[#FAF7F2] hover:text-[#1E1B18]"
                   }`}
                 >
                   <span className="flex size-5 items-center justify-center rounded-full bg-white/70 text-[9px] text-[#6E655F]">
@@ -187,7 +193,7 @@ export default async function AdminDashboardPage() {
                 <article
                   key={metric.label}
                   className={`rounded-2xl border border-[#E3D8C9] p-4 sm:p-5 ${
-                    index === 3 ? "bg-[#F1EBE1]" : "bg-[#FFFFFF]"
+                    index === 3 ? "bg-[#F1EBE1]" : "bg-[#FAF7F2]"
                   }`}
                 >
                   <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#6E655F]">
@@ -205,7 +211,7 @@ export default async function AdminDashboardPage() {
 
             <section
               id="recent-orders"
-              className="mt-4 scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-4 sm:p-6"
+              className="mt-4 scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-6"
             >
               <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
                 <div>
@@ -217,7 +223,7 @@ export default async function AdminDashboardPage() {
                 <span className="text-[10px] text-[#6E655F]">Latest 5 orders</span>
               </div>
               {recentOrders.length === 0 ? (
-                <p className="rounded-xl bg-[#FFFFFF] px-4 py-8 text-center text-sm text-[#6E655F]">
+                <p className="rounded-xl bg-[#FAF7F2] px-4 py-8 text-center text-sm text-[#6E655F]">
                   No recent orders yet.
                 </p>
               ) : (
@@ -248,7 +254,7 @@ export default async function AdminDashboardPage() {
                             {formatDate(order.created_at)}
                           </td>
                           <td className="px-3 py-3">
-                            <span className="inline-flex rounded-full bg-[#B85042] px-3 py-1 text-[10px] font-medium capitalize text-[#1E1B18]">
+                            <span className="inline-flex rounded-full bg-[#B85042] px-3 py-1 text-[10px] font-medium capitalize text-white">
                               {String(order.status ?? "pending")}
                             </span>
                           </td>
@@ -266,7 +272,7 @@ export default async function AdminDashboardPage() {
             <div className="mt-4 grid gap-4 xl:grid-cols-2">
               <section
                 id="customers"
-                className="scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-4 sm:p-6"
+                className="scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-6"
               >
                 <div className="mb-4">
                   <p className="eyebrow">Growing community</p>
@@ -275,7 +281,7 @@ export default async function AdminDashboardPage() {
                   </h2>
                 </div>
                 {latestCustomers.length === 0 ? (
-                  <p className="rounded-xl bg-[#FFFFFF] px-4 py-7 text-sm text-[#6E655F]">
+                  <p className="rounded-xl bg-[#FAF7F2] px-4 py-7 text-sm text-[#6E655F]">
                     No registered customers yet.
                   </p>
                 ) : (
@@ -285,7 +291,7 @@ export default async function AdminDashboardPage() {
                         key={String(customer.id)}
                         className="flex min-w-0 items-center gap-3 py-3 first:pt-0 last:pb-0"
                       >
-                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#B85042] text-xs font-medium text-[#1E1B18]">
+                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#B85042] text-xs font-medium text-white">
                           {String(customer.full_name ?? "C")
                             .split(/\s+/)
                             .slice(0, 2)
@@ -312,7 +318,7 @@ export default async function AdminDashboardPage() {
 
               <section
                 id="inventory"
-                className="scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-4 sm:p-6"
+                className="scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-6"
               >
                 <div className="mb-4 flex items-end justify-between gap-2">
                   <div>
@@ -326,7 +332,7 @@ export default async function AdminDashboardPage() {
                   </span>
                 </div>
                 {lowStockProducts.length === 0 ? (
-                  <p className="rounded-xl bg-[#FFFFFF] px-4 py-7 text-sm text-[#6E655F]">
+                  <p className="rounded-xl bg-[#FAF7F2] px-4 py-7 text-sm text-[#6E655F]">
                     Nothing is running low right now.
                   </p>
                 ) : (

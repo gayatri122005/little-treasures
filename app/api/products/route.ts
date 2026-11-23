@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { RowDataPacket } from "mysql2";
 import pool from "@/lib/db";
+import { PRODUCT_CATEGORIES, PRODUCT_TYPES } from "@/lib/product-categories";
 
 const querySchema = z.object({
   q: z.string().trim().max(120).optional(),
   category: z.string().trim().min(1).max(120).optional(),
+  productType: z.enum(PRODUCT_TYPES as [string, ...string[]]).optional(),
   minPrice: z.coerce.number().finite().min(0).optional(),
   maxPrice: z.coerce.number().finite().min(0).optional(),
   availability: z.enum(["all", "in-stock", "out-of-stock"]).default("all"),
@@ -21,9 +23,12 @@ type ProductRow = RowDataPacket & {
   id: number | string;
   product_name: string;
   category_name: string | null;
+  product_type: string | null;
   description: string | null;
   price: string | number;
   stock_quantity: number;
+  stock_reserved: number;
+  available_stock: number | string;
   status: "active" | "draft" | "out_of_stock";
   is_featured: number;
   is_new_arrival: number;
@@ -58,6 +63,7 @@ export async function GET(request: Request) {
   const parsed = querySchema.safeParse({
     q: searchParams.get("q") ?? undefined,
     category: searchParams.get("category") ?? undefined,
+    productType: searchParams.get("productType") ?? undefined,
     minPrice: searchParams.get("minPrice") ?? undefined,
     maxPrice: searchParams.get("maxPrice") ?? undefined,
     availability: searchParams.get("availability") ?? undefined,
@@ -79,6 +85,7 @@ export async function GET(request: Request) {
   const {
     q,
     category,
+    productType,
     minPrice,
     maxPrice,
     availability,
@@ -96,8 +103,15 @@ export async function GET(request: Request) {
     );
   }
 
-  const filters = ["p.status <> 'draft'"];
-  const parameters: Array<string | number> = [];
+  const availableStock = `GREATEST(0, p.stock_quantity - p.stock_reserved + COALESCE((
+    SELECT SUM(oi.quantity) FROM order_items oi JOIN orders reservation_order ON reservation_order.id = oi.order_id
+    WHERE oi.product_id = p.id AND reservation_order.order_type = 'online'
+      AND reservation_order.payment_status IN ('pending','authorized','failed')
+      AND reservation_order.reservation_expires_at IS NOT NULL
+      AND reservation_order.reservation_expires_at < NOW()
+  ), 0))`;
+  const filters = ["p.status <> 'draft'", `c.category_name IN (${PRODUCT_CATEGORIES.map(() => "?").join(", ")})`];
+  const parameters: Array<string | number> = [...PRODUCT_CATEGORIES];
 
   if (q) {
     filters.push("(p.product_name LIKE ? OR p.description LIKE ? OR c.category_name LIKE ?)");
@@ -105,10 +119,17 @@ export async function GET(request: Request) {
     parameters.push(term, term, term);
   }
   if (category) {
+    if (!PRODUCT_CATEGORIES.some((approved) => normalizeCategory(approved) === normalizeCategory(category))) {
+      return NextResponse.json({ success: false, message: "Choose one of the available collections." }, { status: 400 });
+    }
     filters.push(
       "REPLACE(REPLACE(REPLACE(LOWER(c.category_name), 'jewellery', 'jewelry'), '&', 'and'), ' ', '') = ?",
     );
     parameters.push(normalizeCategory(category));
+  }
+  if (productType) {
+    filters.push("p.product_type = ?");
+    parameters.push(productType);
   }
   if (minPrice !== undefined) {
     filters.push("p.price >= ?");
@@ -124,9 +145,9 @@ export async function GET(request: Request) {
   }
   if (home === "true") filters.push("p.show_on_homepage = 1");
   if (availability === "in-stock") {
-    filters.push("p.status = 'active' AND p.stock_quantity > 0");
+    filters.push(`p.status = 'active' AND ${availableStock} > 0`);
   } else if (availability === "out-of-stock") {
-    filters.push("(p.status = 'out_of_stock' OR p.stock_quantity <= 0)");
+    filters.push(`(p.status = 'out_of_stock' OR ${availableStock} <= 0)`);
   }
 
   const orderBy = {
@@ -148,8 +169,8 @@ export async function GET(request: Request) {
       parameters,
     );
     const [rows] = await pool.execute<ProductRow[]>(
-      `SELECT p.id, p.product_name, c.category_name, p.description, p.price,
-              p.stock_quantity, p.status, p.is_featured,
+      `SELECT p.id, p.product_name, p.product_type, c.category_name, p.description, p.price,
+              p.stock_quantity, p.stock_reserved, ${availableStock} AS available_stock, p.status, p.is_featured,
               CASE
                 WHEN p.is_new_arrival = 1 OR p.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
                 THEN 1 ELSE 0
@@ -183,10 +204,11 @@ export async function GET(request: Request) {
         id: String(row.id),
         name: row.product_name,
         category: row.category_name,
+        productType: row.product_type,
         description: row.description ?? "",
         price: Number(row.price),
-        stock: Number(row.stock_quantity),
-        status: row.status === "out_of_stock" || Number(row.stock_quantity) <= 0
+        stock: Number(row.available_stock),
+        status: row.status === "out_of_stock" || Number(row.available_stock) <= 0
           ? "out_of_stock"
           : "active",
         isFeatured: Boolean(row.is_featured),

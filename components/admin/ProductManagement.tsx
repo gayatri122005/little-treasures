@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { z } from "zod";
 import Icon from "@/components/icons";
-import { PRODUCT_CATEGORIES, type ProductCategory } from "@/lib/product-categories";
+import { PRODUCT_CATEGORIES, PRODUCT_TYPES_BY_CATEGORY, type ProductCategory } from "@/lib/product-categories";
 
 type ImageFit = "cover" | "contain";
 type ImagePosition =
@@ -22,6 +22,7 @@ const adminProductSchema = z.object({
   id: z.string(),
   name: z.string(),
   category: z.enum(PRODUCT_CATEGORIES).nullable(),
+  productType: z.string().nullable(),
   description: z.string(),
   price: z.number(),
   stock: z.number(),
@@ -83,6 +84,7 @@ type ProductFormState = {
   id?: string;
   name: string;
   category: ProductCategory;
+  productType: string;
   description: string;
   price: string;
   stock: string;
@@ -97,6 +99,7 @@ type ProductFormState = {
 const initialForm: ProductFormState = {
   name: "",
   category: PRODUCT_CATEGORIES[0],
+  productType: PRODUCT_TYPES_BY_CATEGORY[PRODUCT_CATEGORIES[0]][0],
   description: "",
   price: "",
   stock: "0",
@@ -305,6 +308,7 @@ export default function ProductManagement() {
       id: product.id,
       name: product.name,
       category: product.category ?? category,
+      productType: product.productType ?? PRODUCT_TYPES_BY_CATEGORY[product.category ?? category][0],
       description: product.description,
       price: String(product.price),
       stock: String(product.stock),
@@ -454,6 +458,7 @@ export default function ProductManagement() {
         id: product.id,
         name: product.name,
         category: product.category,
+        productType: product.productType,
         description: product.description,
         price: Number(product.price),
         stock: Number(product.stock),
@@ -568,6 +573,7 @@ export default function ProductManagement() {
           id: product.id,
           name: product.name,
           category: product.category ?? category,
+          productType: product.productType ?? PRODUCT_TYPES_BY_CATEGORY[product.category ?? category][0],
           description: product.description,
           price: String(product.price),
           stock: String(product.stock),
@@ -921,17 +927,32 @@ export default function ProductManagement() {
                         value={form.name}
                         onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
                         className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] px-3 text-sm font-normal outline-none focus:border-[#1E1B18]"
-                        placeholder="e.g. Handwoven everyday tote"
+                        placeholder="e.g. Handmade Toran or Girls Frock"
                       />
                     </label>
                     <label className="block text-xs font-semibold text-[#1E1B18]">
                       Category
                       <select
                         value={form.category}
-                        onChange={(event) => setForm((current) => ({ ...current, category: event.target.value as ProductCategory }))}
+                        onChange={(event) => {
+                          const nextCategory = event.target.value as ProductCategory;
+                          setForm((current) => ({ ...current, category: nextCategory, productType: PRODUCT_TYPES_BY_CATEGORY[nextCategory][0] }));
+                        }}
                         className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] bg-white px-3 text-sm font-normal"
                       >
                         {PRODUCT_CATEGORIES.map((item) => (
+                          <option key={item} value={item}>{item}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="block text-xs font-semibold text-[#1E1B18]">
+                      Product type
+                      <select
+                        value={form.productType}
+                        onChange={(event) => setForm((current) => ({ ...current, productType: event.target.value }))}
+                        className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] bg-white px-3 text-sm font-normal"
+                      >
+                        {PRODUCT_TYPES_BY_CATEGORY[form.category].map((item) => (
                           <option key={item} value={item}>{item}</option>
                         ))}
                       </select>

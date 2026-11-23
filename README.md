@@ -1,61 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Little Treasures
 
-## Admin product catalog
+Little Treasures is a Next.js 16 App Router storefront. Its backend is implemented with Node.js Route Handlers, MySQL through `mysql2`, and the existing cookie/JWT customer and admin authentication. The bag is kept in browser storage; checkout submits product IDs and quantities only, and the server reloads product prices and stock from MySQL.
 
-Product management is available at `/admin/products` for authenticated admin
-accounts. It manages Apparel, Bags, Jewellery, and Home & Gifts, including
-product details, inventory, publishing, optimized images, and product videos.
+## Database setup
 
-For a new database, create the database and run `scripts/init-db.sql`. For an
-existing database, run `scripts/product-media-migration.sql` once to add image
-and video metadata and seed the four product categories. Do not run that
-migration on a fresh database that already used the updated `init-db.sql`.
-After the media migration, run `scripts/storefront-flags-migration.sql` once to
-add homepage placement flags and the newsletter subscriber table. The
-newsletter form stores confirmed email sign-ups in MySQL; an email campaign
-provider is not configured.
-With XAMPP, these scripts can be imported from phpMyAdmin after selecting the
-`little_treasures_db` database.
-Configure the MySQL connection and `JWT_SECRET` in `.env.local`, then start the
-app and sign in with an admin account.
+- For a new database, create the database and run [`scripts/init-db.sql`](./scripts/init-db.sql).
+- For an existing database, apply the project’s outstanding migrations in order for its current schema. For Razorpay checkout specifically, back up the database and run [`scripts/razorpay-payment-migration.sql`](./scripts/razorpay-payment-migration.sql) **once** after the existing users, products, orders, order-items and payments tables exist.
+- Do not run the Razorpay migration on a new database initialized with the updated `init-db.sql`; it already contains those tables and fields.
+- Keep uploaded media in `storage/product-media` and back it up with the database.
 
-Uploaded files are stored outside the public directory in
-`storage/product-media`; back up this directory alongside MySQL. Images are
-validated and converted to WebP (up to 8 MB each); MP4/WebM videos are validated
-and limited to 40 MB each. The app serves video byte ranges for playback seeking.
-Products with order history cannot be hard-deleted; unpublish them instead.
+## Environment configuration
 
-## Getting Started
+Copy `.env.example` values into the ignored `.env.local` file. Keep all secrets server-side; only the Razorpay Key ID is sent to Standard Checkout.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```dotenv
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+RAZORPAY_WEBHOOK_SECRET=...
+STORE_SHIPPING_AMOUNT=0
+STORE_TAX_RATE_PERCENT=0
+ENABLE_COD=true
+RESEND_API_KEY=
+ORDER_EMAIL_FROM=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`STORE_SHIPPING_AMOUNT` is the flat shipping charge in rupees. The tax percentage is applied to subtotal plus shipping. Both default to zero, and discounts currently remain zero because no promotion rules exist in this project. Set these values to the merchant’s approved pricing and tax configuration before accepting orders. Set `ENABLE_COD=false` to hide and reject COD checkout.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Order emails use Resend’s email API when both `RESEND_API_KEY` and `ORDER_EMAIL_FROM` are configured. Verify the sender domain with the email provider before production. Without these values, orders and payments still work, but email delivery is skipped.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Razorpay Test Mode
 
-## Learn More
+1. Create or activate the merchant account and enable the required payment methods in the Razorpay Dashboard.
+2. Switch the Dashboard to **Test Mode**, generate a Test API Key ID and Key Secret, and place them in `.env.local` as `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`.
+3. Restart the Next.js server after changing environment variables. Sign in with a customer account, add an in-stock product to the bag, and continue to `/checkout`.
+4. Use Razorpay’s current [test card](https://razorpay.com/docs/payments/payments/test-card-details) and [test UPI](https://razorpay.com/docs/payments/payments/test-upi-details) values. No real charge is made in Test Mode.
+5. In the Dashboard, enable automatic capture (or otherwise ensure payments reach `captured`). Orders and stock are committed only after the server verifies a captured payment.
 
-To learn more about Next.js, take a look at the following resources:
+The checkout uses Razorpay Standard Checkout and server-side Orders, Payments and Refunds APIs. UPI apps such as Google Pay, PhonePe and Paytm appear through Razorpay’s supported UPI flow when enabled for the merchant account. Payment-method availability and wallet support depend on Razorpay account approval and configuration.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Webhook setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Deploy the app to a public HTTPS origin, then configure this endpoint in the Razorpay Dashboard in **Test Mode**:
 
-## Deploy on Vercel
+```text
+https://YOUR_PUBLIC_HOST/api/webhooks/razorpay
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Use a separate webhook secret as `RAZORPAY_WEBHOOK_SECRET`. Subscribe to `payment.authorized`, `payment.captured`, `payment.failed`, `order.paid`, `refund.created`, `refund.processed`, and `refund.failed`. The route verifies the HMAC against the exact raw body, records the Razorpay event ID for duplicate protection, and processes captured payments idempotently. Localhost is not reachable by Razorpay; use a public HTTPS development/staging URL for webhook tests.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use separate Test and Live API keys and webhook secrets. Configure and verify the production webhook separately when switching to Live Mode. Refund APIs and individual methods may require additional merchant activation.
+
+## Orders and admin
+
+- Customers must be signed in to checkout. Order history is in `/customer-dashboard`.
+- Admins can review orders, payments, COD, transaction attempts, date/status filters, CSV reports, fulfillment updates and eligible Razorpay refunds at `/admin/orders`.
+- Online checkout reserves stock briefly; verified capture commits the stock reduction once. COD commits stock when the order is placed. Failed online attempts do not decrement on-hand stock, and an order may be retried while its reservation is active.
+- Customer emails are sent for confirmed orders/payments, failed payment attempts, shipment, delivery and processed refunds when Resend is configured.
+
+## Local verification
+
+```bash
+npm install
+npm run dev
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+Before enabling Live Mode, test successful, failed, cancelled and pending payments; retry; duplicate and invalid-signature webhooks; COD; stock contention; customer order history; admin filters/export; and full/partial refunds in Test Mode. Test credentials and merchant webhook configuration are required for end-to-end Razorpay transactions.

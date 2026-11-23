@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { useStorefront } from "@/components/StorefrontContext";
 import {
@@ -8,6 +9,7 @@ import {
   type Product,
 } from "@/lib/catalog-types";
 import { categories, categoryMatches } from "@/lib/category-presentation";
+import { PRODUCT_TYPES_BY_CATEGORY, type ProductCategory } from "@/lib/product-categories";
 import Icon from "@/components/icons";
 
 const pageSize = 12;
@@ -19,6 +21,7 @@ export default function ProductListing({
   initialSearchTerm: string;
   initialCategory: string;
 }) {
+  const router = useRouter();
   const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } =
     useStorefront();
   const [products, setProducts] = useState<Product[]>([]);
@@ -27,7 +30,9 @@ export default function ProductListing({
   const [appliedMinPrice, setAppliedMinPrice] = useState("");
   const [appliedMaxPrice, setAppliedMaxPrice] = useState("");
   const [availability, setAvailability] = useState("all");
+  const [productType, setProductType] = useState("");
   const [collectionTag, setCollectionTag] = useState("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
@@ -53,6 +58,7 @@ export default function ProductListing({
       });
       if (searchTerm.trim()) params.set("q", searchTerm.trim());
       if (selectedCategory) params.set("category", selectedCategory);
+      if (productType) params.set("productType", productType);
       if (appliedMinPrice) params.set("minPrice", appliedMinPrice);
       if (appliedMaxPrice) params.set("maxPrice", appliedMaxPrice);
       if (availability !== "all") params.set("availability", availability);
@@ -104,6 +110,7 @@ export default function ProductListing({
     appliedMinPrice,
     appliedMaxPrice,
     availability,
+    productType,
     collectionTag,
     sort,
     page,
@@ -141,9 +148,11 @@ export default function ProductListing({
     setAppliedMinPrice("");
     setAppliedMaxPrice("");
     setAvailability("all");
+    setProductType("");
     setCollectionTag("all");
     setSort("newest");
     setPage(1);
+    router.replace("/products");
   }
 
   const selectedCategoryInfo = selectedCategory
@@ -151,22 +160,25 @@ export default function ProductListing({
     : null;
 
   return (
-    <main className="page-shell min-h-[65vh] py-6 sm:py-10">
-      <header className="relative overflow-hidden rounded-3xl bg-[#F1EBE1] px-5 py-8 sm:px-10 sm:py-11">
+    <main className="collection-shell min-w-0 py-4 sm:py-6">
+      <header className="relative overflow-hidden rounded-3xl bg-[#F1EBE1] px-5 py-6 sm:px-10 sm:py-8">
         <p className="eyebrow">Take your time, find your thing</p>
         <h1 className="serif-display mt-2 text-4xl sm:text-5xl">
-          {selectedCategory ?? "All the good things"}
+          {selectedCategory ?? "Shop all collections"}
         </h1>
         <p className="mt-3 max-w-xl text-sm leading-6 text-[#6E655F]">
           {selectedCategoryInfo?.description ??
-            "Thoughtful finds from all four collections. Search, filter, and take a closer look at anything that catches your eye."}
+            "Browse home decor, kids wear, and fashion and hair accessories. Search and filter the collection to find an item."}
         </p>
         <span className="pointer-events-none absolute -right-4 -top-8 hidden size-44 rounded-full border border-white/60 sm:block" />
         <span className="pointer-events-none absolute -right-1 -top-1 hidden size-32 rounded-full border border-white/60 sm:block" />
       </header>
 
-      <div className="grid gap-6 py-6 sm:py-8 lg:grid-cols-[250px_1fr] lg:gap-8">
-        <aside className="h-fit space-y-6 rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-4 sm:p-5 lg:sticky lg:top-28">
+      <div className="grid min-w-0 gap-4 py-4 md:grid-cols-[220px_minmax(0,1fr)] md:gap-5 xl:grid-cols-[250px_minmax(0,1fr)] xl:gap-7">
+        <aside
+          id="collection-filters"
+          className={`${filtersOpen ? "block" : "hidden md:block"} h-fit min-w-0 space-y-5 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-5 md:sticky md:top-28`}
+        >
           <div>
             <label
               htmlFor="catalog-search"
@@ -204,7 +216,7 @@ export default function ProductListing({
                 className={`min-h-10 px-3 text-left text-sm transition-colors ${
                   !selectedCategory
                     ? "rounded-lg bg-[#1E1B18] text-white"
-                    : "rounded-lg bg-[#FFFFFF] text-[#6E655F] hover:bg-[#F1EBE1]"
+                    : "rounded-lg bg-[#FAF7F2] text-[#6E655F] hover:bg-[#F1EBE1]"
                 }`}
               >
                 All categories
@@ -214,14 +226,15 @@ export default function ProductListing({
                   type="button"
                   key={category.name}
                   onClick={() => {
-                    setSelectedCategory(category.name);
+            setSelectedCategory(category.name);
+            setProductType("");
                     setPage(1);
                   }}
                   aria-pressed={selectedCategory === category.name}
                   className={`min-h-10 px-3 text-left text-sm transition-colors ${
                     selectedCategory === category.name
                       ? "rounded-lg bg-[#1E1B18] text-white"
-                      : "rounded-lg bg-[#FFFFFF] text-[#6E655F] hover:bg-[#F1EBE1]"
+                      : "rounded-lg bg-[#FAF7F2] text-[#6E655F] hover:bg-[#F1EBE1]"
                   }`}
                 >
                   {category.name}
@@ -292,6 +305,26 @@ export default function ProductListing({
           </form>
 
           <label
+            htmlFor="product-type-filter"
+            className="block text-xs font-semibold tracking-[0.08em]"
+          >
+            PRODUCT TYPE
+            <select
+              id="product-type-filter"
+              value={productType}
+              onChange={(event) => { setProductType(event.target.value); setPage(1); }}
+              className="mt-3 min-h-10 w-full rounded-lg border border-[#E3D8C9] bg-white px-3 text-sm font-normal tracking-normal"
+            >
+              <option value="">All types</option>
+              {(selectedCategory && selectedCategory in PRODUCT_TYPES_BY_CATEGORY
+                ? PRODUCT_TYPES_BY_CATEGORY[selectedCategory as ProductCategory]
+                : Object.values(PRODUCT_TYPES_BY_CATEGORY).flat()).map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+            </select>
+          </label>
+
+          <label
             htmlFor="availability-filter"
             className="block text-xs font-semibold tracking-[0.08em]"
           >
@@ -313,6 +346,7 @@ export default function ProductListing({
 
           {(searchTerm ||
             selectedCategory ||
+            productType ||
             appliedMinPrice ||
             appliedMaxPrice ||
             availability !== "all" ||
@@ -327,30 +361,42 @@ export default function ProductListing({
           )}
         </aside>
 
-        <section aria-label="Product results">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <section className="min-w-0" aria-label="Product results">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-[#6E655F]" aria-live="polite">
               {loading
                 ? "Finding your good things…"
                 : `${total} ${total === 1 ? "piece" : "pieces"}`}
             </p>
-            <label className="flex items-center gap-2 text-xs text-[#6E655F]">
-              SORT BY
-              <select
-                value={sort}
-                onChange={(event) => {
-                  setSort(event.target.value);
-                  setPage(1);
-                }}
-                className="min-h-10 rounded-lg border border-[#E3D8C9] bg-white px-3 text-xs text-[#1E1B18]"
+            <div className="flex min-w-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen((open) => !open)}
+                aria-expanded={filtersOpen}
+                aria-controls="collection-filters"
+                className="min-h-10 rounded-lg border border-[#E3D8C9] bg-white px-3 text-xs font-medium text-[#1E1B18] md:hidden"
               >
-                <option value="newest">Newest</option>
-                <option value="price-asc">Price: low to high</option>
-                <option value="price-desc">Price: high to low</option>
-                <option value="popular">Most popular</option>
-                <option value="name-asc">Name: A to Z</option>
-              </select>
-            </label>
+                {filtersOpen ? "Hide filters" : "Filters & search"}
+              </button>
+              <label className="flex min-w-0 items-center gap-2 text-xs text-[#6E655F]">
+                <span className="hidden sm:inline">SORT BY</span>
+                <select
+                  aria-label="Sort products"
+                  value={sort}
+                  onChange={(event) => {
+                    setSort(event.target.value);
+                    setPage(1);
+                  }}
+                  className="min-h-10 max-w-full rounded-lg border border-[#E3D8C9] bg-white px-2 sm:px-3 text-xs text-[#1E1B18]"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="price-asc">Price: low to high</option>
+                  <option value="price-desc">Price: high to low</option>
+                  <option value="popular">Most popular</option>
+                  <option value="name-asc">Name: A to Z</option>
+                </select>
+              </label>
+            </div>
           </div>
 
           {loading ? (
@@ -385,9 +431,11 @@ export default function ProductListing({
             </div>
           ) : products.length ? (
             <>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 sm:gap-x-5 sm:gap-y-7 xl:grid-cols-4 xl:gap-x-6">
+              <div className={products.length === 1 ? "grid grid-cols-1 justify-items-center" : "grid min-w-0 grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-y-7 xl:gap-x-6"}>
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <div key={product.id} className={products.length === 1 ? "w-full max-w-[360px]" : "min-w-0"}>
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
               {pageCount > 1 && (

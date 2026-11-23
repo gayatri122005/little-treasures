@@ -262,7 +262,7 @@ export default function CustomerAddressBook({
   return (
     <section
       aria-labelledby="saved-addresses-heading"
-      className="rounded-3xl border border-[#E3D8C9] bg-[#FFFFFF] p-6 shadow-sm"
+      className="rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] p-6 shadow-sm"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -466,7 +466,7 @@ export default function CustomerAddressBook({
                   {address.label || "Saved address"}
                 </h3>
                 {address.isDefault && (
-                  <span className="rounded-full bg-[#B85042] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1E1B18]">
+                  <span className="rounded-full bg-[#B85042] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
                     Default
                   </span>
                 )}

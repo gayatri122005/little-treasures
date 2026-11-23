@@ -64,7 +64,7 @@ export default function CustomerPasswordForm() {
   return (
     <section
       aria-labelledby="change-password-heading"
-      className="rounded-3xl border border-[#E3D8C9] bg-[#FFFFFF] p-6 shadow-sm"
+      className="rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] p-6 shadow-sm"
     >
       <p className="eyebrow">Account security</p>
       <h2

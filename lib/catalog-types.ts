@@ -4,6 +4,7 @@ export const productSchema = z.object({
   id: z.string(),
   name: z.string(),
   category: z.string().nullable(),
+  productType: z.string().nullable().optional(),
   description: z.string(),
   price: z.number(),
   stock: z.number(),
@@ -46,6 +47,7 @@ export type Product = {
   id: string;
   name: string;
   category: string | null;
+  productType?: string | null;
   price: number;
   description: string;
   image: string | null;

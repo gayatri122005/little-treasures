@@ -59,7 +59,7 @@ export default function SignInForm() {
       {searchParams.get("passwordChanged") === "1" && (
         <p
           role="status"
-          className="rounded-[3px] border border-[#B85042] bg-[#B85042] px-3 py-2.5 text-sm text-[#1E1B18]"
+          className="rounded-[3px] border border-[#B85042] bg-[#B85042] px-3 py-2.5 text-sm text-white"
         >
           Your password has been updated. Sign in with your new password.
         </p>
@@ -111,7 +111,7 @@ export default function SignInForm() {
       {showResetNotice && (
         <p
           role="status"
-          className="rounded-[3px] border border-[#E3D8C9] bg-[#FFFFFF] px-3 py-2.5 text-xs leading-5 text-[#6E655F]"
+          className="rounded-[3px] border border-[#E3D8C9] bg-[#FAF7F2] px-3 py-2.5 text-xs leading-5 text-[#6E655F]"
         >
           Password reset is not available yet. Please check back soon for
           account recovery options.

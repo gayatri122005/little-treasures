@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "All the Good Things | Thoughtful finds for little moments",
+  title: "Little Treasures | Home Decor, Kids Wear & Accessories",
   description:
-    "Discover thoughtful pieces for everyday moments at All the Good Things.",
+    "Explore Home & Decor, Kids Wear, and Fashion & Hair Accessories at Little Treasures.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

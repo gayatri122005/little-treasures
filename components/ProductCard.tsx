@@ -44,7 +44,7 @@ export default function ProductCard({ product }: { product: Product }) {
               fill
               unoptimized
               sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 280px"
-              className="object-cover"
+              className="object-contain"
             />
           </Link>
         ) : (
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </Link>
         )}
         {product.status === "out_of_stock" && (
-          <span className="absolute left-3 top-14 rounded-full bg-[#FFFFFF]/95 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#6E655F] shadow-sm">
+          <span className="absolute left-3 top-14 rounded-full bg-[#FAF7F2]/95 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#6E655F] shadow-sm">
             Out of stock
           </span>
         )}
@@ -82,7 +82,7 @@ export default function ProductCard({ product }: { product: Product }) {
           type="button"
           onClick={() => setQuickViewOpen(true)}
           aria-label={`Quick view ${product.name}`}
-          className="absolute left-3 top-3 flex size-9 items-center justify-center rounded-full bg-[#FFFFFF]/95 shadow-sm transition-colors hover:bg-[#F1EBE1]"
+          className="absolute left-3 top-3 flex size-9 items-center justify-center rounded-full bg-[#FAF7F2]/95 shadow-sm transition-colors hover:bg-[#F1EBE1]"
         >
           <Icon name="search" className="size-4 text-[#1E1B18]" />
         </button>
@@ -95,7 +95,7 @@ export default function ProductCard({ product }: { product: Product }) {
               : `Add ${product.name} to favorites`
           }
           aria-pressed={favorite}
-          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-[#FFFFFF]/95 shadow-sm transition-transform hover:scale-105"
+          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-[#FAF7F2]/95 shadow-sm transition-transform hover:scale-105"
         >
           <Icon
             name="heart"
@@ -186,7 +186,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   fill
                   unoptimized
                   sizes="(max-width: 640px) 100vw, 50vw"
-                  className="object-cover"
+                  className="object-contain"
                 />
               )}
             </div>
@@ -199,7 +199,7 @@ export default function ProductCard({ product }: { product: Product }) {
               >
                 <Icon name="close" className="size-5" />
               </button>
-              <p className="eyebrow">{product.category ?? "All the Good Things"}</p>
+              <p className="eyebrow">{product.category}</p>
               <h2
                 id={`quick-view-title-${product.id}`}
                 className="serif-display mt-3 pr-7 text-3xl"
@@ -215,7 +215,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   : "Currently unavailable"}
               </p>
               <p className="mt-5 line-clamp-5 text-sm leading-6 text-[#6E655F]">
-                {product.description || "A thoughtful find from the All the Good Things collection."}
+                {product.description || "No description has been added for this product yet."}
               </p>
               <button
                 type="button"

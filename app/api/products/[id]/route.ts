@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 import pool from "@/lib/db";
+import { PRODUCT_CATEGORIES } from "@/lib/product-categories";
 
 type ProductRow = RowDataPacket & {
   id: number | string;
   product_name: string;
   category_name: string | null;
+  product_type: string | null;
   description: string | null;
   price: string | number;
   stock_quantity: number;
+  stock_reserved: number;
+  available_stock: number | string;
   status: "active" | "draft" | "out_of_stock";
   is_featured: number;
   is_new_arrival: number;
@@ -48,8 +52,15 @@ export async function GET(
 
   try {
     const [rows] = await pool.execute<ProductRow[]>(
-      `SELECT p.id, p.product_name, c.category_name, p.description, p.price,
-              p.stock_quantity, p.status, p.is_featured,
+      `SELECT p.id, p.product_name, p.product_type, c.category_name, p.description, p.price,
+              p.stock_quantity, p.stock_reserved,
+              GREATEST(0, p.stock_quantity - p.stock_reserved + COALESCE((
+                SELECT SUM(oi.quantity) FROM order_items oi JOIN orders reservation_order ON reservation_order.id = oi.order_id
+                WHERE oi.product_id = p.id AND reservation_order.order_type = 'online'
+                  AND reservation_order.payment_status IN ('pending','authorized','failed')
+                  AND reservation_order.reservation_expires_at IS NOT NULL
+                  AND reservation_order.reservation_expires_at < NOW()
+              ), 0)) AS available_stock, p.status, p.is_featured,
               CASE
                 WHEN p.is_new_arrival = 1 OR p.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
                 THEN 1 ELSE 0
@@ -58,8 +69,9 @@ export async function GET(
        FROM products p
        LEFT JOIN categories c ON c.id = p.category_id
        WHERE p.id = ? AND p.status <> 'draft'
+         AND c.category_name IN (${PRODUCT_CATEGORIES.map(() => "?").join(", ")})
        LIMIT 1`,
-      [id],
+      [id, ...PRODUCT_CATEGORIES],
     );
     const row = rows[0];
     if (!row) {
@@ -99,11 +111,12 @@ export async function GET(
         id: String(row.id),
         name: row.product_name,
         category: row.category_name,
+        productType: row.product_type,
         description: row.description ?? "",
         price: Number(row.price),
-        stock: Number(row.stock_quantity),
+        stock: Number(row.available_stock),
         status:
-          row.status === "out_of_stock" || Number(row.stock_quantity) <= 0
+          row.status === "out_of_stock" || Number(row.available_stock) <= 0
             ? "out_of_stock"
             : "active",
         isFeatured: Boolean(row.is_featured),

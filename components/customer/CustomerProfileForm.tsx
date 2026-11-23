@@ -175,7 +175,7 @@ export default function CustomerProfileForm({
   return (
     <section
       aria-labelledby="profile-edit-heading"
-      className="rounded-3xl border border-[#E3D8C9] bg-[#FFFFFF] p-6 shadow-sm"
+      className="rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] p-6 shadow-sm"
     >
       <p className="eyebrow">Your details</p>
       <h2

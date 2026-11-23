@@ -58,14 +58,14 @@ export default function FeaturedProducts() {
           <h2 className="serif-display mt-2 text-4xl sm:text-5xl">
             {normalizedSearch
               ? "Your little finds"
-              : selectedCategory ?? "All the good things"}
+              : selectedCategory ?? "Shop all collections"}
           </h2>
           <p className="mt-3 max-w-[440px] text-sm leading-6 text-[#6E655F]">
             {normalizedSearch
               ? `A little look at what we found for “${searchTerm.trim()}”.`
               : selectedCategory
                 ? `A closer look at our ${selectedCategory.toLowerCase()} collection.`
-                : "Thoughtful pieces from across our four collections, chosen to bring a little joy to everyday moments."}
+                : "Featured pieces from Home & Decor, Kids Wear, and Fashion & Hair Accessories."}
           </p>
         </div>
         <a
@@ -91,7 +91,7 @@ export default function FeaturedProducts() {
               : "border-[#E3D8C9] text-[#6E655F] hover:border-[#B85042]"
           }`}
         >
-          ALL THE GOOD THINGS
+          ALL COLLECTIONS
         </button>
         {categories.map((category) => (
           <button

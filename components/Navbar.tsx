@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import Icon from "@/components/icons";
 import { useStorefront } from "@/components/StorefrontContext";
@@ -11,9 +11,9 @@ import { categories } from "@/lib/category-presentation";
 
 const navLinks = [
   { label: "Home", href: "/#top" },
-  { label: "All the good things", href: "/products" },
-  { label: "Just arrived", href: "/#new-arrivals" },
-  { label: "Favorites", href: "/#favorites" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "My Account / Login", href: "/login" },
 ];
 
 function formatPrice(price: number) {
@@ -26,7 +26,6 @@ function formatPrice(price: number) {
 
 export default function Navbar() {
   const router = useRouter();
-  const pathname = usePathname();
   const {
     cartItems,
     cartCount,
@@ -104,26 +103,14 @@ export default function Navbar() {
     event.preventDefault();
     setMobileOpen(false);
     setSearchOpen(false);
-    if (pathname !== "/") {
-      router.push(
-        searchTerm.trim()
-          ? `/products?q=${encodeURIComponent(searchTerm.trim())}`
-          : "/products",
-      );
-      return;
-    }
-    document.getElementById("featured")?.scrollIntoView({ behavior: "smooth" });
+    router.push(searchTerm.trim() ? `/products?q=${encodeURIComponent(searchTerm.trim())}` : "/products");
   }
 
   function chooseSuggestion(productName: string) {
     setSearchTerm(productName);
     setSearchOpen(false);
     setMobileOpen(false);
-    if (pathname !== "/") {
-      router.push(`/products?q=${encodeURIComponent(productName)}`);
-      return;
-    }
-    document.getElementById("featured")?.scrollIntoView({ behavior: "smooth" });
+    router.push(`/products?q=${encodeURIComponent(productName)}`);
   }
 
   return (
@@ -140,59 +127,24 @@ export default function Navbar() {
         </p>
       )}
       <header className="sticky top-0 z-30 border-b border-[#E3D8C9] bg-[#FAF7F2]/95 text-[#1E1B18] shadow-[0_6px_24px_rgba(30,27,24,0.06)] backdrop-blur-md">
-        <div className="page-shell flex min-h-[68px] items-center justify-between gap-3 sm:min-h-[76px] sm:gap-5">
+        <div className="page-shell flex min-h-[68px] items-center justify-between gap-3 sm:min-h-[68px] sm:gap-5">
           <Link
             href="/#top"
             className="flex shrink-0 items-center gap-2 text-[#1E1B18] sm:gap-2.5"
-            aria-label="All the Good Things home"
+            aria-label="Little Treasures home"
           >
             <span className="flex size-8 items-center justify-center rounded-full bg-[#B85042] text-white sm:size-9">
               <Icon name="sparkle" className="size-[17px] sm:size-[19px]" />
             </span>
             <span className="serif-display text-[19px] leading-none sm:text-[23px]">
-              all the good things
+              Little Treasures
             </span>
           </Link>
-
-          <nav
-            aria-label="Main navigation"
-            className="hidden items-center gap-4 xl:flex 2xl:gap-6"
-          >
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="whitespace-nowrap text-[10px] font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33] xl:text-[11px]"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <details className="group relative">
-              <summary className="flex cursor-pointer list-none items-center gap-1 whitespace-nowrap text-[10px] font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33] xl:text-[11px]">
-                Shop by category
-                <Icon
-                  name="arrow"
-                  className="size-3 rotate-90 transition-transform group-open:-rotate-90"
-                />
-              </summary>
-              <div className="absolute left-0 top-full z-30 mt-3 min-w-48 rounded-xl border border-[#E3D8C9] bg-[#FAF7F2] p-2 shadow-xl">
-                {categories.map((category) => (
-                  <Link
-                    key={category.name}
-                    href={`/products?category=${encodeURIComponent(category.name)}`}
-                    className="block rounded-lg px-3 py-2.5 text-xs text-[#6E655F] transition-colors hover:bg-[#F1EBE1] hover:text-[#1E1B18]"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
-            </details>
-          </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
             <form
               onSubmit={handleSearch}
-              className="relative hidden h-10 w-[205px] items-center gap-2 rounded-full border border-[#E3D8C9] bg-[#F1EBE1] px-3 xl:flex"
+              className="relative hidden h-10 w-[min(24vw,320px)] min-w-[205px] items-center gap-2 rounded-full border border-[#E3D8C9] bg-[#F1EBE1] px-3 md:flex"
               role="search"
             >
               <Icon name="search" className="size-4 shrink-0 text-[#6E655F]" />
@@ -211,7 +163,7 @@ export default function Navbar() {
                 <ul
                   id="desktop-search-suggestions"
                   role="listbox"
-                  className="absolute left-0 right-0 top-[calc(100%+10px)] overflow-hidden rounded-lg border border-[#E3D8C9] bg-[#FFFFFF] py-1 shadow-xl"
+                  className="absolute left-0 right-0 top-[calc(100%+10px)] overflow-hidden rounded-lg border border-[#E3D8C9] bg-[#FFFFFF] py-1 text-[#1E1B18] shadow-xl"
                 >
                   {searchSuggestions.map((product) => (
                     <li key={product.id}>
@@ -228,7 +180,7 @@ export default function Navbar() {
                             {product.name}
                           </span>
                           <span className="mt-0.5 block text-[10px] text-[#6E655F]">
-                            {product.category ?? "All the Good Things"}
+                            {product.category}
                           </span>
                         </span>
                         <span className="shrink-0 text-xs">
@@ -265,11 +217,12 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative flex size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1]"
-              aria-label={`Open shopping bag, ${cartCount} items`}
+              className="relative flex min-h-10 items-center justify-center gap-1.5 rounded-full px-2 transition-colors hover:bg-[#F1EBE1]"
+              aria-label={`Cart, ${cartCount} items`}
               aria-expanded={cartOpen}
             >
               <Icon name="bag" className="size-[20px]" />
+              <span className="hidden text-[11px] font-medium sm:inline">Cart</span>
               <span className="absolute -right-0.5 -top-0.5 flex size-[17px] items-center justify-center rounded-full bg-[#B85042] text-[9px] font-semibold text-white">
                 {cartCount}
               </span>
@@ -277,7 +230,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileOpen((open) => !open)}
-              className="flex size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] xl:hidden"
+              className="flex size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] min-[1200px]:hidden"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
             >
@@ -290,7 +243,7 @@ export default function Navbar() {
         </div>
 
         {mobileOpen && (
-          <div className="border-t border-[#E3D8C9] bg-[#FAF7F2] px-5 pb-5 pt-4 text-[#1E1B18] xl:hidden">
+          <div className="border-t border-[#E3D8C9] bg-[#FAF7F2] px-5 pb-5 pt-4 text-[#1E1B18] min-[1200px]:hidden">
             <form
               onSubmit={handleSearch}
               className="relative mb-4 flex h-11 items-center gap-2 rounded-full border border-[#E3D8C9] bg-[#F1EBE1] px-4"
@@ -312,7 +265,7 @@ export default function Navbar() {
                 <ul
                   id="mobile-search-suggestions"
                   role="listbox"
-                  className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-lg border border-[#E3D8C9] bg-[#FFFFFF] py-1 shadow-xl"
+                  className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-lg border border-[#E3D8C9] bg-[#FFFFFF] py-1 text-[#1E1B18] shadow-xl"
                 >
                   {searchSuggestions.map((product) => (
                     <li key={product.id}>
@@ -329,7 +282,7 @@ export default function Navbar() {
                             {product.name}
                           </span>
                           <span className="mt-0.5 block text-[10px] text-[#6E655F]">
-                            {product.category ?? "All the Good Things"}
+                            {product.category}
                           </span>
                         </span>
                         <span className="shrink-0 text-xs">
@@ -342,7 +295,7 @@ export default function Navbar() {
               )}
             </form>
             <nav aria-label="Mobile navigation" className="grid gap-1">
-              {navLinks.map((link) => (
+              {navLinks.slice(0, 1).map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
@@ -362,15 +315,22 @@ export default function Navbar() {
                   {category.name}
                 </Link>
               ))}
+              {navLinks.slice(1).map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-[#F1EBE1] hover:text-[#9A3F33]"
+                >
+                  {link.label}
+                </a>
+              ))}
               <button
                 type="button"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setAccountOpen(true);
-                }}
+                onClick={() => { setMobileOpen(false); setCartOpen(true); }}
                 className="rounded-lg px-3 py-2.5 text-left text-sm font-medium hover:bg-[#F1EBE1] hover:text-[#9A3F33]"
               >
-                Account
+                Cart ({cartCount})
               </button>
               <button
                 type="button"
@@ -390,6 +350,19 @@ export default function Navbar() {
             </nav>
           </div>
         )}
+        <nav aria-label="Shop categories" className="hidden border-t border-[#E3D8C9] min-[1200px]:block">
+          <div className="page-shell flex min-h-10 items-center justify-center gap-8">
+            {categories.map((category) => (
+              <Link
+                key={category.name}
+                href={`/products?category=${encodeURIComponent(category.name)}`}
+                className="py-2 text-[11px] font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33]"
+              >
+                {category.name}
+              </Link>
+            ))}
+          </div>
+        </nav>
       </header>
 
       <div className="sr-only" aria-live="polite">
@@ -535,12 +508,10 @@ export default function Navbar() {
                     <span>Subtotal</span>
                     <span className="font-medium">{formatPrice(subtotal)}</span>
                   </div>
-                  <p className="mt-2 text-xs text-[#6E655F]">
-                    Shipping is calculated at checkout.
-                  </p>
                   <p className="mt-4 text-center text-xs text-[#6E655F]">
-                    Checkout is not enabled yet. Your bag is saved on this browser.
+                    Your bag is saved on this browser. Secure checkout is ready when you are.
                   </p>
+                  <Link href="/checkout" onClick={() => setCartOpen(false)} className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#B85042] text-sm font-semibold text-white hover:brightness-95">Continue to checkout</Link>
                 </div>
               </>
             )}

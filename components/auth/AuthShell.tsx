@@ -23,18 +23,18 @@ export default function AuthShell({
   children,
 }: AuthShellProps) {
   return (
-    <main className="min-h-screen bg-[#FFFFFF] px-3 py-4 sm:px-7 sm:py-7">
+    <main className="min-h-screen bg-[#FAF7F2] px-3 py-4 sm:px-7 sm:py-7">
       <header className="mx-auto flex w-full max-w-[1320px] items-center justify-between">
         <Link
           href="/"
           className="inline-flex items-center gap-2.5"
-          aria-label="All the Good Things home"
+          aria-label="Little Treasures home"
         >
           <span className="flex size-9 items-center justify-center rounded-full bg-[#F1EBE1] text-[#B85042]">
             <Icon name="sparkle" className="size-[19px]" />
           </span>
           <span className="serif-display text-[21px] leading-none sm:text-[23px]">
-            all the good things
+            Little Treasures
           </span>
         </Link>
         <Link
@@ -47,11 +47,11 @@ export default function AuthShell({
         </Link>
       </header>
 
-      <div className="mx-auto mt-6 grid w-full max-w-[1320px] overflow-hidden rounded-3xl border border-[#E3D8C9] bg-[#FFFFFF] shadow-[0_20px_70px_rgba(54,48,38,0.08)] md:mt-8 md:min-h-[min(760px,calc(100vh-120px))] md:grid-cols-[1fr_0.88fr]">
+      <div className="mx-auto mt-6 grid w-full max-w-[1320px] overflow-hidden rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] shadow-[0_20px_70px_rgba(54,48,38,0.08)] md:mt-8 md:min-h-[min(760px,calc(100vh-120px))] md:grid-cols-[1fr_0.88fr]">
         <section className="relative hidden min-h-[620px] overflow-hidden bg-[#1E1B18] md:block">
           <Image
-            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=90"
-            alt="Friends finding thoughtful pieces together"
+            src="/categories/kids-wear.svg"
+            alt="Illustration of a girls festive dress"
             fill
             priority
             sizes="(max-width: 900px) 0px, 55vw"

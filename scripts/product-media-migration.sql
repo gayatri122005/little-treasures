@@ -21,9 +21,8 @@ ALTER TABLE product_videos
 
 INSERT INTO categories (category_name, description)
 VALUES
-  ('Apparel', 'Clothing and everyday layers'),
-  ('Bags', 'Bags and accessories'),
-  ('Jewellery', 'Jewellery and keepsakes'),
-  ('Home & Gifts', 'Home accents and thoughtful gifts')
+  ('Home & Decor', 'Toran and decorative doormats'),
+  ('Kids Wear', 'Ghagra, frocks and palazzo'),
+  ('Fashion & Hair Accessories', 'Potli bags and hair clips')
 ON DUPLICATE KEY UPDATE
   description = VALUES(description);

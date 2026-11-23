@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Icon from "@/components/icons";
 import ProductCard from "@/components/ProductCard";
@@ -28,11 +29,13 @@ function formatPrice(price: number) {
 }
 
 export default function ProductDetails({ productId }: { productId: string }) {
+  const router = useRouter();
   const { addToCart, wishlistIds, toggleWishlist } = useStorefront();
   const { products: catalogProducts } = useProductCatalog();
   const [product, setProduct] = useState<ProductDetailsData | null>(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [imageZoomed, setImageZoomed] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -73,6 +76,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
           result.data.product.images[0] ?? result.data.product.image ?? "",
         );
         setSelectedVideo(null);
+        setImageZoomed(false);
         setQuantity(1);
       } catch (requestError) {
         if (controller.signal.aborted) return;
@@ -201,15 +205,30 @@ export default function ProductDetails({ productId }: { productId: string }) {
                 Your browser does not support product video playback.
               </video>
             ) : selectedImage ? (
-              <Image
-                src={selectedImage}
-                alt={product.name}
-                fill
-                priority
-                unoptimized
-                sizes="(max-width: 1023px) 100vw, 50vw"
-                className="object-cover"
-              />
+              <>
+                <Image
+                  src={selectedImage}
+                  alt={product.name}
+                  fill
+                  loading="eager"
+                  unoptimized
+                  sizes="(max-width: 1023px) 100vw, 50vw"
+                  className={`object-contain transition-transform duration-300 ${imageZoomed ? "scale-150" : "scale-100"}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setImageZoomed((zoomed) => !zoomed)}
+                  aria-label={
+                    imageZoomed
+                      ? "Reset product image zoom"
+                      : "Zoom product image"
+                  }
+                  aria-pressed={imageZoomed}
+                  className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full bg-[#FAF7F2]/95 text-[#1E1B18] shadow-sm transition-colors hover:bg-white"
+                >
+                  <Icon name="search" className="size-4" />
+                </button>
+              </>
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-2 text-[#6E655F]">
                 <Icon name="sparkle" className="size-8 text-[#B85042]" />
@@ -230,6 +249,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
                   onClick={() => {
                     setSelectedImage(image);
                     setSelectedVideo(null);
+                    setImageZoomed(false);
                   }}
                   aria-label={`View product image ${index + 1}`}
                   aria-pressed={selectedVideo === null && selectedImage === image}
@@ -245,7 +265,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
                     fill
                     unoptimized
                     sizes="68px"
-                    className="object-cover"
+                    className="object-contain"
                   />
                 </button>
               ))}
@@ -253,7 +273,10 @@ export default function ProductDetails({ productId }: { productId: string }) {
                 <button
                   type="button"
                   key={`${video.src}-${index}`}
-                  onClick={() => setSelectedVideo(video.src)}
+                  onClick={() => {
+                    setSelectedVideo(video.src);
+                    setImageZoomed(false);
+                  }}
                   aria-label={`Play product video ${index + 1}`}
                   aria-pressed={selectedVideo === video.src}
                   className={`relative flex aspect-[4/5] w-[62px] shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 bg-[#1E1B18] text-white transition-colors sm:w-[72px] ${
@@ -280,7 +303,8 @@ export default function ProductDetails({ productId }: { productId: string }) {
         </div>
 
         <section className="flex min-w-0 w-full flex-col items-start self-start rounded-2xl border border-[#E3D8C9] bg-[#F1EBE1] p-5 sm:p-7 lg:p-9">
-          <p className="eyebrow">{product.category ?? "All the Good Things"}</p>
+          <p className="eyebrow">{product.category}</p>
+          {product.productType && <p className="mt-2 text-xs text-[#6E655F]">{product.productType}</p>}
           <h1 className="serif-display mt-3 text-4xl leading-[1.05] sm:text-5xl">
             {product.name}
           </h1>
@@ -288,7 +312,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
           {(product.isNewArrival || product.isFeatured) && (
             <div className="mt-3 flex flex-wrap gap-2">
               {product.isNewArrival && (
-                <span className="rounded-full bg-[#F1E1DA] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#9A3F33]">
+                <span className="rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#9A3F33]">
                   Just arrived
                 </span>
               )}
@@ -301,13 +325,13 @@ export default function ProductDetails({ productId }: { productId: string }) {
           )}
           <p
             className={`mt-3 text-xs ${
-              available ? "rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[#6E655F]" : "rounded-full bg-[#F1E1DA] px-3 py-1.5 text-[#9A3F33]"
+              available ? "rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[#6E655F]" : "rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[#9A3F33]"
             }`}
           >
             {available ? `${product.stock} available` : "Currently unavailable"}
           </p>
           <p className="mt-6 whitespace-pre-line text-sm leading-7 text-[#6E655F]">
-            {product.description || "A thoughtful find from the All the Good Things collection."}
+            {product.description || "No description has been added for this product yet."}
           </p>
 
           <div className="mt-6 flex w-full flex-wrap items-center gap-4">
@@ -347,6 +371,17 @@ export default function ProductDetails({ productId }: { productId: string }) {
           </div>
           <button
             type="button"
+            onClick={() => {
+              addProductToCart(product);
+              router.push("/checkout");
+            }}
+            disabled={!available}
+            className="mt-3 min-h-12 w-full rounded-full border border-[#1E1B18] bg-[#FAF7F2] px-6 text-xs font-semibold tracking-[0.12em] text-[#1E1B18] transition-colors hover:bg-[#1E1B18] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            BUY NOW
+          </button>
+          <button
+            type="button"
             onClick={() => toggleWishlist(product)}
             aria-pressed={isWishlisted}
             className="mt-4 inline-flex min-h-10 items-center gap-2 text-xs font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33]"
@@ -367,7 +402,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
         <section className="mt-16 border-t border-[#E3D8C9] pt-10">
           <p className="eyebrow">A few more to love</p>
           <h2 className="serif-display mt-2 text-3xl">More in {product.category}</h2>
-          <div className="mt-7 grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-4 sm:gap-x-5">
+          <div className="mt-7 grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4">
             {relatedProducts.map((relatedProduct) => (
               <ProductCard key={relatedProduct.id} product={relatedProduct} />
             ))}

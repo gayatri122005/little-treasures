@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
-import { PRODUCT_CATEGORIES } from "@/lib/product-categories";
+import { PRODUCT_CATEGORIES, PRODUCT_TYPES, PRODUCT_TYPES_BY_CATEGORY } from "@/lib/product-categories";
 import pool from "@/lib/db";
 import {
   getProductMediaFilename,
@@ -65,6 +65,7 @@ const productSchema = z.object({
   id: z.string().regex(/^\d+$/).optional(),
   name: z.string().trim().min(1).max(160),
   category: z.enum(PRODUCT_CATEGORIES),
+  productType: z.enum(PRODUCT_TYPES as [string, ...string[]]),
   description: z.string().trim().max(10000),
   price: z.number().finite().min(0).max(99999999.99),
   stock: z.number().int().min(0).max(10000000),
@@ -75,6 +76,9 @@ const productSchema = z.object({
   images: z.array(imageDescriptorSchema).max(MAX_PRODUCT_IMAGES),
   videos: z.array(videoDescriptorSchema).max(MAX_PRODUCT_VIDEOS),
 }).superRefine((product, context) => {
+  if (!PRODUCT_TYPES_BY_CATEGORY[product.category].includes(product.productType)) {
+    context.addIssue({ code: "custom", message: "Choose a product type within this category.", path: ["productType"] });
+  }
   const primaryCount = product.images.filter((image) => image.primary).length;
   if (product.images.length > 0 && primaryCount !== 1) {
     context.addIssue({
@@ -137,6 +141,7 @@ type ProductRow = RowDataPacket & {
   id: number | string;
   product_name: string;
   category_name: string | null;
+  product_type: string | null;
   description: string | null;
   price: number | string;
   stock_quantity: number;
@@ -310,12 +315,15 @@ async function saveProduct(request: Request, productId?: string) {
     let existingImages: ImageRow[] = [];
     let existingVideos: VideoRow[] = [];
     if (productId) {
-      const [products] = await connection.execute<ProductRow[]>(
-        "SELECT id FROM products WHERE id = ? LIMIT 1 FOR UPDATE",
+      const [products] = await connection.execute<(RowDataPacket & { id: number; stock_reserved: number })[]>(
+        "SELECT id, stock_reserved FROM products WHERE id = ? LIMIT 1 FOR UPDATE",
         [productId],
       );
       if (!products[0]) {
         throw new ProductRequestError("Product not found.", 404);
+      }
+      if (product.stock < Number(products[0].stock_reserved)) {
+        throw new ProductRequestError("On-hand stock cannot be lower than units reserved for customer payments.", 409);
       }
       const existing = await getExistingMedia(connection, productId);
       existingImages = existing.images;
@@ -504,12 +512,13 @@ async function saveProduct(request: Request, productId?: string) {
     if (productId) {
       await connection.execute(
         `UPDATE products
-         SET category_id = ?, product_name = ?, description = ?, price = ?,
+         SET category_id = ?, product_type = ?, product_name = ?, description = ?, price = ?,
              stock_quantity = ?, status = ?, is_featured = ?, is_new_arrival = ?,
              show_on_homepage = ?, updated_at = NOW()
          WHERE id = ?`,
         [
           categoryId,
+          product.productType,
           product.name,
           product.description,
           product.price,
@@ -524,11 +533,12 @@ async function saveProduct(request: Request, productId?: string) {
     } else {
       const [result] = await connection.execute<ResultSetHeader>(
         `INSERT INTO products
-           (category_id, product_name, description, price, stock_quantity, status,
+           (category_id, product_type, product_name, description, price, stock_quantity, status,
             is_featured, is_new_arrival, show_on_homepage)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           categoryId,
+          product.productType,
           product.name,
           product.description,
           product.price,
@@ -744,18 +754,18 @@ export async function GET(request: Request) {
 
   try {
     const parameters: string[] = [];
-    const categoryFilter = category ? "WHERE c.category_name = ?" : "";
+    const categoryFilter = category ? "AND c.category_name = ?" : "";
     if (category) parameters.push(category);
     const [products] = await pool.execute<ProductRow[]>(
-      `SELECT p.id, p.product_name, c.category_name, p.description, p.price,
+      `SELECT p.id, p.product_name, p.product_type, c.category_name, p.description, p.price,
               p.stock_quantity, p.status, p.is_featured, p.is_new_arrival,
               p.show_on_homepage, p.created_at, p.updated_at
        FROM products p
        LEFT JOIN categories c ON c.id = p.category_id
-       ${categoryFilter}
+       WHERE c.category_name IN (${PRODUCT_CATEGORIES.map(() => "?").join(", ")}) ${categoryFilter}
        ORDER BY p.updated_at DESC, p.id DESC
        LIMIT 500`,
-      parameters,
+      [...PRODUCT_CATEGORIES, ...parameters],
     );
     const productIds = products.map((product) => product.id);
     let images: ImageRow[] = [];
@@ -796,6 +806,7 @@ export async function GET(request: Request) {
         id: String(product.id),
         name: product.product_name,
         category: product.category_name,
+        productType: product.product_type,
         description: product.description ?? "",
         price: Number(product.price),
         stock: Number(product.stock_quantity),

@@ -74,7 +74,7 @@ export default function Newsletter() {
               required
               autoComplete="email"
               placeholder="Your email address"
-              className="min-h-12 min-w-0 flex-1 rounded-full border border-[#E3D8C9] bg-[#FFFFFF] px-5 text-sm placeholder:text-[#6E655F]"
+              className="min-h-12 min-w-0 flex-1 rounded-full border border-[#E3D8C9] bg-[#FAF7F2] px-5 text-sm placeholder:text-[#6E655F]"
             />
             <button
               type="submit"

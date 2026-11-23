@@ -46,7 +46,7 @@ async function getDashboardData(userId: number) {
       [userId],
     ),
     pool.execute<RowDataPacket[]>(
-      "SELECT id, order_number, status, total_amount, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
+      "SELECT id, order_number, status, order_type, payment_status, total_amount, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
       [userId],
     ),
     pool.execute<RowDataPacket[]>(
@@ -77,11 +77,11 @@ export default async function CustomerDashboardPage() {
   const addresses = data.addresses as SavedAddress[];
 
   return (
-    <main className="min-h-screen bg-[#FFFFFF] px-3 py-6 sm:px-6 sm:py-10 lg:px-8">
+    <main className="min-h-screen bg-[#FAF7F2] px-3 py-6 sm:px-6 sm:py-10 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-col gap-4 rounded-2xl bg-[#1E1B18] px-5 py-5 text-white sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-6">
           <div>
-            <p className="eyebrow eyebrow-on-dark">Your All the Good Things account</p>
+            <p className="eyebrow eyebrow-on-dark">Your Little Treasures account</p>
             <h1 className="serif-display mt-2 text-4xl text-white sm:text-5xl">
               Welcome back, {data.profile.full_name.split(" ")[0] || "friend"}.
             </h1>
@@ -89,7 +89,7 @@ export default async function CustomerDashboardPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/"
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#B85042] px-5 text-xs font-semibold tracking-[0.08em] text-[#1E1B18] transition-colors hover:brightness-95"
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#B85042] px-5 text-xs font-semibold tracking-[0.08em] text-white transition-colors hover:brightness-95"
             >
               BACK TO SHOP
             </Link>
@@ -100,10 +100,10 @@ export default async function CustomerDashboardPage() {
         <section className="grid gap-4 md:grid-cols-3">
           <a
             href="#profile-settings"
-            className="group rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-5 transition-shadow hover:shadow-md sm:p-6"
+            className="group rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-5 transition-shadow hover:shadow-md sm:p-6"
           >
             <div className="flex items-center gap-3">
-              <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#B85042] text-sm font-medium text-[#1E1B18]">
+              <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#B85042] text-sm font-medium text-white">
                 {data.profile.profile_image ? (
                   <Image
                     src={data.profile.profile_image}
@@ -139,7 +139,7 @@ export default async function CustomerDashboardPage() {
           </a>
           <a
             href="#recent-orders"
-            className="rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-5 transition-shadow hover:shadow-md sm:p-6"
+            className="rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-5 transition-shadow hover:shadow-md sm:p-6"
           >
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6E655F]">
               Recent orders
@@ -149,7 +149,7 @@ export default async function CustomerDashboardPage() {
           </a>
           <a
             href="#saved-addresses"
-            className="rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-5 transition-shadow hover:shadow-md sm:p-6"
+            className="rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-5 transition-shadow hover:shadow-md sm:p-6"
           >
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6E655F]">
               Saved addresses
@@ -161,7 +161,7 @@ export default async function CustomerDashboardPage() {
 
         <nav
           aria-label="Account sections"
-          className="mt-6 flex gap-2 overflow-x-auto rounded-full border border-[#E3D8C9] bg-[#FFFFFF] p-2"
+          className="mt-6 flex gap-2 overflow-x-auto rounded-full border border-[#E3D8C9] bg-[#FAF7F2] p-2"
         >
           {[
             ["Profile", "profile-settings"],
@@ -172,7 +172,7 @@ export default async function CustomerDashboardPage() {
             <a
               key={id}
               href={`#${id}`}
-              className="min-h-9 shrink-0 rounded-full px-4 py-2 text-xs font-medium text-[#6E655F] transition-colors hover:bg-[#B85042] hover:text-[#1E1B18]"
+              className="min-h-9 shrink-0 rounded-full px-4 py-2 text-xs font-medium text-[#6E655F] transition-colors hover:bg-[#B85042] hover:text-white"
             >
               {label}
             </a>
@@ -200,7 +200,7 @@ export default async function CustomerDashboardPage() {
 
         <section
           id="recent-orders"
-          className="mt-5 scroll-mt-24 rounded-2xl border border-[#E3D8C9] bg-[#FFFFFF] p-5 shadow-sm sm:p-6"
+          className="mt-5 scroll-mt-24 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-5 shadow-sm sm:p-6"
         >
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -219,6 +219,7 @@ export default async function CustomerDashboardPage() {
                   <tr className="border-b border-[#E3D8C9] text-[10px] uppercase tracking-[0.1em] text-[#6E655F]">
                     <th className="px-2 py-3 font-semibold">Order</th>
                     <th className="px-2 py-3 font-semibold">Status</th>
+                    <th className="px-2 py-3 font-semibold">Payment</th>
                     <th className="px-2 py-3 font-semibold">Amount</th>
                     <th className="px-2 py-3 font-semibold">Created</th>
                   </tr>
@@ -228,6 +229,7 @@ export default async function CustomerDashboardPage() {
                     <tr key={String(order.id)} className="border-b border-[#F1EBE1] last:border-0">
                       <td className="px-2 py-3 font-medium text-[#1E1B18]">{String(order.order_number ?? "N/A")}</td>
                       <td className="px-2 py-3 capitalize text-[#6E655F]">{String(order.status ?? "pending")}</td>
+                      <td className="px-2 py-3 capitalize text-[#6E655F]">{String(order.payment_status ?? "pending").replaceAll("_", " ")}</td>
                       <td className="px-2 py-3 font-medium text-[#1E1B18]">{formatPrice(order.total_amount)}</td>
                       <td className="px-2 py-3 text-[#6E655F]">{formatDate(order.created_at)}</td>
                     </tr>

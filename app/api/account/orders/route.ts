@@ -18,7 +18,7 @@ export async function GET() {
 
   try {
     const [rows] = await pool.query(
-      "SELECT id, order_number, status, total_amount, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
+      "SELECT id, order_number, status, order_type, payment_status, total_amount, currency, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
       [user.id],
     );
 

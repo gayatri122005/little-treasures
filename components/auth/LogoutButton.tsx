@@ -38,7 +38,7 @@ export default function LogoutButton() {
         type="button"
         onClick={handleLogout}
         disabled={busy}
-        className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#E3D8C9] bg-[#FFFFFF] px-4 text-xs font-semibold tracking-[0.08em] text-[#1E1B18] transition-colors hover:border-[#1E1B18] hover:text-[#1E1B18] disabled:cursor-wait disabled:opacity-60"
+        className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#E3D8C9] bg-[#FAF7F2] px-4 text-xs font-semibold tracking-[0.08em] text-[#1E1B18] transition-colors hover:border-[#1E1B18] hover:text-[#1E1B18] disabled:cursor-wait disabled:opacity-60"
       >
         {busy ? "SIGNING OUT…" : "SIGN OUT"}
       </button>
