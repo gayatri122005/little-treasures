@@ -10,11 +10,21 @@ if (fs.existsSync(envFile)) {
 }
 
 async function main() {
-  const adminEmail = process.env.INIT_ADMIN_EMAIL || "aartidhuri12@gmail.com";
+  const adminEmail = (process.env.INIT_ADMIN_EMAIL || "aartidhuri12@gmail.com").trim().toLowerCase();
   const adminPassword = process.env.INIT_ADMIN_PASSWORD;
 
   if (!adminPassword) {
     throw new Error("INIT_ADMIN_PASSWORD is required before seeding the admin account.");
+  }
+  if (
+    Buffer.byteLength(adminPassword, "utf8") > 72 ||
+    adminPassword.length < 8 ||
+    !/[a-z]/.test(adminPassword) ||
+    !/[A-Z]/.test(adminPassword) ||
+    !/\d/.test(adminPassword) ||
+    !/[^A-Za-z0-9]/.test(adminPassword)
+  ) {
+    throw new Error("INIT_ADMIN_PASSWORD must be 8-72 bytes with uppercase, lowercase, number, and special characters.");
   }
 
   const pool = mysql.createPool({
@@ -33,6 +43,9 @@ async function main() {
       full_name VARCHAR(120) NOT NULL,
       email VARCHAR(255) NOT NULL,
       mobile VARCHAR(32) DEFAULT NULL,
+      email_verified TINYINT(1) NOT NULL DEFAULT 1,
+      account_status ENUM('active','suspended') NOT NULL DEFAULT 'active',
+      session_version INT UNSIGNED NOT NULL DEFAULT 0,
       password_hash VARCHAR(255) NOT NULL,
       profile_image VARCHAR(255) DEFAULT NULL,
       role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer',

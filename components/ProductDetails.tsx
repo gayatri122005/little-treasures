@@ -36,6 +36,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [imageZoomed, setImageZoomed] = useState(false);
+  const [desktopImageOpen, setDesktopImageOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -194,9 +195,48 @@ export default function ProductDetails({ productId }: { productId: string }) {
         <span className="text-[#1E1B18]">{product.name}</span>
       </nav>
 
-      <div className="grid gap-7 lg:grid-cols-2 lg:gap-12">
-        <div className="mx-auto min-w-0 w-full max-w-[550px] lg:sticky lg:top-28 lg:self-start">
-          <div className="product-gallery-main group relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#F1EBE1]">
+      <div className="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,1.18fr)_minmax(350px,0.82fr)] lg:gap-10 xl:gap-14">
+        <div className="mx-auto min-w-0 w-full max-w-[680px] lg:sticky lg:top-28 lg:self-start">
+          {activeVideo ? (
+            <video
+              key={activeVideo.src}
+              controls
+              playsInline
+              preload="metadata"
+              poster={activeVideo.thumbnail ?? undefined}
+              className="hidden aspect-[4/5] w-full rounded-xl bg-[#1E1B18] object-contain lg:block"
+            >
+              <source src={activeVideo.src} />
+              Your browser does not support product video playback.
+            </video>
+          ) : images.length > 1 ? (
+            <div className="hidden grid-cols-2 gap-2 lg:grid xl:gap-3" aria-label="Product image gallery">
+              {images.map((image, index) => (
+                <button
+                  type="button"
+                  key={`${image}-desktop-${index}`}
+                  onClick={() => {
+                    setSelectedImage(image);
+                    setDesktopImageOpen(true);
+                  }}
+                  aria-label={`View product image ${index + 1} larger`}
+                  className="group relative aspect-[0.88] overflow-hidden rounded-xl bg-[#F1EBE1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B85042]"
+                >
+                  <Image
+                    src={image}
+                    alt={`${product.name}, view ${index + 1}`}
+                    fill
+                    unoptimized
+                    loading="eager"
+                    sizes="(max-width: 1279px) 42vw, 36vw"
+                    className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.025]"
+                  />
+                  <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-black/5" />
+                </button>
+              ))}
+            </div>
+          ) : null}
+          <div className={`product-gallery-main group relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#F1EBE1] ${images.length > 1 || activeVideo ? "lg:hidden" : ""}`}>
             {activeVideo ? (
               <video
                 key={activeVideo.src}
@@ -245,7 +285,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
           {images.length + product.videos.length > 1 && (
             <div
               aria-label="Product media thumbnails"
-              className="mt-3 flex gap-2 overflow-x-auto pb-2"
+              className={`mt-3 flex gap-2 overflow-x-auto pb-2 ${images.length > 1 && product.videos.length === 0 ? "lg:hidden" : ""}`}
             >
               {images.map((image, index) => (
                 <button
@@ -307,7 +347,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
           )}
         </div>
 
-        <section className="flex min-w-0 w-full flex-col items-start self-start rounded-2xl border border-[#E3D8C9] bg-[#F1EBE1] p-5 sm:p-7 lg:p-9">
+        <section className="flex min-w-0 w-full flex-col items-start self-start rounded-2xl border border-[#E3D8C9] bg-[#F1EBE1] p-5 sm:p-7 lg:sticky lg:top-28 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
           <p className="eyebrow">{product.category}</p>
           {product.productType && <p className="mt-2 text-xs text-[#6E655F]">{product.productType}</p>}
           <h1 className="serif-display mt-3 text-4xl leading-[1.05] sm:text-5xl">
@@ -399,6 +439,18 @@ export default function ProductDetails({ productId }: { productId: string }) {
           </p>
         </section>
       </div>
+
+      {desktopImageOpen && selectedImage && (
+        <div className="fixed inset-0 z-[60] hidden items-center justify-center bg-[#1E1B18]/85 p-8 lg:flex" role="dialog" aria-modal="true" aria-label="Enlarged product image">
+          <button type="button" className="absolute inset-0 cursor-zoom-out" onClick={() => setDesktopImageOpen(false)} aria-label="Dismiss enlarged image preview" />
+          <div className="relative z-10 h-[min(86vh,900px)] w-[min(84vw,1100px)]">
+            <Image src={selectedImage} alt={product.name} fill unoptimized sizes="84vw" className="object-contain" />
+          </div>
+          <button type="button" onClick={() => setDesktopImageOpen(false)} aria-label="Close enlarged image" className="absolute right-5 top-5 z-20 flex size-11 items-center justify-center rounded-full bg-[#FAF7F2] text-[#1E1B18] shadow-lg">
+            <Icon name="close" className="size-5" />
+          </button>
+        </div>
+      )}
 
       {relatedProducts.length > 0 && (
         <section className="mt-16 border-t border-[#E3D8C9] pt-10">

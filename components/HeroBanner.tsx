@@ -68,9 +68,9 @@ export default function HeroBanner() {
   }
 
   return (
-    <section className="page-shell pb-8 pt-4 sm:pb-12 sm:pt-6" id="top">
+    <section className="page-shell pb-6 pt-4 sm:pb-9 sm:pt-5" id="top">
       <div
-        className="relative isolate grid overflow-hidden rounded-[1.5rem] bg-[#1E1B18] shadow-[0_24px_70px_rgba(30,27,24,0.12)] md:min-h-[440px] md:grid-cols-[0.88fr_1.12fr] lg:min-h-[500px]"
+        className="relative isolate grid overflow-hidden rounded-[1.25rem] bg-[#1E1B18] shadow-[0_18px_48px_rgba(30,27,24,0.1)] md:min-h-[360px] md:grid-cols-[0.9fr_1.1fr] lg:min-h-[420px]"
         aria-roledescription="carousel"
         aria-label="Explore Little Treasures collections"
       >

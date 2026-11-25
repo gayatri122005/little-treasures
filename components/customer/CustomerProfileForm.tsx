@@ -5,10 +5,12 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { profileSchema } from "@/lib/validation";
+import ResendVerificationForm from "@/components/auth/ResendVerificationForm";
 
 const profileResponseSchema = z.object({
   success: z.boolean(),
   message: z.string().optional(),
+  emailVerificationRequired: z.boolean().optional(),
   user: z
     .object({
       full_name: z.string(),
@@ -53,6 +55,7 @@ export default function CustomerProfileForm({
   const [imageMessage, setImageMessage] = useState("");
   const [imageError, setImageError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [verificationPending, setVerificationPending] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
@@ -164,6 +167,10 @@ export default function CustomerProfileForm({
         setProfileImage(result.data.user.profile_image);
       }
       setMessage(result.data.message ?? "Your profile has been updated.");
+      if (result.data.emailVerificationRequired) {
+        setVerificationPending(true);
+        return;
+      }
       router.refresh();
     } catch {
       setError("Unable to reach the server. Please try again.");
@@ -184,6 +191,13 @@ export default function CustomerProfileForm({
       >
         Edit profile
       </h2>
+      {verificationPending && (
+        <div className="mt-4 rounded border border-[#E3D8C9] bg-white p-4 text-sm leading-6 text-[#6E655F]">
+          <p className="font-semibold text-[#1E1B18]">Verify your updated email to sign in again.</p>
+          <p className="mt-1">Your current session has been signed out for security.</p>
+          <ResendVerificationForm initialEmail={email} />
+        </div>
+      )}
       <div className="mt-5 flex flex-col gap-4 border-b border-[#E3D8C9] pb-5 sm:flex-row sm:items-center">
         <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#F1EBE1] text-lg font-medium text-[#1E1B18]">
           {currentImage ? (
@@ -218,6 +232,7 @@ export default function CustomerProfileForm({
             type="file"
             accept="image/jpeg,image/png,image/webp"
             onChange={handleImageSelection}
+            disabled={verificationPending}
             className="block min-h-11 w-full text-sm file:mr-3 file:min-h-10 file:border-0 file:bg-[#F1EBE1] file:px-3 file:text-xs file:font-medium file:text-[#1E1B18]"
           />
           <p className="mt-1 text-xs text-[#6E655F]">
@@ -227,7 +242,7 @@ export default function CustomerProfileForm({
         <button
           type="button"
           onClick={handleImageUpload}
-          disabled={!selectedImage || uploadingImage}
+          disabled={!selectedImage || uploadingImage || verificationPending}
           className="min-h-11 shrink-0 bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {uploadingImage ? "UPLOADING…" : "UPLOAD PHOTO"}
@@ -259,6 +274,7 @@ export default function CustomerProfileForm({
             maxLength={120}
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
+            disabled={verificationPending}
             className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
           />
         </div>
@@ -278,6 +294,7 @@ export default function CustomerProfileForm({
             maxLength={255}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            disabled={verificationPending}
             className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
           />
         </div>
@@ -296,13 +313,14 @@ export default function CustomerProfileForm({
             maxLength={20}
             value={mobile}
             onChange={(event) => setMobile(event.target.value)}
+            disabled={verificationPending}
             className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
           />
         </div>
         <div className="flex items-end">
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || verificationPending}
             className="min-h-11 w-full bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-wait disabled:opacity-60 sm:w-auto"
           >
             {saving ? "SAVING…" : "SAVE CHANGES"}

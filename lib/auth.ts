@@ -1,6 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import type { RowDataPacket } from "mysql2";
+
+import pool from "@/lib/db";
 
 export const SESSION_COOKIE_NAME = "little_treasures_session";
 
@@ -22,6 +25,20 @@ export type AppUser = {
   role: "customer" | "admin";
   created_at?: string | null;
   updated_at?: string | null;
+};
+
+export type CurrentUser = AppUser & { sessionVersion: number };
+
+type AuthUserRow = RowDataPacket & {
+  id: number;
+  full_name: string;
+  email: string;
+  mobile: string | null;
+  profile_image: string | null;
+  role: "customer" | "admin";
+  email_verified: number;
+  account_status: "active" | "suspended";
+  session_version: number;
 };
 
 export function sanitizeUser(user: Record<string, unknown>): AppUser {
@@ -66,12 +83,13 @@ export function clearSessionCookie(response: NextResponse) {
   });
 }
 
-export async function createSessionToken(user: AppUser) {
+export async function createSessionToken(user: AppUser, sessionVersion = 0) {
   return new SignJWT({
     userId: user.id,
     email: user.email,
     role: user.role,
     fullName: user.full_name,
+    sessionVersion,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -82,13 +100,23 @@ export async function createSessionToken(user: AppUser) {
 export async function verifySessionToken(token: string) {
   const secret = getSessionSecret();
   try {
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
+    if (!Number.isSafeInteger(payload.userId) || Number(payload.userId) < 1) {
+      return null;
+    }
+    if (
+      payload.sessionVersion !== undefined &&
+      (!Number.isSafeInteger(payload.sessionVersion) || Number(payload.sessionVersion) < 0)
+    ) {
+      return null;
+    }
 
     return payload as {
       userId: number;
       email: string;
       role: "customer" | "admin";
       fullName?: string;
+      sessionVersion?: number;
     } | null;
   } catch {
     return null;
@@ -109,12 +137,27 @@ export async function getCurrentUser() {
     return null;
   }
 
+  const [rows] = await pool.execute<AuthUserRow[]>(
+    `SELECT id, full_name, email, mobile, profile_image, role,
+            email_verified, account_status, session_version
+     FROM users WHERE id = ? LIMIT 1`,
+    [payload.userId],
+  );
+  const row = rows[0];
+
+  if (
+    !row ||
+    row.account_status !== "active" ||
+    Number(row.email_verified) !== 1 ||
+    Number(row.session_version) !== Number(payload.sessionVersion ?? 0)
+  ) {
+    return null;
+  }
+
   return {
-    id: payload.userId,
-    full_name: payload.fullName || "",
-    email: payload.email,
-    role: payload.role,
-  } as AppUser;
+    ...sanitizeUser(row),
+    sessionVersion: Number(row.session_version),
+  } satisfies CurrentUser;
 }
 
 export async function requireAuth() {

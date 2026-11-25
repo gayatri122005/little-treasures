@@ -4,11 +4,19 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { clearSessionCookie, getCurrentUser } from "@/lib/auth";
 import pool from "@/lib/db";
+import { isSameOriginRequest } from "@/lib/auth-security";
 import { changePasswordSchema } from "@/lib/validation";
 
 type PasswordRow = RowDataPacket & { password_hash: string };
 
 export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { success: false, message: "Request origin is not allowed." },
+      { status: 403 },
+    );
+  }
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json(
@@ -64,7 +72,7 @@ export async function POST(request: Request) {
 
     const newPasswordHash = await bcrypt.hash(parsed.data.newPassword, 12);
     const [result] = await pool.execute<ResultSetHeader>(
-      "UPDATE users SET password_hash = ?, updated_at = NOW() WHERE id = ? AND password_hash = ?",
+      "UPDATE users SET password_hash = ?, session_version = session_version + 1, updated_at = NOW() WHERE id = ? AND password_hash = ?",
       [newPasswordHash, user.id, passwordHash],
     );
     if (result.affectedRows !== 1) {

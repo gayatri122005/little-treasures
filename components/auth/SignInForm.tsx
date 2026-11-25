@@ -1,21 +1,32 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import AuthInput from "@/components/auth/AuthInput";
 import PasswordToggle from "@/components/auth/PasswordToggle";
+import ResendVerificationForm from "@/components/auth/ResendVerificationForm";
+import { loginSchema, validationErrors } from "@/lib/validation";
 
 export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
-  const [showResetNotice, setShowResetNotice] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [needsVerification, setNeedsVerification] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setFieldErrors({});
+    setNeedsVerification(false);
+    const parsedInput = loginSchema.safeParse(form);
+    if (!parsedInput.success) {
+      setFieldErrors(validationErrors(parsedInput.error));
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -24,22 +35,27 @@ export default function SignInForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify(form),
+        body: JSON.stringify(parsedInput.data),
       });
       const result = await response.json();
 
       if (!response.ok) {
+        if (result.code === "EMAIL_NOT_VERIFIED") setNeedsVerification(true);
         throw new Error(result.message || "Unable to sign in.");
       }
 
       const requestedRedirect = searchParams.get("redirect");
       const defaultRedirect =
         result.user?.role === "admin" ? "/admin" : "/customer-dashboard";
-      const redirect =
-        requestedRedirect?.startsWith("/") &&
-        !requestedRedirect.startsWith("//")
-          ? requestedRedirect
-          : defaultRedirect;
+      let redirect = defaultRedirect;
+      if (requestedRedirect && requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//") && !requestedRedirect.includes("\\")) {
+        try {
+          const target = new URL(requestedRedirect, window.location.origin);
+          if (target.origin === window.location.origin) redirect = `${target.pathname}${target.search}${target.hash}`;
+        } catch {
+          redirect = defaultRedirect;
+        }
+      }
 
       router.push(redirect);
       router.refresh();
@@ -75,6 +91,7 @@ export default function SignInForm() {
         onChange={(event) =>
           setForm((current) => ({ ...current, email: event.target.value }))
         }
+        error={fieldErrors.email}
         required
       />
 
@@ -88,6 +105,7 @@ export default function SignInForm() {
         onChange={(event) =>
           setForm((current) => ({ ...current, password: event.target.value }))
         }
+        error={fieldErrors.password}
         suffix={
           <PasswordToggle
             visible={showPassword}
@@ -98,25 +116,10 @@ export default function SignInForm() {
       />
 
       <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => setShowResetNotice((visible) => !visible)}
-          className="text-xs font-medium text-[#1E1B18] underline decoration-[#B85042] underline-offset-4 hover:text-[#9A3F33]"
-          aria-expanded={showResetNotice}
-        >
+        <Link href="/forgot-password" className="text-xs font-medium text-[#1E1B18] underline decoration-[#B85042] underline-offset-4 hover:text-[#9A3F33]">
           Forgot password?
-        </button>
+        </Link>
       </div>
-
-      {showResetNotice && (
-        <p
-          role="status"
-          className="rounded-[3px] border border-[#E3D8C9] bg-[#FAF7F2] px-3 py-2.5 text-xs leading-5 text-[#6E655F]"
-        >
-          Password reset is not available yet. Please check back soon for
-          account recovery options.
-        </p>
-      )}
 
       {error && (
         <p
@@ -126,6 +129,7 @@ export default function SignInForm() {
           {error}
         </p>
       )}
+      {needsVerification && <ResendVerificationForm initialEmail={form.email} />}
 
       <button
         type="submit"

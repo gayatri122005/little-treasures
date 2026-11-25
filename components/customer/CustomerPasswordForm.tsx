@@ -106,6 +106,7 @@ export default function CustomerPasswordForm() {
             type="password"
             autoComplete="new-password"
             minLength={8}
+            maxLength={72}
             required
             value={form.newPassword}
             onChange={(event) =>
@@ -124,6 +125,7 @@ export default function CustomerPasswordForm() {
             type="password"
             autoComplete="new-password"
             minLength={8}
+            maxLength={72}
             required
             value={form.confirmPassword}
             onChange={(event) =>
@@ -132,6 +134,9 @@ export default function CustomerPasswordForm() {
             className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
           />
         </div>
+        <p className="text-[11px] leading-5 text-[#6E655F] sm:col-span-2">
+          Use at least 8 characters with an uppercase letter, lowercase letter, number, and special character.
+        </p>
         {error && (
           <p className="text-sm text-[#9b5545] sm:col-span-2" role="alert">
             {error}

@@ -3,6 +3,9 @@ CREATE TABLE IF NOT EXISTS users (
   full_name VARCHAR(120) NOT NULL,
   email VARCHAR(255) NOT NULL,
   mobile VARCHAR(32) DEFAULT NULL,
+  email_verified TINYINT(1) NOT NULL DEFAULT 1,
+  account_status ENUM('active','suspended') NOT NULL DEFAULT 'active',
+  session_version INT UNSIGNED NOT NULL DEFAULT 0,
   password_hash VARCHAR(255) NOT NULL,
   profile_image VARCHAR(255) DEFAULT NULL,
   role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer',
@@ -10,6 +13,46 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_users_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS auth_email_verification_tokens (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  token_hash CHAR(64) NOT NULL,
+  expires_at DATETIME(3) NOT NULL,
+  used_at DATETIME(3) DEFAULT NULL,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_auth_email_token_hash (token_hash),
+  KEY idx_auth_email_token_user (user_id, used_at, expires_at),
+  CONSTRAINT fk_auth_email_token_user FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS auth_password_reset_tokens (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  token_hash CHAR(64) NOT NULL,
+  expires_at DATETIME(3) NOT NULL,
+  used_at DATETIME(3) DEFAULT NULL,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_auth_password_token_hash (token_hash),
+  KEY idx_auth_password_token_user (user_id, used_at, expires_at),
+  CONSTRAINT fk_auth_password_token_user FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS auth_rate_limits (
+  action VARCHAR(32) NOT NULL,
+  subject_hash CHAR(64) NOT NULL,
+  window_started_at DATETIME(3) NOT NULL,
+  attempt_count INT UNSIGNED NOT NULL DEFAULT 0,
+  blocked_until DATETIME(3) DEFAULT NULL,
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+    ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (action, subject_hash),
+  KEY idx_auth_rate_limit_updated (updated_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS categories (

@@ -86,12 +86,12 @@ h3 {
 }
 
 .page-shell {
-  width: min(100% - 1.5rem, 82rem);
+  width: min(100% - 1.5rem, 80rem);
   margin-inline: auto;
 }
 
 .collection-shell {
-  width: min(100% - 1.5rem, 96rem);
+  width: min(100% - 1.5rem, 84rem);
   margin-inline: auto;
 }
 
@@ -129,11 +129,11 @@ h3 {
 
 @media (min-width: 640px) {
   .page-shell {
-    width: min(100% - 3rem, 82rem);
+    width: min(100% - 3rem, 80rem);
   }
 
   .collection-shell {
-    width: min(100% - 3rem, 96rem);
+    width: min(100% - 3rem, 84rem);
   }
 }
 

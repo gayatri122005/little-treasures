@@ -14,7 +14,7 @@ import Link from "next/link";
 
 function ShopCategories() {
   return (
-    <section id="categories" className="page-shell scroll-mt-8 py-14 sm:py-20">
+    <section id="categories" className="page-shell scroll-mt-8 py-10 sm:py-14">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow">Little things, just your style</p>
@@ -30,7 +30,7 @@ function ShopCategories() {
           <Icon name="arrow" className="size-4" />
         </Link>
       </div>
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-9 sm:grid-cols-3 sm:gap-5">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-7 sm:grid-cols-3 sm:gap-5">
         {categories.map((category) => (
           <CategoryCard key={category.name} category={category} />
         ))}
@@ -41,7 +41,7 @@ function ShopCategories() {
 
 function BrandStory() {
   return (
-    <section id="story" className="page-shell py-16 sm:py-24">
+    <section id="story" className="page-shell py-12 sm:py-16">
       <div className="grid gap-8 border-y border-[#E3D8C9] py-10 md:grid-cols-[0.8fr_1.2fr] md:items-center md:gap-16 md:py-14">
         <div>
           <p className="eyebrow">Why choose Little Treasures</p>

@@ -51,7 +51,7 @@ export default function FeaturedProducts() {
         .slice(0, 4);
 
   return (
-    <section id="featured" className="page-shell scroll-mt-8 py-14 sm:py-20">
+    <section id="featured" className="page-shell scroll-mt-8 py-10 sm:py-14">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow">A thoughtful collection</p>
@@ -77,7 +77,7 @@ export default function FeaturedProducts() {
         </a>
       </div>
 
-      <div className="mt-7 flex gap-2 overflow-x-auto pb-2">
+      <div className="horizontal-rail mt-6 flex gap-2 overflow-x-auto pb-2">
         <button
           type="button"
           onClick={() => {
@@ -112,7 +112,7 @@ export default function FeaturedProducts() {
 
       {loading ? (
         <div
-          className="mt-6 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6"
+          className="mt-6 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6"
           aria-label="Loading products"
           aria-busy="true"
         >
@@ -138,7 +138,7 @@ export default function FeaturedProducts() {
           </button>
         </div>
       ) : visibleProducts.length ? (
-        <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7">
+        <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7 2xl:grid-cols-5">
           {visibleProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

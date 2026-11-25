@@ -1,10 +1,54 @@
 import { z } from "zod";
 
+const emailSchema = z
+  .string()
+  .trim()
+  .max(255, "Email address must be 255 characters or fewer.")
+  .toLowerCase()
+  .pipe(z.email("Please enter a valid email address."));
+
+const nameSchema = z
+  .string()
+  .trim()
+  .min(2, "Full name must be at least 2 characters.")
+  .max(120, "Full name must be 120 characters or fewer.")
+  .regex(
+    /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u,
+    "Use letters, spaces, apostrophes, periods, or hyphens in your name.",
+  );
+
+const indianMobileSchema = z
+  .string()
+  .trim()
+  .transform((value) => value.replace(/[\s()-]/g, ""))
+  .pipe(
+    z
+      .string()
+      .regex(
+        /^(?:\+91)?[6-9]\d{9}$/,
+        "Enter a valid 10-digit Indian mobile number, optionally prefixed with +91.",
+      )
+      .transform((value) => `+91${value.replace(/^\+91/, "")}`),
+  );
+
+const strongPasswordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters.")
+  .max(72, "Password must be 72 characters or fewer.")
+  .refine((value) => /[a-z]/.test(value), "Add a lowercase letter.")
+  .refine((value) => /[A-Z]/.test(value), "Add an uppercase letter.")
+  .refine((value) => /\d/.test(value), "Add a number.")
+  .refine((value) => /[^A-Za-z0-9]/.test(value), "Add a special character.")
+  .refine(
+    (value) => new TextEncoder().encode(value).byteLength <= 72,
+    "Password must be 72 bytes or fewer.",
+  );
+
 export const registerSchema = z.object({
-  fullName: z.string().trim().min(2, "Full name must be at least 2 characters."),
-  email: z.email("Please enter a valid email address."),
-  mobile: z.string().trim().max(20, "Mobile number is too long.").optional().or(z.literal("")),
-  password: z.string().min(8, "Password must be at least 8 characters."),
+  fullName: nameSchema,
+  email: emailSchema,
+  mobile: indianMobileSchema,
+  password: strongPasswordSchema,
   confirmPassword: z.string().min(8, "Please confirm your password."),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match.",
@@ -12,20 +56,42 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.email("Please enter a valid email address."),
-  password: z.string().min(8, "Password must be at least 8 characters."),
+  email: emailSchema,
+  password: z
+    .string()
+    .min(1, "Enter your password.")
+    .refine(
+      (value) => new TextEncoder().encode(value).byteLength <= 72,
+      "Invalid email or password.",
+    ),
 });
 
+export const emailOnlySchema = z.object({ email: emailSchema });
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(32, "This password reset link is invalid or expired."),
+    password: strongPasswordSchema,
+    confirmPassword: z.string().min(1, "Confirm your new password."),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
 export const profileSchema = z.object({
-  fullName: z.string().trim().min(2, "Full name must be at least 2 characters."),
-  email: z.email("Please enter a valid email address."),
+  fullName: nameSchema,
+  email: emailSchema,
   mobile: z.string().trim().max(20, "Mobile number is too long.").optional().or(z.literal("")),
 });
 
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, "Enter your current password."),
-    newPassword: z.string().min(8, "Your new password must be at least 8 characters."),
+    currentPassword: z
+      .string()
+      .min(1, "Enter your current password.")
+      .refine((value) => new TextEncoder().encode(value).byteLength <= 72, "Current password is invalid."),
+    newPassword: strongPasswordSchema,
     confirmPassword: z.string().min(1, "Confirm your new password."),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -49,3 +115,12 @@ export const addressSchema = z.object({
   country: z.string().trim().min(2, "Country is required.").max(100),
   isDefault: z.boolean().default(false),
 });
+
+export function validationErrors(error: z.ZodError) {
+  const errors: Record<string, string> = {};
+  for (const issue of error.issues) {
+    const field = String(issue.path[0] ?? "form");
+    if (!errors[field]) errors[field] = issue.message;
+  }
+  return errors;
+}

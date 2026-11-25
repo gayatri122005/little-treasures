@@ -129,7 +129,7 @@ export default function Navbar() {
         </p>
       )}
       <header className="sticky top-0 z-30 border-b border-[#E3D8C9] bg-[#FAF7F2]/95 text-[#1E1B18] shadow-[0_6px_24px_rgba(30,27,24,0.06)] backdrop-blur-md">
-        <div className="page-shell flex min-h-[68px] items-center justify-between gap-3 sm:min-h-[68px] sm:gap-5">
+        <div className="page-shell flex min-h-[64px] items-center justify-between gap-3 sm:gap-5">
           <Link
             href="/#top"
             className="flex shrink-0 items-center gap-2 text-[#1E1B18] sm:gap-2.5"
@@ -143,16 +143,16 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex min-w-0 flex-1 items-center justify-end gap-1.5 sm:gap-3">
             <form
               onSubmit={handleSearch}
-              className="relative hidden h-10 w-[min(24vw,320px)] min-w-[205px] items-center gap-2 rounded-full border border-[#E3D8C9] bg-[#F1EBE1] px-3 md:flex"
+              className="relative hidden h-11 min-w-0 max-w-[560px] flex-1 items-center gap-2 rounded-full border border-[#E3D8C9] bg-white px-4 md:flex"
               role="search"
             >
               <Icon name="search" className="size-4 shrink-0 text-[#6E655F]" />
               <input
                 aria-label="Search products"
-                placeholder="Search the collection..."
+                placeholder="Search for products, categories and more"
                 role="combobox"
                 aria-expanded={searchOpen && searchSuggestions.length > 0}
                 aria-controls="desktop-search-suggestions"
@@ -197,10 +197,11 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setAccountOpen(true)}
-              className="hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] md:flex"
+              className="hidden min-h-10 items-center justify-center gap-2 rounded-full px-2 transition-colors hover:bg-[#F1EBE1] md:flex"
               aria-label="Account information"
             >
               <Icon name="user" className="size-[19px]" />
+              <span className="hidden text-[11px] font-medium xl:inline">Account</span>
             </button>
             <button
               type="button"
@@ -219,7 +220,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative flex min-h-10 items-center justify-center gap-1.5 rounded-full px-2 transition-colors hover:bg-[#F1EBE1]"
+              className="relative flex min-h-10 items-center justify-center gap-1.5 rounded-full px-2 transition-colors hover:bg-[#F1EBE1] sm:px-3"
               aria-label={`Cart, ${cartCount} items`}
               aria-expanded={cartOpen}
             >
@@ -253,7 +254,7 @@ export default function Navbar() {
             <Icon name="search" className="size-4 shrink-0 text-[#6E655F]" />
             <input
               aria-label="Search products"
-              placeholder="Search the collection..."
+              placeholder="Search for products, categories and more"
               role="combobox"
               aria-expanded={searchOpen && searchSuggestions.length > 0}
               aria-controls="mobile-search-suggestions"
@@ -350,16 +351,20 @@ export default function Navbar() {
           </div>
         )}
         <nav aria-label="Shop categories" className="hidden border-t border-[#E3D8C9] min-[1200px]:block">
-          <div className="page-shell flex min-h-10 items-center justify-center gap-8">
+          <div className="page-shell flex min-h-11 items-center justify-center gap-6 xl:gap-8">
+            <Link href="/" className={`py-2 text-[11px] font-medium transition-colors hover:text-[#9A3F33] ${pathname === "/" ? "text-[#9A3F33]" : "text-[#6E655F]"}`}>Home</Link>
+            <Link href="/products" className={`py-2 text-[11px] font-medium transition-colors hover:text-[#9A3F33] ${pathname === "/products" && !selectedCategory ? "text-[#9A3F33]" : "text-[#6E655F]"}`}>Shop all</Link>
             {categories.map((category) => (
               <Link
                 key={category.name}
                 href={`/products?category=${encodeURIComponent(category.name)}`}
-                className="py-2 text-[11px] font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33]"
+                className={`py-2 text-[11px] font-medium transition-colors hover:text-[#9A3F33] ${selectedCategory === category.name ? "text-[#9A3F33]" : "text-[#6E655F]"}`}
               >
                 {category.name}
               </Link>
             ))}
+            <Link href="/about" className="py-2 text-[11px] font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33]">Our story</Link>
+            <Link href="/contact" className="py-2 text-[11px] font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33]">Contact</Link>
           </div>
         </nav>
         <nav
@@ -518,7 +523,7 @@ export default function Navbar() {
                             fill
                             unoptimized
                             sizes="86px"
-                            className="object-cover"
+                            className="object-contain p-1"
                           />
                         ) : (
                           <span className="flex h-full items-center justify-center">
@@ -592,8 +597,9 @@ export default function Navbar() {
                     <span className="font-medium">{formatPrice(subtotal)}</span>
                   </div>
                   <p className="mt-4 text-center text-xs text-[#6E655F]">
-                    Your bag is saved on this browser. Secure checkout is ready when you are.
+                    Your bag is saved on this browser. Final delivery and tax details are confirmed at checkout.
                   </p>
+                  <Link href="/cart" onClick={() => setCartOpen(false)} className="mt-3 inline-flex min-h-10 w-full items-center justify-center rounded-full border border-[#E3D8C9] bg-white text-xs font-semibold text-[#1E1B18] transition-colors hover:bg-[#FAF7F2]">View full bag</Link>
                   <Link href="/checkout" onClick={() => setCartOpen(false)} className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#B85042] text-sm font-semibold text-white hover:brightness-95">Continue to checkout</Link>
                 </div>
               </>
@@ -647,7 +653,7 @@ export default function Navbar() {
                           fill
                           unoptimized
                           sizes="86px"
-                          className="object-cover"
+                            className="object-contain p-1"
                         />
                       ) : (
                         <span className="flex h-full items-center justify-center">
