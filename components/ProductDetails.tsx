@@ -172,8 +172,13 @@ export default function ProductDetails({ productId }: { productId: string }) {
     setNotice(`${quantity} ${quantity === 1 ? "item" : "items"} added to your bag.`);
   }
 
+  function buyNow(productToBuy: ProductDetailsData) {
+    addProductToCart(productToBuy);
+    router.push("/checkout");
+  }
+
   return (
-    <main className="page-shell min-h-[65vh] py-8 sm:py-12">
+    <main className="page-shell min-h-[65vh] pb-36 pt-8 sm:py-12 md:pb-12">
       <nav
         aria-label="Breadcrumb"
         className="mb-6 flex flex-wrap items-center text-xs text-[#6E655F]"
@@ -364,19 +369,16 @@ export default function ProductDetails({ productId }: { productId: string }) {
               type="button"
               onClick={() => addProductToCart(product)}
               disabled={!available}
-              className="min-h-12 flex-1 rounded-full bg-[#B85042] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50"
+              className="hidden min-h-12 flex-1 rounded-full bg-[#B85042] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50 md:flex md:items-center md:justify-center"
             >
               {available ? "ADD TO BAG" : "SOLD OUT"}
             </button>
           </div>
           <button
             type="button"
-            onClick={() => {
-              addProductToCart(product);
-              router.push("/checkout");
-            }}
+            onClick={() => buyNow(product)}
             disabled={!available}
-            className="mt-3 min-h-12 w-full rounded-full border border-[#1E1B18] bg-[#FAF7F2] px-6 text-xs font-semibold tracking-[0.12em] text-[#1E1B18] transition-colors hover:bg-[#1E1B18] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-3 hidden min-h-12 w-full rounded-full border border-[#1E1B18] bg-[#FAF7F2] px-6 text-xs font-semibold tracking-[0.12em] text-[#1E1B18] transition-colors hover:bg-[#1E1B18] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 md:block"
           >
             BUY NOW
           </button>
@@ -409,6 +411,26 @@ export default function ProductDetails({ productId }: { productId: string }) {
           </div>
         </section>
       )}
+      <div className="fixed inset-x-0 bottom-[calc(3.625rem+env(safe-area-inset-bottom))] z-30 border-t border-[#E3D8C9] bg-[#FAF7F2]/95 px-3 py-2 shadow-[0_-6px_24px_rgba(30,27,24,0.08)] backdrop-blur-md md:hidden">
+        <div className="mx-auto grid max-w-xl grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => addProductToCart(product)}
+            disabled={!available}
+            className="min-h-11 rounded-lg border border-[#B85042] bg-[#FAF7F2] px-3 text-[10px] font-semibold tracking-[0.08em] text-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {available ? "ADD TO BAG" : "SOLD OUT"}
+          </button>
+          <button
+            type="button"
+            onClick={() => buyNow(product)}
+            disabled={!available}
+            className="min-h-11 rounded-lg bg-[#B85042] px-3 text-[10px] font-semibold tracking-[0.08em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            BUY NOW
+          </button>
+        </div>
+      </div>
     </main>
   );
 }

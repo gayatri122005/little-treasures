@@ -15,7 +15,10 @@ type IconName =
   | "arrow"
   | "play"
   | "refresh"
-  | "trash";
+  | "trash"
+  | "home"
+  | "grid"
+  | "shirt";
 
 type IconProps = SVGProps<SVGSVGElement> & { name: IconName };
 
@@ -55,6 +58,27 @@ export default function Icon({ name, ...props }: IconProps) {
       return (
         <svg {...shared}>
           <path d="M20.8 8.6c0 5-8.8 10-8.8 10s-8.8-5-8.8-10a4.6 4.6 0 0 1 8.8-1.8 4.6 4.6 0 0 1 8.8 1.8Z" />
+        </svg>
+      );
+    case "home":
+      return (
+        <svg {...shared}>
+          <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z" />
+        </svg>
+      );
+    case "grid":
+      return (
+        <svg {...shared}>
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+        </svg>
+      );
+    case "shirt":
+      return (
+        <svg {...shared}>
+          <path d="m8 4-5 3 2 5 3-1v9h8v-9l3 1 2-5-5-3-2 3h-4L8 4Z" />
         </svg>
       );
     case "menu":

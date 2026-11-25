@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import Icon from "@/components/icons";
 import { useStorefront } from "@/components/StorefrontContext";
@@ -26,6 +26,7 @@ function formatPrice(price: number) {
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const {
     cartItems,
     cartCount,
@@ -37,6 +38,7 @@ export default function Navbar() {
     setCartQuantity,
     removeFromCart,
     toggleWishlist,
+    selectedCategory,
   } = useStorefront();
   const { products } = useProductCatalog();
   const [cartOpen, setCartOpen] = useState(false);
@@ -195,7 +197,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setAccountOpen(true)}
-              className="hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] sm:flex"
+              className="hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] md:flex"
               aria-label="Account information"
             >
               <Icon name="user" className="size-[19px]" />
@@ -203,7 +205,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setWishlistOpen(true)}
-              className="relative hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] sm:flex"
+              className="relative hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-[#F1EBE1] md:flex"
               aria-label={`Open wishlist, ${wishlistCount} saved items`}
               aria-expanded={wishlistOpen}
             >
@@ -242,58 +244,55 @@ export default function Navbar() {
           </div>
         </div>
 
+        <div className="page-shell pb-3 md:hidden">
+          <form
+            onSubmit={handleSearch}
+            className="relative flex h-11 items-center gap-2 rounded-full border border-[#E3D8C9] bg-[#F1EBE1] px-4"
+            role="search"
+          >
+            <Icon name="search" className="size-4 shrink-0 text-[#6E655F]" />
+            <input
+              aria-label="Search products"
+              placeholder="Search the collection..."
+              role="combobox"
+              aria-expanded={searchOpen && searchSuggestions.length > 0}
+              aria-controls="mobile-search-suggestions"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              onFocus={() => setSearchOpen(true)}
+              className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#6E655F]"
+            />
+            {searchOpen && searchSuggestions.length > 0 && (
+              <ul
+                id="mobile-search-suggestions"
+                role="listbox"
+                className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-lg border border-[#E3D8C9] bg-white py-1 text-[#1E1B18] shadow-xl"
+              >
+                {searchSuggestions.map((product) => (
+                  <li key={product.id}>
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected="false"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => chooseSuggestion(product.name)}
+                      className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-[#F1EBE1]"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-xs font-medium">{product.name}</span>
+                        <span className="mt-0.5 block text-[10px] text-[#6E655F]">{product.category}</span>
+                      </span>
+                      <span className="shrink-0 text-xs">{formatPrice(product.price)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </form>
+        </div>
+
         {mobileOpen && (
           <div className="border-t border-[#E3D8C9] bg-[#FAF7F2] px-5 pb-5 pt-4 text-[#1E1B18] min-[1200px]:hidden">
-            <form
-              onSubmit={handleSearch}
-              className="relative mb-4 flex h-11 items-center gap-2 rounded-full border border-[#E3D8C9] bg-[#F1EBE1] px-4"
-              role="search"
-            >
-              <Icon name="search" className="size-4 text-[#6E655F]" />
-              <input
-                aria-label="Search products"
-                placeholder="Search the collection..."
-                role="combobox"
-                aria-expanded={searchOpen && searchSuggestions.length > 0}
-                aria-controls="mobile-search-suggestions"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                onFocus={() => setSearchOpen(true)}
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#6E655F]"
-              />
-              {searchOpen && searchSuggestions.length > 0 && (
-                <ul
-                  id="mobile-search-suggestions"
-                  role="listbox"
-                  className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-lg border border-[#E3D8C9] bg-[#FFFFFF] py-1 text-[#1E1B18] shadow-xl"
-                >
-                  {searchSuggestions.map((product) => (
-                    <li key={product.id}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected="false"
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => chooseSuggestion(product.name)}
-                        className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-[#1E1B18] hover:bg-[#F1EBE1]"
-                      >
-                        <span className="min-w-0">
-                          <span className="block truncate text-xs font-medium">
-                            {product.name}
-                          </span>
-                          <span className="mt-0.5 block text-[10px] text-[#6E655F]">
-                            {product.category}
-                          </span>
-                        </span>
-                        <span className="shrink-0 text-xs">
-                          {formatPrice(product.price)}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </form>
             <nav aria-label="Mobile navigation" className="grid gap-1">
               {navLinks.slice(0, 1).map((link) => (
                 <a
@@ -363,7 +362,91 @@ export default function Navbar() {
             ))}
           </div>
         </nav>
+        <nav
+          aria-label="Browse categories"
+          className="border-t border-[#E3D8C9] min-[1200px]:hidden"
+        >
+          <div className="horizontal-rail page-shell flex gap-2 overflow-x-auto py-2">
+            {categories.map((category, index) => {
+              const iconName = index === 0 ? "home" : index === 1 ? "shirt" : "sparkle";
+              const active = selectedCategory === category.name;
+              return (
+                <Link
+                  key={category.name}
+                  href={`/products?category=${encodeURIComponent(category.name)}`}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex min-h-12 min-w-[92px] shrink-0 items-center gap-2 rounded-xl px-2.5 text-[10px] font-medium transition-colors ${active ? "bg-[#E8DCCB] text-[#9A3F33]" : "text-[#6E655F] hover:bg-[#F1EBE1] hover:text-[#1E1B18]"}`}
+                >
+                  <Icon name={iconName} className="size-5 shrink-0" />
+                  <span className="max-w-[82px] leading-tight">{category.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
       </header>
+
+      <nav
+        aria-label="Mobile bottom navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E3D8C9] bg-[#FAF7F2]/95 pb-[env(safe-area-inset-bottom)] text-[#6E655F] shadow-[0_-6px_24px_rgba(30,27,24,0.08)] backdrop-blur-md md:hidden"
+      >
+        <div className="mx-auto grid min-h-[58px] max-w-xl grid-cols-5">
+          <Link
+            href="/"
+            aria-current={pathname === "/" ? "page" : undefined}
+            className={`flex min-h-[58px] flex-col items-center justify-center gap-1 text-[9px] font-medium ${pathname === "/" ? "text-[#9A3F33]" : "hover:text-[#1E1B18]"}`}
+          >
+            <Icon name="home" className="size-5" />
+            Home
+          </Link>
+          <Link
+            href="/products"
+            aria-current={pathname === "/products" ? "page" : undefined}
+            className={`flex min-h-[58px] flex-col items-center justify-center gap-1 text-[9px] font-medium ${pathname === "/products" ? "text-[#9A3F33]" : "hover:text-[#1E1B18]"}`}
+          >
+            <Icon name="grid" className="size-5" />
+            Categories
+          </Link>
+          <button
+            type="button"
+            onClick={() => setWishlistOpen(true)}
+            aria-label={`Open wishlist, ${wishlistCount} saved items`}
+            aria-pressed={wishlistOpen}
+            className={`relative flex min-h-[58px] flex-col items-center justify-center gap-1 text-[9px] font-medium ${wishlistOpen ? "text-[#9A3F33]" : "hover:text-[#1E1B18]"}`}
+          >
+            <Icon name="heart" className="size-5" />
+            Wishlist
+            {wishlistCount > 0 && (
+              <span className="absolute right-[calc(50%-19px)] top-1 flex size-4 items-center justify-center rounded-full bg-[#B85042] text-[8px] text-white">
+                {wishlistCount}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setAccountOpen(true)}
+            aria-label="Account information"
+            aria-expanded={accountOpen}
+            className={`flex min-h-[58px] flex-col items-center justify-center gap-1 text-[9px] font-medium ${accountOpen ? "text-[#9A3F33]" : "hover:text-[#1E1B18]"}`}
+          >
+            <Icon name="user" className="size-5" />
+            Account
+          </button>
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+            aria-label={`Cart, ${cartCount} items`}
+            aria-expanded={cartOpen}
+            className={`relative flex min-h-[58px] flex-col items-center justify-center gap-1 text-[9px] font-medium ${cartOpen ? "text-[#9A3F33]" : "hover:text-[#1E1B18]"}`}
+          >
+            <Icon name="bag" className="size-5" />
+            Cart
+            <span className="absolute right-[calc(50%-21px)] top-1 flex min-h-4 min-w-4 items-center justify-center rounded-full bg-[#B85042] px-1 text-[8px] text-white">
+              {cartCount}
+            </span>
+          </button>
+        </div>
+      </nav>
 
       <div className="sr-only" aria-live="polite">
         {searchTerm

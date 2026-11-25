@@ -33,6 +33,12 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+@media (max-width: 767px) {
+  body:has([aria-label="Mobile bottom navigation"]) {
+    padding-bottom: calc(3.625rem + env(safe-area-inset-bottom));
+  }
+}
+
 button,
 input {
   font: inherit;

@@ -431,10 +431,10 @@ export default function ProductListing({
             </div>
           ) : products.length ? (
             <>
-              <div className={products.length === 1 ? "grid grid-cols-1 justify-items-center" : "grid min-w-0 grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-y-7 xl:gap-x-6"}>
+              <div className={products.length === 1 ? "grid grid-cols-1" : "grid min-w-0 grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-y-7 xl:gap-x-6"}>
                 {products.map((product) => (
-                  <div key={product.id} className={products.length === 1 ? "w-full max-w-[360px]" : "min-w-0"}>
-                    <ProductCard product={product} />
+                  <div key={product.id} className="min-w-0">
+                    <ProductCard product={product} layout={products.length === 1 ? "feature" : "grid"} />
                   </div>
                 ))}
               </div>

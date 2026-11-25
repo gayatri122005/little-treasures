@@ -15,7 +15,13 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  product,
+  layout = "grid",
+}: {
+  product: Product;
+  layout?: "grid" | "feature";
+}) {
   const { addToCart, wishlistIds, toggleWishlist } = useStorefront();
   const [added, setAdded] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -30,8 +36,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <>
-      <article className="product-card group min-w-0 overflow-hidden rounded-2xl border border-[#E3D8C9] bg-[#F1EBE1] transition-shadow duration-300 hover:shadow-[0_14px_36px_rgba(30,27,24,0.09)]">
-      <div className="product-image relative aspect-[4/5] overflow-hidden bg-[#E8DCCB]">
+      <article className={`product-card group min-w-0 overflow-hidden rounded-2xl border border-[#E3D8C9] bg-[#F1EBE1] transition-shadow duration-300 hover:shadow-[0_14px_36px_rgba(30,27,24,0.09)] ${layout === "feature" ? "sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : ""}`}>
+      <div className={`product-image relative aspect-[4/5] overflow-hidden bg-[#E8DCCB] ${layout === "feature" ? "sm:aspect-auto sm:min-h-[360px]" : ""}`}>
         {product.image ? (
           <Link
             href={`/product/${encodeURIComponent(product.id)}`}
@@ -43,6 +49,7 @@ export default function ProductCard({ product }: { product: Product }) {
               alt={product.name}
               fill
               unoptimized
+              loading={layout === "feature" ? "eager" : "lazy"}
               sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 280px"
               className="object-contain"
             />
@@ -121,7 +128,7 @@ export default function ProductCard({ product }: { product: Product }) {
               : "ADD TO BAG"}
         </button>
       </div>
-      <div className="px-3 pb-3.5 pt-3 sm:px-4 sm:pb-4">
+      <div className={`px-3 pb-3.5 pt-3 sm:px-4 sm:pb-4 ${layout === "feature" ? "sm:flex sm:flex-col sm:justify-center sm:p-8 lg:p-12" : ""}`}>
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             {product.category && (
