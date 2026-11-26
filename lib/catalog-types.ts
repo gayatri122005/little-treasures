@@ -60,10 +60,14 @@ export type Product = {
 };
 
 export type ShopCategory = {
+  id?: string;
+  slug?: string;
   name: string;
   description: string;
   image: string;
   imageAlt: string;
+  status?: "active" | "inactive";
+  productCount?: number;
 };
 
 export type ProductVideo = z.infer<typeof productVideoSchema>;

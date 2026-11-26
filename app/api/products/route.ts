@@ -2,12 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { RowDataPacket } from "mysql2";
 import pool from "@/lib/db";
-import { PRODUCT_CATEGORIES, PRODUCT_TYPES } from "@/lib/product-categories";
 
 const querySchema = z.object({
   q: z.string().trim().max(120).optional(),
   category: z.string().trim().min(1).max(120).optional(),
-  productType: z.enum(PRODUCT_TYPES as [string, ...string[]]).optional(),
+  productType: z.string().trim().min(1).max(80).optional(),
   minPrice: z.coerce.number().finite().min(0).optional(),
   maxPrice: z.coerce.number().finite().min(0).optional(),
   availability: z.enum(["all", "in-stock", "out-of-stock"]).default("all"),
@@ -110,22 +109,17 @@ export async function GET(request: Request) {
       AND reservation_order.reservation_expires_at IS NOT NULL
       AND reservation_order.reservation_expires_at < NOW()
   ), 0))`;
-  const filters = ["p.status <> 'draft'", `c.category_name IN (${PRODUCT_CATEGORIES.map(() => "?").join(", ")})`];
-  const parameters: Array<string | number> = [...PRODUCT_CATEGORIES];
+  const filters = ["p.status <> 'draft'", "c.status = 'active'"];
+  const parameters: Array<string | number> = [];
 
   if (q) {
-    filters.push("(p.product_name LIKE ? OR p.description LIKE ? OR c.category_name LIKE ?)");
+    filters.push("(p.product_name LIKE ? OR p.description LIKE ? OR c.category_name LIKE ? OR c.slug LIKE ? OR p.product_type LIKE ?)");
     const term = `%${q}%`;
-    parameters.push(term, term, term);
+    parameters.push(term, term, term, term, term);
   }
   if (category) {
-    if (!PRODUCT_CATEGORIES.some((approved) => normalizeCategory(approved) === normalizeCategory(category))) {
-      return NextResponse.json({ success: false, message: "Choose one of the available collections." }, { status: 400 });
-    }
-    filters.push(
-      "REPLACE(REPLACE(REPLACE(LOWER(c.category_name), 'jewellery', 'jewelry'), '&', 'and'), ' ', '') = ?",
-    );
-    parameters.push(normalizeCategory(category));
+    filters.push("(REPLACE(REPLACE(REPLACE(LOWER(c.category_name), 'jewellery', 'jewelry'), '&', 'and'), ' ', '') = ? OR LOWER(c.slug) = LOWER(?))");
+    parameters.push(normalizeCategory(category), category.trim());
   }
   if (productType) {
     filters.push("p.product_type = ?");

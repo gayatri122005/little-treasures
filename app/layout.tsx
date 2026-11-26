@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Little Treasures | Home Decor, Kids Wear & Accessories",
+  title: "OmTreasure | Home Decor, Kids Wear & Accessories",
   description:
-    "Explore Home & Decor, Kids Wear, and Fashion & Hair Accessories at Little Treasures.",
+    "Explore Home & Decor, Kids Wear, and Fashion & Hair Accessories at OmTreasure.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

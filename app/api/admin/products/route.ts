@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import type { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
-import { PRODUCT_CATEGORIES, PRODUCT_TYPES, PRODUCT_TYPES_BY_CATEGORY } from "@/lib/product-categories";
 import pool from "@/lib/db";
 import {
   getProductMediaFilename,
@@ -64,8 +63,8 @@ const videoDescriptorSchema = z.union([
 const productSchema = z.object({
   id: z.string().regex(/^\d+$/).optional(),
   name: z.string().trim().min(1).max(160),
-  category: z.enum(PRODUCT_CATEGORIES),
-  productType: z.enum(PRODUCT_TYPES as [string, ...string[]]),
+  category: z.string().trim().min(1).max(120),
+  productType: z.string().trim().min(1).max(80),
   description: z.string().trim().max(10000),
   price: z.number().finite().min(0).max(99999999.99),
   stock: z.number().int().min(0).max(10000000),
@@ -76,9 +75,6 @@ const productSchema = z.object({
   images: z.array(imageDescriptorSchema).max(MAX_PRODUCT_IMAGES),
   videos: z.array(videoDescriptorSchema).max(MAX_PRODUCT_VIDEOS),
 }).superRefine((product, context) => {
-  if (!PRODUCT_TYPES_BY_CATEGORY[product.category].includes(product.productType)) {
-    context.addIssue({ code: "custom", message: "Choose a product type within this category.", path: ["productType"] });
-  }
   const primaryCount = product.images.filter((image) => image.primary).length;
   if (product.images.length > 0 && primaryCount !== 1) {
     context.addIssue({
@@ -745,13 +741,6 @@ export async function GET(request: Request) {
   }
 
   const category = new URL(request.url).searchParams.get("category");
-  if (
-    category &&
-    !PRODUCT_CATEGORIES.includes(category as (typeof PRODUCT_CATEGORIES)[number])
-  ) {
-    return errorResponse("Choose a valid product category.", 400);
-  }
-
   try {
     const parameters: string[] = [];
     const categoryFilter = category ? "AND c.category_name = ?" : "";
@@ -762,10 +751,10 @@ export async function GET(request: Request) {
               p.show_on_homepage, p.created_at, p.updated_at
        FROM products p
        LEFT JOIN categories c ON c.id = p.category_id
-       WHERE c.category_name IN (${PRODUCT_CATEGORIES.map(() => "?").join(", ")}) ${categoryFilter}
+       WHERE c.id IS NOT NULL ${categoryFilter}
        ORDER BY p.updated_at DESC, p.id DESC
        LIMIT 500`,
-      [...PRODUCT_CATEGORIES, ...parameters],
+      parameters,
     );
     const productIds = products.map((product) => product.id);
     let images: ImageRow[] = [];
@@ -799,9 +788,13 @@ export async function GET(request: Request) {
       videosByProduct.set(key, [...(videosByProduct.get(key) ?? []), video]);
     }
 
+    const [categoryRows] = await pool.execute<(RowDataPacket & { category_name: string })[]>(
+      "SELECT category_name FROM categories ORDER BY category_name ASC",
+    );
+
     return NextResponse.json({
       success: true,
-      categories: PRODUCT_CATEGORIES,
+      categories: categoryRows.map((row) => row.category_name),
       products: products.map((product) => ({
         id: String(product.id),
         name: product.product_name,

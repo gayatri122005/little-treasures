@@ -7,8 +7,9 @@ import { useStorefront } from "@/components/StorefrontContext";
 import {
   paginatedCatalogResponseSchema,
   type Product,
+  type ShopCategory,
 } from "@/lib/catalog-types";
-import { categories, categoryMatches } from "@/lib/category-presentation";
+import { categoryMatches } from "@/lib/category-presentation";
 import { PRODUCT_TYPES_BY_CATEGORY, type ProductCategory } from "@/lib/product-categories";
 import Icon from "@/components/icons";
 
@@ -25,6 +26,7 @@ export default function ProductListing({
   const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } =
     useStorefront();
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ShopCategory[]>([]);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [appliedMinPrice, setAppliedMinPrice] = useState("");
@@ -40,6 +42,16 @@ export default function ProductListing({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [requestVersion, setRequestVersion] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetch("/api/categories", { cache: "no-store" }).then((response) => response.json()).then((payload: unknown) => {
+      if (!cancelled && typeof payload === "object" && payload !== null && "categories" in payload && Array.isArray(payload.categories)) {
+        setCategories(payload.categories.map((category) => ({ ...category, imageAlt: `${String(category.name)} category` })) as ShopCategory[]);
+      }
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     setSearchTerm(initialSearchTerm);

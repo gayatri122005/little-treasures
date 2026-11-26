@@ -18,7 +18,11 @@ type IconName =
   | "trash"
   | "home"
   | "grid"
-  | "shirt";
+  | "shirt"
+  | "truck"
+  | "shield"
+  | "headset"
+  | "rotate";
 
 type IconProps = SVGProps<SVGSVGElement> & { name: IconName };
 
@@ -150,5 +154,13 @@ export default function Icon({ name, ...props }: IconProps) {
           <path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3" />
         </svg>
       );
+    case "truck":
+      return <svg {...shared}><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="1.8" /><circle cx="18" cy="18" r="1.8" /></svg>;
+    case "shield":
+      return <svg {...shared}><path d="M12 3 20 6v5c0 5-3.4 8-8 10-4.6-2-8-5-8-10V6l8-3Z" /><path d="m8.5 12 2.2 2.2 4.8-5" /></svg>;
+    case "headset":
+      return <svg {...shared}><path d="M4 13v-1a8 8 0 0 1 16 0v1" /><path d="M4 13h3v6H5a1 1 0 0 1-1-1v-5ZM20 13h-3v6h2a1 1 0 0 0 1-1v-5ZM17 19c-1 1.2-2.5 2-5 2" /></svg>;
+    case "rotate":
+      return <svg {...shared}><path d="M20 7v5h-5" /><path d="M19 12a7 7 0 1 0 1 4" /></svg>;
   }
 }

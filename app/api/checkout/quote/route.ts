@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const [rows] = await pool.execute<(RowDataPacket & { id: number; price: string; stock_quantity: number; product_name: string; status: string })[]>(
       `SELECT p.id, p.price, p.stock_quantity, p.product_name, p.status
        FROM products p JOIN categories c ON c.id = p.category_id
-       WHERE p.id IN (${ids.map(() => "?").join(",")}) AND c.category_name IN ('Home & Decor','Kids Wear','Fashion & Hair Accessories')`, ids,
+       WHERE p.id IN (${ids.map(() => "?").join(",")}) AND c.status = 'active'`, ids,
     );
     if (rows.length !== ids.length) return NextResponse.json({ success: false, message: "One or more products are no longer available." }, { status: 409 });
     let subtotal = 0;

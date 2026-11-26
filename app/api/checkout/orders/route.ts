@@ -92,7 +92,7 @@ export async function POST(request: Request) {
               (SELECT image_path FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.is_primary DESC, pi.id LIMIT 1) AS image_path
        FROM products p LEFT JOIN categories c ON c.id = p.category_id
        WHERE p.id IN (${productIds.map(() => "?").join(",")})
-         AND c.category_name IN ('Home & Decor','Kids Wear','Fashion & Hair Accessories')
+         AND c.status = 'active'
        ORDER BY p.id FOR UPDATE`, productIds,
     );
     if (products.length !== productIds.length) { await connection.rollback(); return NextResponse.json({ success: false, message: "One or more products are no longer available." }, { status: 409 }); }

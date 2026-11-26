@@ -8,6 +8,7 @@ Little Treasures is a Next.js 16 App Router storefront. Its backend is implement
 - For an existing database, apply the project’s outstanding migrations in order for its current schema. For Razorpay checkout specifically, back up the database and run [`scripts/razorpay-payment-migration.sql`](./scripts/razorpay-payment-migration.sql) **once** after the existing users, products, orders, order-items and payments tables exist.
 - Do not run the Razorpay migration on a new database initialized with the updated `init-db.sql`; it already contains those tables and fields.
 - Keep uploaded media in `storage/product-media` and back it up with the database.
+- For an existing database, apply [`scripts/categories-crud-migration.sql`](./scripts/categories-crud-migration.sql) once. It adds category slugs, images, active/inactive status, and indexes. Category uploads are stored in `storage/category-media`.
 
 ## Environment configuration
 
@@ -54,6 +55,7 @@ Use separate Test and Live API keys and webhook secrets. Configure and verify th
 
 - Customers must be signed in to checkout. Order history is in `/customer-dashboard`.
 - Admins can review orders, payments, COD, transaction attempts, date/status filters, CSV reports, fulfillment updates and eligible Razorpay refunds at `/admin/orders`.
+- Category CRUD is available at `/admin/categories`. It is protected by the server-side admin session check and the category route handlers independently enforce admin authorization.
 - Online checkout reserves stock briefly; verified capture commits the stock reduction once. COD commits stock when the order is placed. Failed online attempts do not decrement on-hand stock, and an order may be retried while its reservation is active.
 - Customer emails are sent for confirmed orders/payments, failed payment attempts, shipment, delivery and processed refunds when Resend is configured.
 

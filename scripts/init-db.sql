@@ -58,16 +58,21 @@ CREATE TABLE IF NOT EXISTS auth_rate_limits (
 CREATE TABLE IF NOT EXISTS categories (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   category_name VARCHAR(120) NOT NULL,
+  slug VARCHAR(140) NOT NULL,
   description VARCHAR(255) DEFAULT NULL,
+  image_path VARCHAR(255) DEFAULT NULL,
+  status ENUM('active','inactive') NOT NULL DEFAULT 'active',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_categories_name (category_name)
+  UNIQUE KEY uq_categories_name (category_name),
+  UNIQUE KEY uq_categories_slug (slug),
+  KEY idx_categories_status_order (status, category_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS products (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  category_id BIGINT UNSIGNED DEFAULT NULL,
+  category_id BIGINT UNSIGNED NOT NULL,
   product_type VARCHAR(80) DEFAULT NULL,
   product_name VARCHAR(160) NOT NULL,
   description TEXT,
@@ -86,7 +91,7 @@ CREATE TABLE IF NOT EXISTS products (
   KEY idx_products_homepage_flags (show_on_homepage, is_featured, is_new_arrival, created_at),
   CONSTRAINT fk_products_category
     FOREIGN KEY (category_id) REFERENCES categories(id)
-    ON DELETE SET NULL
+    ON DELETE RESTRICT
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -130,13 +135,13 @@ CREATE TABLE IF NOT EXISTS product_videos (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO categories (category_name, description)
+INSERT INTO categories (category_name, slug, description, image_path)
 VALUES
-  ('Home & Decor', 'Toran and decorative doormats'),
-  ('Kids Wear', 'Ghagra, frocks and palazzo'),
-  ('Fashion & Hair Accessories', 'Potli bags and hair clips')
+  ('Home & Decor', 'home-decor', 'Toran and decorative doormats', '/categories/home-decor.svg'),
+  ('Kids Wear', 'kids-wear', 'Ghagra, frocks and palazzo', '/categories/kids-wear.svg'),
+  ('Fashion & Hair Accessories', 'fashion-hair-accessories', 'Potli bags and hair clips', '/categories/fashion-accessories.svg')
 ON DUPLICATE KEY UPDATE
-  description = VALUES(description);
+  description = VALUES(description), slug = VALUES(slug);
 
 CREATE TABLE IF NOT EXISTS user_addresses (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

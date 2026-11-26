@@ -28,15 +28,15 @@ export default function Footer() {
           <Link
             href="/#top"
             className="inline-flex items-center gap-2.5"
-            aria-label="Little Treasures home"
+            aria-label="OmTreasure home"
           >
             <span className="flex size-9 items-center justify-center rounded-full bg-white/10 text-[#F1EBE1]">
               <Icon name="sparkle" className="size-[19px]" />
             </span>
-            <span className="serif-display text-[23px]">Little Treasures</span>
+            <span className="serif-display text-[23px]">OmTreasure</span>
           </Link>
           <p className="mt-4 max-w-[290px] text-sm leading-6 text-white/65">
-            Browse Home &amp; Decor, Kids Wear, and Fashion &amp; Hair Accessories.
+            Browse Home &amp; Decor, Kids Wear, and Fashion &amp; Hair Accessories at OmTreasure.
           </p>
         </div>
         {footerLinks.map((group) => (

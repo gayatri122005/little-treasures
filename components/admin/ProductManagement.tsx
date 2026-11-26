@@ -21,7 +21,7 @@ type ImagePosition =
 const adminProductSchema = z.object({
   id: z.string(),
   name: z.string(),
-  category: z.enum(PRODUCT_CATEGORIES).nullable(),
+  category: z.string().nullable(),
   productType: z.string().nullable(),
   description: z.string(),
   price: z.number(),
@@ -83,7 +83,7 @@ type DraftVideo = {
 type ProductFormState = {
   id?: string;
   name: string;
-  category: ProductCategory;
+  category: string;
   productType: string;
   description: string;
   price: string;
@@ -195,8 +195,13 @@ function responseMessage(payload: unknown, fallback: string) {
   return fallback;
 }
 
+function productTypesForCategory(category: string) {
+  return PRODUCT_TYPES_BY_CATEGORY[category as ProductCategory] ?? ["General"];
+}
+
 export default function ProductManagement() {
-  const [category, setCategory] = useState<ProductCategory>(PRODUCT_CATEGORIES[0]);
+  const [category, setCategory] = useState<string>(PRODUCT_CATEGORIES[0]);
+  const [categories, setCategories] = useState<string[]>([...PRODUCT_CATEGORIES]);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [listError, setListError] = useState("");
@@ -217,7 +222,7 @@ export default function ProductManagement() {
       const payload: unknown = await response.json();
       const result = z.object({
         success: z.literal(true),
-        categories: z.array(z.enum(PRODUCT_CATEGORIES)),
+        categories: z.array(z.string()),
         products: z.array(adminProductSchema),
       }).safeParse(payload);
       if (!response.ok || !result.success) {
@@ -225,6 +230,7 @@ export default function ProductManagement() {
       }
       setListError("");
       setProducts(result.data.products);
+      setCategories(result.data.categories);
     } catch (loadError) {
       if (signal?.aborted) return;
       setProducts([]);
@@ -308,7 +314,7 @@ export default function ProductManagement() {
       id: product.id,
       name: product.name,
       category: product.category ?? category,
-      productType: product.productType ?? PRODUCT_TYPES_BY_CATEGORY[product.category ?? category][0],
+      productType: product.productType ?? productTypesForCategory(product.category ?? category)[0],
       description: product.description,
       price: String(product.price),
       stock: String(product.stock),
@@ -573,7 +579,7 @@ export default function ProductManagement() {
           id: product.id,
           name: product.name,
           category: product.category ?? category,
-          productType: product.productType ?? PRODUCT_TYPES_BY_CATEGORY[product.category ?? category][0],
+          productType: product.productType ?? productTypesForCategory(product.category ?? category)[0],
           description: product.description,
           price: String(product.price),
           stock: String(product.stock),
@@ -683,7 +689,7 @@ export default function ProductManagement() {
           aria-label="Product categories"
           className="mt-7 flex gap-2 overflow-x-auto border-b border-[#E3D8C9] pb-3"
         >
-          {PRODUCT_CATEGORIES.map((item) => (
+          {categories.map((item) => (
             <button
               key={item}
               type="button"
@@ -935,12 +941,12 @@ export default function ProductManagement() {
                       <select
                         value={form.category}
                         onChange={(event) => {
-                          const nextCategory = event.target.value as ProductCategory;
-                          setForm((current) => ({ ...current, category: nextCategory, productType: PRODUCT_TYPES_BY_CATEGORY[nextCategory][0] }));
+                          const nextCategory = event.target.value;
+                          setForm((current) => ({ ...current, category: nextCategory, productType: productTypesForCategory(nextCategory)[0] }));
                         }}
                         className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] bg-white px-3 text-sm font-normal"
                       >
-                        {PRODUCT_CATEGORIES.map((item) => (
+                        {categories.map((item) => (
                           <option key={item} value={item}>{item}</option>
                         ))}
                       </select>
@@ -952,7 +958,7 @@ export default function ProductManagement() {
                         onChange={(event) => setForm((current) => ({ ...current, productType: event.target.value }))}
                         className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] bg-white px-3 text-sm font-normal"
                       >
-                        {PRODUCT_TYPES_BY_CATEGORY[form.category].map((item) => (
+                        {productTypesForCategory(form.category).map((item) => (
                           <option key={item} value={item}>{item}</option>
                         ))}
                       </select>

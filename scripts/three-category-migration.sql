@@ -9,10 +9,10 @@ UPDATE categories SET category_name = 'Fashion & Hair Accessories', description 
 WHERE category_name = 'Bags';
 UPDATE categories SET category_name = 'Home & Decor', description = 'Toran and decorative doormats'
 WHERE category_name = 'Home & Gifts';
-INSERT INTO categories (category_name, description)
-VALUES ('Home & Decor', 'Toran and decorative doormats'),
-       ('Kids Wear', 'Ghagra, frocks and palazzo'),
-       ('Fashion & Hair Accessories', 'Potli bags and hair clips')
+INSERT INTO categories (category_name, slug, description)
+VALUES ('Home & Decor', 'home-decor', 'Toran and decorative doormats'),
+       ('Kids Wear', 'kids-wear', 'Ghagra, frocks and palazzo'),
+       ('Fashion & Hair Accessories', 'fashion-hair-accessories', 'Potli bags and hair clips')
 ON DUPLICATE KEY UPDATE description = VALUES(description);
 
 START TRANSACTION;
@@ -26,6 +26,8 @@ SET category_id = CASE
       WHEN LOWER(product_name) REGEXP 'palazzo|plazo' THEN (SELECT id FROM categories WHERE category_name = 'Kids Wear')
       WHEN LOWER(product_name) REGEXP 'potli|pouch' THEN (SELECT id FROM categories WHERE category_name = 'Fashion & Hair Accessories')
       WHEN LOWER(product_name) REGEXP 'hair clip' THEN (SELECT id FROM categories WHERE category_name = 'Fashion & Hair Accessories')
+      WHEN LOWER(product_name) REGEXP 'pooja|thali|toran|doormat|door mat' THEN (SELECT id FROM categories WHERE category_name = 'Home & Decor')
+      WHEN LOWER(product_name) REGEXP 'frock|frog|ghagra|palazzo|plazo' THEN (SELECT id FROM categories WHERE category_name = 'Kids Wear')
       ELSE NULL
     END,
     product_type = CASE

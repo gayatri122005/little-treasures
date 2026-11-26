@@ -12,6 +12,7 @@ import {
 import {
   catalogResponseSchema,
   type Product,
+  type ShopCategory,
 } from "@/lib/catalog-types";
 
 type CatalogContextValue = {
@@ -21,6 +22,7 @@ type CatalogContextValue = {
   loading: boolean;
   error: string | null;
   retry: () => void;
+  categories: ShopCategory[];
 };
 
 const CatalogContext = createContext<CatalogContextValue | null>(null);
@@ -29,6 +31,7 @@ export function ProductCatalogProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ShopCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -42,7 +45,7 @@ export function ProductCatalogProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       try {
-        const [popularResponse, newArrivalsResponse, featuredResponse] = await Promise.all([
+        const [popularResponse, newArrivalsResponse, featuredResponse, categoriesResponse] = await Promise.all([
           fetch("/api/products?limit=48&sort=popular", {
             signal: controller.signal,
           }),
@@ -52,17 +55,20 @@ export function ProductCatalogProvider({ children }: { children: ReactNode }) {
           fetch("/api/products?limit=8&sort=popular&featured=true&home=true", {
             signal: controller.signal,
           }),
+          fetch("/api/categories", { signal: controller.signal }),
         ]);
-        const [popularPayload, newArrivalsPayload, featuredPayload]: unknown[] =
+        const [popularPayload, newArrivalsPayload, featuredPayload, categoriesPayload]: unknown[] =
           await Promise.all([
             popularResponse.json(),
             newArrivalsResponse.json(),
             featuredResponse.json(),
+            categoriesResponse.json(),
           ]);
         const popularResult = catalogResponseSchema.safeParse(popularPayload);
         const newArrivalsResult =
           catalogResponseSchema.safeParse(newArrivalsPayload);
         const featuredResult = catalogResponseSchema.safeParse(featuredPayload);
+        const categoryResult = categoriesPayload && typeof categoriesPayload === "object" && "categories" in categoriesPayload && Array.isArray(categoriesPayload.categories) ? categoriesPayload.categories : [];
 
         if (!popularResponse.ok || !popularResult.success) {
           throw new Error(
@@ -79,6 +85,7 @@ export function ProductCatalogProvider({ children }: { children: ReactNode }) {
         setProducts(popularResult.data.products);
         setNewArrivals(newArrivalsResult.data.products);
         setFeaturedProducts(featuredResult.data.products);
+        setCategories(categoryResult.map((category) => ({ ...category, imageAlt: `${category.name} category` })) as ShopCategory[]);
       } catch (loadError) {
         if (controller.signal.aborted) {
           return;
@@ -103,8 +110,8 @@ export function ProductCatalogProvider({ children }: { children: ReactNode }) {
   }, [attempt]);
 
   const value = useMemo(
-    () => ({ products, newArrivals, featuredProducts, loading, error, retry }),
-    [products, newArrivals, featuredProducts, loading, error, retry],
+    () => ({ products, newArrivals, featuredProducts, loading, error, retry, categories }),
+    [products, newArrivals, featuredProducts, loading, error, retry, categories],
   );
 
   return (

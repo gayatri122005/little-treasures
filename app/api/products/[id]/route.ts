@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 import pool from "@/lib/db";
-import { PRODUCT_CATEGORIES } from "@/lib/product-categories";
 
 type ProductRow = RowDataPacket & {
   id: number | string;
@@ -69,9 +68,9 @@ export async function GET(
        FROM products p
        LEFT JOIN categories c ON c.id = p.category_id
        WHERE p.id = ? AND p.status <> 'draft'
-         AND c.category_name IN (${PRODUCT_CATEGORIES.map(() => "?").join(", ")})
+         AND c.status = 'active'
        LIMIT 1`,
-      [id, ...PRODUCT_CATEGORIES],
+      [id],
     );
     const row = rows[0];
     if (!row) {

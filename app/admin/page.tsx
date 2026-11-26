@@ -115,6 +115,12 @@ export default async function AdminDashboardPage() {
               MANAGE PRODUCTS
             </Link>
             <Link
+              href="/admin/categories"
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#1E1B18] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#342d28]"
+            >
+              MANAGE CATEGORIES
+            </Link>
+            <Link
               href="/"
               className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#E3D8C9] px-4 text-xs font-semibold text-[#1E1B18] transition-colors hover:border-[#1E1B18] hover:text-[#1E1B18]"
             >

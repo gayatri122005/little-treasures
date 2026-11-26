@@ -19,10 +19,10 @@ ALTER TABLE product_videos
   ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP AFTER created_at;
 
-INSERT INTO categories (category_name, description)
+INSERT INTO categories (category_name, slug, description)
 VALUES
-  ('Home & Decor', 'Toran and decorative doormats'),
-  ('Kids Wear', 'Ghagra, frocks and palazzo'),
-  ('Fashion & Hair Accessories', 'Potli bags and hair clips')
+  ('Home & Decor', 'home-decor', 'Toran and decorative doormats'),
+  ('Kids Wear', 'kids-wear', 'Ghagra, frocks and palazzo'),
+  ('Fashion & Hair Accessories', 'fashion-hair-accessories', 'Potli bags and hair clips')
 ON DUPLICATE KEY UPDATE
   description = VALUES(description);
