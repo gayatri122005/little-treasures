@@ -55,21 +55,24 @@ export async function POST(request: Request) {
       );
     }
 
-    const { email, password } = result.data;
-    const emailLimit = await consumeRateLimit("login-email", email, 10, 900);
-    if (!emailLimit.allowed) return rateLimited(emailLimit.retryAfterSeconds);
+    const { identifier, password } = result.data;
+    const normalizedIdentifier = identifier.includes("@")
+      ? identifier.toLowerCase()
+      : `+91${identifier.replace(/[\s()+-]/g, "").replace(/^91/, "")}`;
+    const identifierLimit = await consumeRateLimit("login-identifier", normalizedIdentifier, 10, 900);
+    if (!identifierLimit.allowed) return rateLimited(identifierLimit.retryAfterSeconds);
 
     const [rows] = await pool.execute<LoginUserRow[]>(
       `SELECT id, full_name, email, mobile, profile_image, role, password_hash,
               email_verified, account_status, session_version, created_at, updated_at
-       FROM users WHERE email = ? LIMIT 1`,
-      [email],
+       FROM users WHERE email = ? OR mobile = ? LIMIT 1`,
+      [normalizedIdentifier, normalizedIdentifier],
     );
     const row = rows[0];
     const passwordMatches = await bcrypt.compare(password, row?.password_hash ?? DUMMY_PASSWORD_HASH);
 
     if (!row || !passwordMatches || row.account_status !== "active") {
-      return NextResponse.json({ success: false, message: "Invalid email or password." }, { status: 401 });
+      return NextResponse.json({ success: false, message: "Invalid email/mobile number or password." }, { status: 401 });
     }
 
     if (Number(row.email_verified) !== 1) {
@@ -84,7 +87,7 @@ export async function POST(request: Request) {
     const response = NextResponse.json({ success: true, message: "Login successful.", user });
     setSessionCookie(response, token);
     try {
-      await clearRateLimit("login-email", email);
+      await clearRateLimit("login-identifier", normalizedIdentifier);
     } catch {
       console.error("Login attempt counter could not be cleared.");
     }

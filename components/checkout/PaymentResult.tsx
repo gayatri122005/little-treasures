@@ -56,7 +56,7 @@ export default function PaymentResult({ mode }: { mode: ResultMode }) {
       }
       const Checkout = window.Razorpay;
       if (!Checkout) throw new Error("Secure checkout could not be loaded.");
-      const checkout = new Checkout({ key: result.keyId, amount: Math.round(result.amount * 100), currency: result.currency, name: "Little Treasures", description: `Order ${result.orderNumber}`, order_id: result.gatewayOrderId, prefill: result.customer, theme: { color: "#B85042" }, handler: async (payment: Record<string, string>) => { await fetch("/api/checkout/verify", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ orderId: result.orderId, ...payment }) }); router.push(`/checkout/pending?order=${result.orderId}`); }, modal: { ondismiss: () => router.push(`/checkout/pending?order=${result.orderId}`) } });
+      const checkout = new Checkout({ key: result.keyId, amount: Math.round(result.amount * 100), currency: result.currency, name: "OMTreasure", description: `Order ${result.orderNumber}`, order_id: result.gatewayOrderId, prefill: result.customer, theme: { color: "#B85042" }, handler: async (payment: Record<string, string>) => { await fetch("/api/checkout/verify", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ orderId: result.orderId, ...payment }) }); router.push(`/checkout/pending?order=${result.orderId}`); }, modal: { ondismiss: () => router.push(`/checkout/pending?order=${result.orderId}`) } });
       checkout.open();
     } catch (error) { setMessage(error instanceof Error ? error.message : "Unable to retry payment."); }
     finally { setBusy(false); }
@@ -69,7 +69,7 @@ export default function PaymentResult({ mode }: { mode: ResultMode }) {
     <main className="min-h-[70vh] bg-[#FAF7F2] px-4 py-12 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-3xl rounded-3xl border border-[#E3D8C9] bg-white p-6 shadow-sm sm:p-10">
         <div className={`flex size-14 items-center justify-center rounded-full text-2xl ${actualMode === "success" ? "bg-[#e9f5ea] text-[#28613b]" : actualMode === "failed" ? "bg-[#fff0ee] text-[#9d3c33]" : "bg-[#fff7e7] text-[#8a6518]"}`}>{actualMode === "success" ? "✓" : actualMode === "failed" ? "!" : "…"}</div>
-        <p className="eyebrow mt-5">Little Treasures · Order update</p>
+        <p className="eyebrow mt-5">OMTreasure · Order update</p>
         <h1 className="serif-display mt-2 text-4xl sm:text-5xl">{loading ? "Checking your order…" : title}</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-[#6E655F]">{message || description}</p>
         {order && <>

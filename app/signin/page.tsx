@@ -4,8 +4,8 @@ import AuthShell from "@/components/auth/AuthShell";
 import SignInForm from "@/components/auth/SignInForm";
 
 export const metadata: Metadata = {
-  title: "Sign in | Little Treasures",
-  description: "Sign in to your Little Treasures account.",
+  title: "Sign in | OMTreasure",
+  description: "Sign in to your OMTreasure account.",
 };
 
 export default function SignInPage() {

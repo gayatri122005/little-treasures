@@ -134,7 +134,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
   if (error || !product) {
     return (
       <main className="page-shell flex min-h-[65vh] flex-col items-center justify-center px-5 py-16 text-center">
-        <h1 className="serif-display text-3xl">This little treasure is unavailable</h1>
+        <h1 className="serif-display text-3xl">This item is unavailable</h1>
         <p className="mt-3 max-w-md text-sm leading-6 text-[#6E655F]">
           {error ?? "We couldn’t load this product just now. Please try again later."}
         </p>

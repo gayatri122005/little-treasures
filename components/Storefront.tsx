@@ -3,9 +3,7 @@
 import Image from "next/image";
 import CategoryCard from "@/components/CategoryCard";
 import FeaturedProducts from "@/components/FeaturedProducts";
-import Footer from "@/components/Footer";
 import HeroBanner from "@/components/HeroBanner";
-import Navbar from "@/components/Navbar";
 import NewArrivals from "@/components/NewArrivals";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import Icon from "@/components/icons";
@@ -27,7 +25,7 @@ function Benefits() {
 
 function StorefrontContent() {
   const { categories } = useProductCatalog();
-  return <><Navbar /><div className="mobile-only-categories"><ShopCategories categories={categories} mobile /></div><main><HeroBanner /><div className="desktop-only-categories"><ShopCategories categories={categories} /></div><HomePromo /><FeaturedProducts /><NewArrivals /><Benefits /></main><Footer /><MobileBottomNav /></>;
+  return <><div className="mobile-only-categories"><ShopCategories categories={categories} mobile /></div><main><HeroBanner /><div className="desktop-only-categories"><ShopCategories categories={categories} /></div><HomePromo /><FeaturedProducts /><NewArrivals /><Benefits /></main><MobileBottomNav /></>;
 }
 
 export default function Storefront() {

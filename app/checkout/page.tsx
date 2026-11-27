@@ -75,7 +75,7 @@ export default function CheckoutPage() {
         key: gatewayOrder.keyId,
         amount: Math.round(gatewayOrder.amount * 100),
         currency: gatewayOrder.currency,
-        name: "Little Treasures",
+        name: "OMTreasure",
         description: `Order ${gatewayOrder.orderNumber}`,
         order_id: gatewayOrder.gatewayOrderId,
         prefill: gatewayOrder.customer,
@@ -134,7 +134,7 @@ export default function CheckoutPage() {
             <div className="mt-4 flex justify-between border-t border-[#E3D8C9] pt-4"><span className="font-semibold">Final payable</span><span className="serif-display text-xl">{quote ? formatPrice(quote.total) : "Calculating…"}</span></div>
             {error && <p role="alert" className="mt-4 rounded-xl bg-[#fff2f1] px-3 py-2.5 text-xs text-[#81362e]">{error}</p>}
             <button disabled={busy || !quote || (paymentMethod === "razorpay" && !paymentEnabled) || (paymentMethod === "cod" && !codEnabled)} className="mt-5 min-h-12 w-full rounded-full bg-[#B85042] px-5 text-sm font-semibold text-white transition hover:brightness-95 disabled:cursor-wait disabled:opacity-60">{busy ? "Preparing secure checkout…" : paymentMethod === "cod" ? "Place COD order" : "Pay securely"}</button>
-            <p className="mt-3 text-center text-[10px] leading-5 text-[#6E655F]">Card details, CVV, OTP and UPI PIN are handled by Razorpay and never stored by Little Treasures.</p>
+            <p className="mt-3 text-center text-[10px] leading-5 text-[#6E655F]">Card details, CVV, OTP and UPI PIN are handled by Razorpay and never stored by OMTreasure.</p>
           </aside>
         </form>
       </div>

@@ -22,7 +22,8 @@ type IconName =
   | "truck"
   | "shield"
   | "headset"
-  | "rotate";
+  | "rotate"
+  | "bell";
 
 type IconProps = SVGProps<SVGSVGElement> & { name: IconName };
 
@@ -162,5 +163,7 @@ export default function Icon({ name, ...props }: IconProps) {
       return <svg {...shared}><path d="M4 13v-1a8 8 0 0 1 16 0v1" /><path d="M4 13h3v6H5a1 1 0 0 1-1-1v-5ZM20 13h-3v6h2a1 1 0 0 0 1-1v-5ZM17 19c-1 1.2-2.5 2-5 2" /></svg>;
     case "rotate":
       return <svg {...shared}><path d="M20 7v5h-5" /><path d="M19 12a7 7 0 1 0 1 4" /></svg>;
+    case "bell":
+      return <svg {...shared}><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" /><path d="M10 21h4" /></svg>;
   }
 }

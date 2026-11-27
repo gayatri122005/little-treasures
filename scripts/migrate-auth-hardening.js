@@ -35,6 +35,28 @@ async function main() {
       }
     }
 
+    // Canonicalize legacy 10-digit Indian numbers before enforcing uniqueness.
+    await connection.query(
+      "UPDATE users SET mobile = CONCAT('+91', mobile) WHERE mobile REGEXP '^[6-9][0-9]{9}$'",
+    );
+    const [duplicateMobiles] = await connection.query(
+      "SELECT mobile FROM users WHERE mobile IS NOT NULL AND mobile <> '' GROUP BY mobile HAVING COUNT(*) > 1",
+    );
+    for (const duplicate of duplicateMobiles) {
+      const [duplicateUsers] = await connection.query(
+        "SELECT id FROM users WHERE mobile = ? ORDER BY id",
+        [duplicate.mobile],
+      );
+      for (const user of duplicateUsers.slice(1)) {
+        await connection.query("UPDATE users SET mobile = NULL WHERE id = ?", [user.id]);
+        console.warn(`Cleared duplicate mobile ${duplicate.mobile} from user ${user.id}; the earliest account keeps it.`);
+      }
+    }
+    const [userIndexes] = await connection.query("SHOW INDEX FROM users");
+    if (!userIndexes.some((index) => index.Key_name === "uq_users_mobile")) {
+      await connection.query("ALTER TABLE users ADD UNIQUE KEY uq_users_mobile (mobile)");
+    }
+
     await connection.query(`CREATE TABLE IF NOT EXISTS auth_email_verification_tokens (
       id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
       user_id BIGINT UNSIGNED NOT NULL,

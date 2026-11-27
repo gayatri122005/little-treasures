@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       const url = `${config.baseUrl}/reset-password?token=${encodeURIComponent(token)}`;
       await sendAuthEmail({
         to: email,
-        subject: "Reset your Little Treasures password",
+        subject: "Reset your OMTreasure password",
         text: `Hello ${fullName}, reset your password using this link: ${url}. This link expires in 30 minutes. If you did not request this, you can ignore this email.`,
         html: `<p>Hello ${escapeEmailHtml(fullName)},</p><p><a href="${escapeEmailHtml(url)}">Reset your password</a></p><p>This link expires in 30 minutes. If you did not request this, you can ignore this email.</p>`,
       });

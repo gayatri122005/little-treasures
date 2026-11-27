@@ -1,6 +1,6 @@
-# Little Treasures
+# OMTreasure
 
-Little Treasures is a Next.js 16 App Router storefront. Its backend is implemented with Node.js Route Handlers, MySQL through `mysql2`, and the existing cookie/JWT customer and admin authentication. The bag is kept in browser storage; checkout submits product IDs and quantities only, and the server reloads product prices and stock from MySQL.
+OMTreasure is a Next.js 16 App Router storefront. Its backend is implemented with Node.js Route Handlers, MySQL through `mysql2`, and the existing cookie/JWT customer and admin authentication. The bag is kept in browser storage; checkout submits product IDs and quantities only, and the server reloads product prices and stock from MySQL.
 
 ## Database setup
 

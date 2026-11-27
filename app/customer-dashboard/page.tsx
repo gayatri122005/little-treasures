@@ -81,7 +81,7 @@ export default async function CustomerDashboardPage() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-col gap-4 rounded-2xl bg-[#1E1B18] px-5 py-5 text-white sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-6">
           <div>
-            <p className="eyebrow eyebrow-on-dark">Your Little Treasures account</p>
+            <p className="eyebrow eyebrow-on-dark">Your OMTreasure account</p>
             <h1 className="serif-display mt-2 text-4xl text-white sm:text-5xl">
               Welcome back, {data.profile.full_name.split(" ")[0] || "friend"}.
             </h1>

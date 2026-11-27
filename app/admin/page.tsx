@@ -94,7 +94,7 @@ export default async function AdminDashboardPage() {
             </span>
             <span>
               <span className="serif-display block text-xl leading-none text-[#1E1B18]">
-                Little Treasures
+                OMTreasure
               </span>
               <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.15em] text-[#6E655F]">
                 Admin workspace

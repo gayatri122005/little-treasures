@@ -71,7 +71,7 @@ async function main() {
   await pool.execute(
     `INSERT INTO users (full_name, email, mobile, password_hash, profile_image, role, created_at, updated_at)
      VALUES (?, ?, ?, ?, ?, 'admin', NOW(), NOW())`,
-    ["Little Treasures Admin", adminEmail, null, passwordHash, null],
+    ["OMTreasure Admin", adminEmail, null, passwordHash, null],
   );
 
   console.log(`Admin seeded successfully for ${adminEmail}.`);

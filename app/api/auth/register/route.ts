@@ -53,12 +53,14 @@ export async function POST(request: Request) {
     try {
       await connection.beginTransaction();
       const [existing] = await connection.execute<RowDataPacket[]>(
-        "SELECT id FROM users WHERE email = ? LIMIT 1",
-        [email],
+        "SELECT id, email, mobile FROM users WHERE email = ? OR mobile = ? LIMIT 1",
+        [email, mobile],
       );
       if (Array.isArray(existing) && existing.length > 0) {
         await connection.rollback();
-        return NextResponse.json({ success: false, message: "An account with this email already exists." }, { status: 409 });
+        const match = existing[0] as { email?: string; mobile?: string };
+        const field = match.email === email ? "email address" : "mobile number";
+        return NextResponse.json({ success: false, message: `An account with this ${field} already exists. Sign in instead.` }, { status: 409 });
       }
 
       const [insertResult] = await connection.execute<ResultSetHeader>(
@@ -74,7 +76,7 @@ export async function POST(request: Request) {
     } catch (error) {
       await connection.rollback();
       if ((error as { code?: string })?.code === "ER_DUP_ENTRY") {
-        return NextResponse.json({ success: false, message: "An account with this email already exists." }, { status: 409 });
+        return NextResponse.json({ success: false, message: "An account with this email address or mobile number already exists. Sign in instead." }, { status: 409 });
       }
       throw error;
     } finally {
@@ -90,9 +92,9 @@ export async function POST(request: Request) {
     const emailResult = verificationUrl
       ? await sendAuthEmail({
           to: email,
-          subject: "Verify your Little Treasures account",
+          subject: "Verify your OMTreasure account",
           text: `Hello ${fullName}, verify your email address using this link: ${verificationUrl}. This link expires in 30 minutes.`,
-          html: `<p>Hello ${safeName},</p><p>Please verify your email address to finish creating your Little Treasures account.</p><p><a href="${safeUrl}">Verify email address</a></p><p>This link expires in 30 minutes. If you did not create this account, you can ignore this email.</p>`,
+          html: `<p>Hello ${safeName},</p><p>Please verify your email address to finish creating your OMTreasure account.</p><p><a href="${safeUrl}">Verify email address</a></p><p>This link expires in 30 minutes. If you did not create this account, you can ignore this email.</p>`,
         })
       : { sent: false as const, reason: "not_configured" as const };
 

@@ -1,6 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import Icon from "@/components/icons";
 
 type AuthShellProps = {
@@ -24,39 +23,9 @@ export default function AuthShell({
 }: AuthShellProps) {
   return (
     <main className="min-h-screen bg-[#FAF7F2] px-3 py-4 sm:px-7 sm:py-7">
-      <header className="mx-auto flex w-full max-w-[1320px] items-center justify-between">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2.5"
-          aria-label="Little Treasures home"
-        >
-          <span className="flex size-9 items-center justify-center rounded-full bg-[#F1EBE1] text-[#B85042]">
-            <Icon name="sparkle" className="size-[19px]" />
-          </span>
-          <span className="serif-display text-[21px] leading-none sm:text-[23px]">
-            Little Treasures
-          </span>
-        </Link>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-medium text-[#6E655F] transition-colors hover:text-[#B85042]"
-        >
-          <Icon name="arrow" className="size-4 rotate-180" />
-          <span className="hidden sm:inline">Back to the shop</span>
-          <span className="sm:hidden">Shop</span>
-        </Link>
-      </header>
-
       <div className="mx-auto mt-6 grid w-full max-w-[1320px] overflow-hidden rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] shadow-[0_20px_70px_rgba(54,48,38,0.08)] md:mt-8 md:min-h-[min(760px,calc(100vh-120px))] md:grid-cols-[1fr_0.88fr]">
         <section className="relative hidden min-h-[620px] overflow-hidden bg-[#1E1B18] md:block">
-          <Image
-            src="/categories/kids-wear.svg"
-            alt="Illustration of a girls festive dress"
-            fill
-            priority
-            sizes="(max-width: 900px) 0px, 55vw"
-            className="object-cover"
-          />
+          <div className="absolute inset-0 bg-[url('/categories/kids-wear.svg')] bg-cover bg-center" aria-hidden="true" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1E1B18]/70 via-[#1E1B18]/10 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-10 text-white lg:p-14">
             <p className="flex items-center gap-2 text-[10px] font-semibold tracking-[0.2em] text-[#F1EBE1]">
@@ -64,12 +33,12 @@ export default function AuthShell({
               THOUGHTFUL FINDS, JUST FOR YOU
             </p>
             <h2 className="serif-display mt-4 max-w-[540px] text-5xl leading-[1.05] lg:text-6xl">
-              Little things.
+              OMTreasure moments.
               <br />
               Big happy.
             </h2>
             <p className="mt-4 max-w-[380px] text-sm leading-6 text-white/80">
-              A lovely little corner for the things you&apos;ll treasure.
+              A lovely corner for the things you&apos;ll treasure.
             </p>
           </div>
         </section>

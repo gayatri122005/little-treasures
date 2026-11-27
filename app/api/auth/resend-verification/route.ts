@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       const url = `${config.baseUrl}/verify-email?token=${encodeURIComponent(token)}`;
       await sendAuthEmail({
         to: email,
-        subject: "Your Little Treasures verification link",
+        subject: "Your OMTreasure verification link",
         text: `Hello ${name}, verify your email using this link: ${url}. This link expires in 30 minutes.`,
         html: `<p>Hello ${escapeEmailHtml(name)},</p><p><a href="${escapeEmailHtml(url)}">Verify your email address</a></p><p>This link expires in 30 minutes.</p>`,
       });

@@ -3,8 +3,8 @@ import AuthShell from "@/components/auth/AuthShell";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Forgot password | Little Treasures",
-  description: "Request a secure password reset link for your Little Treasures account.",
+  title: "Forgot password | OMTreasure",
+  description: "Request a secure password reset link for your OMTreasure account.",
   referrer: "no-referrer",
 };
 

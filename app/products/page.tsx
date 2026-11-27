@@ -1,5 +1,3 @@
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
 import ProductListing from "@/components/ProductListing";
 import { ProductCatalogProvider } from "@/components/ProductCatalogContext";
 
@@ -17,12 +15,10 @@ export default async function ProductsPage({
 
   return (
     <ProductCatalogProvider>
-      <Navbar />
       <ProductListing
         initialSearchTerm={initialSearchTerm}
         initialCategory={initialCategory}
       />
-      <Footer />
     </ProductCatalogProvider>
   );
 }

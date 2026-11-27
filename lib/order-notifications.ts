@@ -26,9 +26,9 @@ export async function sendOrderEmail(message: Notification) {
 }
 
 export function orderEmailText(orderNumber: string, status: string, amount: string) {
-  const subject = `Little Treasures order ${orderNumber}: ${status}`;
+  const subject = `OMTreasure order ${orderNumber}: ${status}`;
   const text = `Your order ${orderNumber} is ${status}. Order total: ${amount}. Visit your account to view order details.`;
-  const html = `<p>Your order <strong>${escapeHtml(orderNumber)}</strong> is ${escapeHtml(status)}.</p><p>Order total: ${escapeHtml(amount)}</p><p>Visit your Little Treasures account to view order details.</p>`;
+  const html = `<p>Your order <strong>${escapeHtml(orderNumber)}</strong> is ${escapeHtml(status)}.</p><p>Order total: ${escapeHtml(amount)}</p><p>Visit your OMTreasure account to view order details.</p>`;
   return { subject, text, html };
 }
 

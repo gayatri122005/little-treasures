@@ -16,7 +16,7 @@ export default function SignInForm() {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [needsVerification, setNeedsVerification] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ identifier: "", password: "" });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -82,16 +82,17 @@ export default function SignInForm() {
       )}
 
       <AuthInput
-        label="Email address"
-        name="email"
-        type="email"
-        autoComplete="email"
-        placeholder="you@example.com"
-        value={form.email}
+        label="Email address or mobile number"
+        name="identifier"
+        type="text"
+        inputMode="email"
+        autoComplete="username"
+        placeholder="you@example.com or +91 98765 43210"
+        value={form.identifier}
         onChange={(event) =>
-          setForm((current) => ({ ...current, email: event.target.value }))
+          setForm((current) => ({ ...current, identifier: event.target.value }))
         }
-        error={fieldErrors.email}
+        error={fieldErrors.identifier}
         required
       />
 
@@ -129,7 +130,7 @@ export default function SignInForm() {
           {error}
         </p>
       )}
-      {needsVerification && <ResendVerificationForm initialEmail={form.email} />}
+      {needsVerification && form.identifier.includes("@") && <ResendVerificationForm initialEmail={form.identifier} />}
 
       <button
         type="submit"

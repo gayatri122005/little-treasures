@@ -138,7 +138,8 @@ export default function CartPageClient() {
                       <button type="button" onClick={() => setCartQuantity(product.id, quantity + 1)} disabled={quantity >= product.stock} aria-label={`Increase ${product.name} quantity`} className="flex size-9 items-center justify-center disabled:opacity-35"><Icon name="plus" className="size-3.5" /></button>
                     </div>
                     <button type="button" onClick={() => { toggleWishlist(product); removeFromCart(product.id); }} className="min-h-9 text-xs text-[#6E655F] hover:text-[#9A3F33]">Save for later</button>
-                    <button type="button" onClick={() => removeFromCart(product.id)} className="min-h-9 text-xs text-[#6E655F] hover:text-[#9A3F33]">Remove</button>
+                    <button type="button" onClick={() => removeFromCart(product.id)} className="min-h-9 text-xs text-[#6E655F] hover:text-[#9A3F33]">Remove product</button>
+                    <Link href="/checkout" className="min-h-9 inline-flex items-center text-xs font-semibold text-[#B85042] hover:text-[#9A3F33]">Buy now</Link>
                   </div>
                 </div>
                 <p className="text-sm font-semibold sm:pt-1">{formatPrice(product.price * quantity)}</p>
@@ -150,7 +151,7 @@ export default function CartPageClient() {
         <aside className="h-fit rounded-2xl border border-[#E3D8C9] bg-white p-5 sm:p-6 lg:sticky lg:top-28">
           <h2 className="serif-display text-2xl">Price details</h2>
           <div className="mt-5 space-y-3 border-b border-[#E3D8C9] pb-4 text-sm">
-            <div className="flex justify-between gap-3"><span className="text-[#6E655F]">Items ({cartCount})</span><span>{formatPrice(currentQuote?.subtotal ?? subtotal)}</span></div>
+            <div className="flex justify-between gap-3"><span className="text-[#6E655F]">Total product price</span><span>{formatPrice(currentQuote?.subtotal ?? subtotal)}</span></div>
             {currentQuote ? (
               <>
                 <div className="flex justify-between gap-3"><span className="text-[#6E655F]">Delivery</span><span>{currentQuote.shipping ? formatPrice(currentQuote.shipping) : "Complimentary"}</span></div>

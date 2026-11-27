@@ -3,8 +3,8 @@ import AuthShell from "@/components/auth/AuthShell";
 import SignUpForm from "@/components/auth/SignUpForm";
 
 export const metadata: Metadata = {
-  title: "Create an account | Little Treasures",
-  description: "Create your Little Treasures customer account.",
+  title: "Create an account | OMTreasure",
+  description: "Create your OMTreasure customer account.",
 };
 
 export default function SignUpPage() {

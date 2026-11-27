@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
 import { ProductCatalogProvider } from "@/components/ProductCatalogContext";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Little Treasures",
-  description: "Account and order information for Little Treasures customers.",
+  title: "Contact Us | OMTreasure",
+  description: "Account and order information for OMTreasure customers.",
 };
 
 export default function ContactPage() {
   return (
     <ProductCatalogProvider>
-      <Navbar />
       <main className="page-shell min-h-[65vh] py-12 sm:py-20">
         <p className="eyebrow">Contact Us</p>
         <h1 className="serif-display mt-3 text-4xl sm:text-6xl">How can we help?</h1>
@@ -24,7 +21,6 @@ export default function ContactPage() {
           My Account / Login
         </Link>
       </main>
-      <Footer />
     </ProductCatalogProvider>
   );
 }

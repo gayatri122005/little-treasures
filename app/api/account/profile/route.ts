@@ -146,7 +146,7 @@ export async function PUT(request: Request) {
       const emailResult = url
         ? await sendAuthEmail({
             to: normalizedEmail,
-            subject: "Verify your updated Little Treasures email",
+            subject: "Verify your updated OMTreasure email",
             text: `Hello ${fullName.trim()}, verify your updated email address using this link: ${url}. This link expires in 30 minutes.`,
             html: `<p>Hello ${safeName},</p><p><a href="${safeUrl}">Verify your updated email address</a></p><p>This link expires in 30 minutes.</p>`,
           })

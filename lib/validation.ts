@@ -56,7 +56,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: emailSchema,
+  identifier: z.string().trim().min(1, "Enter your email address or mobile number.").max(255, "Email address or mobile number is too long."),
   password: z
     .string()
     .min(1, "Enter your password.")

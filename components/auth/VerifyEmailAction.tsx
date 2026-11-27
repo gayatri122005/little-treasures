@@ -46,7 +46,7 @@ export default function VerifyEmailAction() {
     <div>
       {token ? (
         <>
-          <p className="mb-4 text-sm leading-6 text-[#6E655F]">Confirm your email address to activate your Little Treasures account.</p>
+          <p className="mb-4 text-sm leading-6 text-[#6E655F]">Confirm your email address to activate your OMTreasure account.</p>
           {error && <p role="alert" className="mb-4 rounded border border-[#f0d2d0] bg-[#fff2f1] px-3 py-2.5 text-sm text-[#81362e]">{error}</p>}
           <button type="button" onClick={verify} disabled={busy} className="min-h-12 w-full rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[#9A3F33] disabled:opacity-70">
             {busy ? "VERIFYING…" : "VERIFY EMAIL"}
