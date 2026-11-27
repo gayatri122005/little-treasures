@@ -118,8 +118,13 @@ export async function GET(request: Request) {
     parameters.push(term, term, term, term, term);
   }
   if (category) {
-    filters.push("(REPLACE(REPLACE(REPLACE(LOWER(c.category_name), 'jewellery', 'jewelry'), '&', 'and'), ' ', '') = ? OR LOWER(c.slug) = LOWER(?))");
-    parameters.push(normalizeCategory(category), category.trim());
+    if (/^\d+$/.test(category.trim())) {
+      filters.push("c.id = ?");
+      parameters.push(Number(category.trim()));
+    } else {
+      filters.push("(REPLACE(REPLACE(REPLACE(LOWER(c.category_name), 'jewellery', 'jewelry'), '&', 'and'), ' ', '') = ? OR LOWER(c.slug) = LOWER(?))");
+      parameters.push(normalizeCategory(category), category.trim());
+    }
   }
   if (productType) {
     filters.push("p.product_type = ?");

@@ -8,7 +8,7 @@ import Icon from "@/components/icons";
 const accountLinks = [
   ["user", "My Profile", "/customer-dashboard#profile-settings"],
   ["grid", "My Orders", "/customer-dashboard#recent-orders"],
-  ["heart", "My Wishlist", "/products?collection=favorites"],
+  ["heart", "My Wishlist", "/wishlist"],
   ["bag", "My Cart", "/cart"],
   ["home", "Saved Addresses", "/customer-dashboard#saved-addresses"],
   ["shield", "Payment Methods", "/checkout"],
@@ -53,6 +53,7 @@ export default function AccountDropdown() {
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    window.dispatchEvent(new Event("omtreasure:auth-changed"));
     setOpen(false);
     setAuthenticated(false);
     router.refresh();

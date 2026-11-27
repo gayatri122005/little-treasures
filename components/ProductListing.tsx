@@ -238,13 +238,13 @@ export default function ProductListing({
                   type="button"
                   key={category.name}
                   onClick={() => {
-            setSelectedCategory(category.name);
+                    setSelectedCategory(category.slug ?? category.name);
             setProductType("");
                     setPage(1);
                   }}
-                  aria-pressed={selectedCategory === category.name}
+                  aria-pressed={selectedCategory === (category.slug ?? category.name)}
                   className={`min-h-10 px-3 text-left text-sm transition-colors ${
-                    selectedCategory === category.name
+                    selectedCategory === (category.slug ?? category.name)
                       ? "rounded-lg bg-[var(--ink)] text-white"
                       : "rounded-lg bg-[var(--page)] text-[var(--muted)] hover:bg-[var(--surface-soft)]"
                   }`}
@@ -328,8 +328,8 @@ export default function ProductListing({
               className="mt-3 min-h-10 w-full rounded-lg border border-[var(--line)] bg-white px-3 text-sm font-normal tracking-normal"
             >
               <option value="">All types</option>
-              {(selectedCategory && selectedCategory in PRODUCT_TYPES_BY_CATEGORY
-                ? PRODUCT_TYPES_BY_CATEGORY[selectedCategory as ProductCategory]
+              {(selectedCategory && (Object.keys(PRODUCT_TYPES_BY_CATEGORY) as ProductCategory[]).some((category) => categoryMatches(category, selectedCategory))
+                ? PRODUCT_TYPES_BY_CATEGORY[(Object.keys(PRODUCT_TYPES_BY_CATEGORY) as ProductCategory[]).find((category) => categoryMatches(category, selectedCategory)) as ProductCategory]
                 : Object.values(PRODUCT_TYPES_BY_CATEGORY).flat()).map((type) => (
                   <option key={type} value={type}>{type}</option>
                 ))}
@@ -378,6 +378,8 @@ export default function ProductListing({
             <p className="text-sm text-[var(--muted)]" aria-live="polite">
               {loading
                 ? "Finding your good things…"
+                : error
+                  ? "Unable to load the collection"
                 : `${total} ${total === 1 ? "piece" : "pieces"}`}
             </p>
             <div className="flex min-w-0 items-center gap-2">

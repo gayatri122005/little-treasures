@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useMemo,
+  useEffect,
   useState,
   useSyncExternalStore,
   type ReactNode,
@@ -12,13 +13,11 @@ import type { Product } from "@/lib/catalog-types";
 import {
   getCartSnapshot,
   getServerCartSnapshot,
-  getServerWishlistSnapshot,
-  getWishlistSnapshot,
   saveCartSnapshot,
-  saveWishlistSnapshot,
   subscribeToStorefrontStorage,
   type CartItem,
 } from "@/lib/storefront-storage";
+import { usePathname, useRouter } from "next/navigation";
 
 type StorefrontContextValue = {
   cartItems: CartItem[];
@@ -26,6 +25,9 @@ type StorefrontContextValue = {
   wishlistIds: string[];
   wishlistProducts: Product[];
   wishlistCount: number;
+  wishlistLoading: boolean;
+  wishlistError: string | null;
+  wishlistNotice: string;
   storageNotice: string;
   searchTerm: string;
   selectedCategory: string | null;
@@ -34,7 +36,7 @@ type StorefrontContextValue = {
   addToCart: (product: Product, quantity?: number) => void;
   setCartQuantity: (productId: string, quantity: number) => void;
   removeFromCart: (productId: string) => void;
-  toggleWishlist: (product: Product) => void;
+  toggleWishlist: (product: Product) => Promise<void>;
 };
 
 const StorefrontContext = createContext<StorefrontContextValue | null>(null);
@@ -51,20 +53,38 @@ export function StorefrontProvider({
     getCartSnapshot,
     getServerCartSnapshot,
   );
-  const wishlistSnapshot = useSyncExternalStore(
-    subscribeToStorefrontStorage,
-    getWishlistSnapshot,
-    getServerWishlistSnapshot,
-  );
   const cartItems = cartSnapshot.items;
-  const wishlistProducts = wishlistSnapshot.products;
+  const router = useRouter();
+  const pathname = usePathname();
+  const [wishlistProducts, setWishlistProducts] = useState<Product[]>([]);
+  const [wishlistLoading, setWishlistLoading] = useState(true);
+  const [wishlistError, setWishlistError] = useState<string | null>(null);
+  const [wishlistNotice, setWishlistNotice] = useState("");
+  const [wishlistPendingIds, setWishlistPendingIds] = useState<string[]>([]);
   const [storageWriteNotice, setStorageWriteNotice] = useState("");
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  useEffect(() => {
+    async function loadWishlist() {
+      setWishlistLoading(true);
+      try {
+        const response = await fetch("/api/account/wishlist", { credentials: "same-origin", cache: "no-store" });
+        const payload = await response.json() as { products?: Product[]; message?: string };
+        if (response.status === 401) { setWishlistProducts([]); setWishlistError(null); return; }
+        if (!response.ok || !Array.isArray(payload.products)) throw new Error(payload.message ?? "Your wishlist is temporarily unavailable.");
+        setWishlistProducts(payload.products); setWishlistError(null);
+      } catch (error) { setWishlistError(error instanceof Error ? error.message : "Your wishlist is temporarily unavailable."); }
+      finally { setWishlistLoading(false); }
+    }
+    void loadWishlist();
+    const refresh = () => void loadWishlist();
+    window.addEventListener("omtreasure:auth-changed", refresh);
+    return () => window.removeEventListener("omtreasure:auth-changed", refresh);
+  }, []);
+
   const wishlistIds = wishlistProducts.map((product) => product.id);
-  const storageNotice =
-    storageWriteNotice || cartSnapshot.notice || wishlistSnapshot.notice;
+  const storageNotice = storageWriteNotice || cartSnapshot.notice;
 
   const value = useMemo<StorefrontContextValue>(() => {
     function updateCart(update: (current: CartItem[]) => CartItem[]) {
@@ -74,16 +94,6 @@ export function StorefrontProvider({
       } catch (error) {
         console.error("Bag could not be saved:", error);
         setStorageWriteNotice("Your bag could not be saved on this browser.");
-      }
-    }
-
-    function updateWishlist(update: (current: Product[]) => Product[]) {
-      try {
-        saveWishlistSnapshot(update(getWishlistSnapshot().products));
-        setStorageWriteNotice("");
-      } catch (error) {
-        console.error("Wishlist could not be saved:", error);
-        setStorageWriteNotice("Your wishlist could not be saved on this browser.");
       }
     }
 
@@ -128,12 +138,28 @@ export function StorefrontProvider({
       );
     }
 
-    function toggleWishlist(product: Product) {
-      updateWishlist((current) =>
-        current.some((item) => item.id === product.id)
-          ? current.filter((item) => item.id !== product.id)
-          : [...current, product],
-      );
+    async function toggleWishlist(product: Product) {
+      if (wishlistPendingIds.includes(product.id)) return;
+      let authenticatedResponse: Response;
+      try {
+        authenticatedResponse = await fetch("/api/auth/me", { credentials: "same-origin", cache: "no-store" });
+      } catch {
+        setWishlistNotice("We could not check your sign-in status. Please try again.");
+        return;
+      }
+      if (!authenticatedResponse.ok) { router.push(`/signin?redirect=${encodeURIComponent(pathname)}`); return; }
+      const removing = wishlistProducts.some((item) => item.id === product.id);
+      const previous = wishlistProducts;
+      setWishlistPendingIds((ids) => [...ids, product.id]);
+      setWishlistProducts(removing ? previous.filter((item) => item.id !== product.id) : [...previous, product]);
+      try {
+        const response = await fetch("/api/account/wishlist", { method: removing ? "DELETE" : "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId: product.id }) });
+        const payload = await response.json() as { products?: Product[]; message?: string };
+        if (!response.ok || !Array.isArray(payload.products)) throw new Error(payload.message ?? "Your wishlist could not be updated.");
+        setWishlistProducts(payload.products); setWishlistNotice(removing ? "Removed from your wishlist." : "Saved to your wishlist.");
+        window.setTimeout(() => setWishlistNotice(""), 1800);
+      } catch (error) { setWishlistProducts(previous); setWishlistNotice(error instanceof Error ? error.message : "Your wishlist could not be updated."); }
+      finally { setWishlistPendingIds((ids) => ids.filter((id) => id !== product.id)); }
     }
 
     return {
@@ -142,6 +168,9 @@ export function StorefrontProvider({
       wishlistIds,
       wishlistProducts,
       wishlistCount: wishlistProducts.length,
+      wishlistLoading,
+      wishlistError,
+      wishlistNotice,
       storageNotice,
       searchTerm,
       selectedCategory,
@@ -159,6 +188,12 @@ export function StorefrontProvider({
     storageNotice,
     searchTerm,
     selectedCategory,
+    wishlistLoading,
+    wishlistError,
+    wishlistNotice,
+    wishlistPendingIds,
+    router,
+    pathname,
   ]);
 
   return (

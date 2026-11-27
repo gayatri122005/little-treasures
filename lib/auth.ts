@@ -93,8 +93,8 @@ export async function getCurrentUser() {
   }
 
   const [rows] = await pool.execute<AuthUserRow[]>(
-    `SELECT id, full_name, email, mobile, profile_image, role,
-            email_verified, account_status, session_version
+    `SELECT u.id, u.full_name, u.email, u.mobile, u.profile_image, u.role,
+            u.email_verified, u.account_status, u.session_version
      FROM users u
      INNER JOIN auth_sessions s ON s.user_id = u.id
      WHERE s.token_hash = ?

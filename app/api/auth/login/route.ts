@@ -71,8 +71,15 @@ export async function POST(request: Request) {
     const row = rows[0];
     const passwordMatches = await bcrypt.compare(password, row?.password_hash ?? DUMMY_PASSWORD_HASH);
 
-    if (!row || !passwordMatches || row.account_status !== "active") {
+    if (!row || !passwordMatches) {
       return NextResponse.json({ success: false, message: "Invalid email/mobile number or password." }, { status: 401 });
+    }
+
+    if (row.account_status === "suspended") {
+      return NextResponse.json(
+        { success: false, code: "ACCOUNT_SUSPENDED", message: "This account is restricted. Please contact support." },
+        { status: 403 },
+      );
     }
 
     if (Number(row.email_verified) !== 1) {
@@ -93,7 +100,14 @@ export async function POST(request: Request) {
     }
     return response;
   } catch (error) {
-    console.error("Login failed:", (error as { code?: string })?.code ?? "unexpected error");
-    return NextResponse.json({ success: false, message: "Unable to sign in right now." }, { status: 500 });
+    const details = error as { code?: string; message?: string };
+    console.error("Login failed", {
+      code: details.code ?? "unknown",
+      message: details.message ?? "unknown",
+    });
+    return NextResponse.json(
+      { success: false, code: "SERVER_ERROR", message: "Something went wrong. Please try again later." },
+      { status: 500 },
+    );
   }
 }

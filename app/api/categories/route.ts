@@ -7,7 +7,7 @@ function mapCategory(row: CategoryRow) { return { id: String(row.id), name: row.
 
 export async function GET() {
   try {
-    const [rows] = await pool.execute<CategoryRow[]>(`SELECT c.id, c.category_name, c.slug, c.description, c.image_path, c.status, c.created_at, c.updated_at, COUNT(p.id) AS product_count FROM categories c LEFT JOIN products p ON p.category_id = c.id GROUP BY c.id ORDER BY c.category_name ASC`);
+    const [rows] = await pool.execute<CategoryRow[]>(`SELECT c.id, c.category_name, c.slug, c.description, c.image_path, c.status, c.created_at, c.updated_at, COUNT(CASE WHEN p.status <> 'draft' THEN p.id END) AS product_count FROM categories c LEFT JOIN products p ON p.category_id = c.id GROUP BY c.id, c.category_name, c.slug, c.description, c.image_path, c.status, c.created_at, c.updated_at ORDER BY c.category_name ASC`);
     return NextResponse.json({ success: true, categories: rows.filter((row) => row.status === "active").map(mapCategory) });
   } catch (error) { console.error("Category catalog query failed:", error); return NextResponse.json({ success: false, message: "Categories are temporarily unavailable." }, { status: 500 }); }
 }

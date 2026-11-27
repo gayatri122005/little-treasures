@@ -50,13 +50,13 @@ export default function Navbar() {
           {searchForm}
           <div className="header-actions">
             <AccountDropdown />
-            <Link href="/products?collection=favorites" aria-label={`Wishlist ${wishlistCount} items`} className="header-icon"><Icon name="heart" />{wishlistCount > 0 && <b>{wishlistCount}</b>}</Link>
+            <Link href="/wishlist" aria-label={`Wishlist ${wishlistCount} items`} className="header-icon"><Icon name="heart" />{wishlistCount > 0 && <b>{wishlistCount}</b>}</Link>
             <Link href="/cart" aria-label={`Cart ${cartCount} items`} className="header-icon"><Icon name="bag" /><b>{cartCount}</b></Link>
           </div>
         </div>
         <div className="mobile-search page-shell">{searchForm}</div>
-        {menu && <div className="mobile-menu">{categories.map((category) => <Link key={category.name} href={`/products?category=${encodeURIComponent(category.name)}`} onClick={() => setMenu(false)}>{category.name}</Link>)}<Link href="/about">About Us</Link><Link href="/contact">Contact Us</Link></div>}
-        <nav className="desktop-nav"><Link href="/" className={pathname === "/" ? "active" : ""}>⌂ &nbsp;Home</Link>{categories.map((category) => <Link key={category.name} href={`/products?category=${encodeURIComponent(category.name)}`}>{category.name}</Link>)}</nav>
+        {menu && <div className="mobile-menu">{categories.map((category) => <Link key={category.name} href={`/products?category=${encodeURIComponent(category.slug ?? category.name)}`} onClick={() => setMenu(false)}>{category.name}</Link>)}<Link href="/about">About Us</Link><Link href="/contact">Contact Us</Link></div>}
+        <nav className="desktop-nav"><Link href="/" className={pathname === "/" ? "active" : ""}>⌂ &nbsp;Home</Link>{categories.map((category) => <Link key={category.name} href={`/products?category=${encodeURIComponent(category.slug ?? category.name)}`}>{category.name}</Link>)}</nav>
       </header>
     </>
   );

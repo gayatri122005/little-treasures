@@ -11,7 +11,7 @@ export default function MobileBottomNav() {
   const items = [
     { label: "Home", href: "/", icon: "home" as const },
     { label: "Categories", href: "/products", icon: "grid" as const },
-    { label: "Wishlist", href: "/products?collection=favorites", icon: "heart" as const, count: wishlistCount },
+    { label: "Wishlist", href: "/wishlist", icon: "heart" as const, count: wishlistCount },
     { label: "Account", href: "/login", icon: "user" as const },
     { label: "Cart", href: "/cart", icon: "bag" as const, count: cartCount },
   ];

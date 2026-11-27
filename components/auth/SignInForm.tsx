@@ -31,13 +31,23 @@ export default function SignInForm() {
     setError("");
 
     try {
-      const response = await fetch("/api/auth/login", {
+      let response: Response;
+      try {
+        response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
         body: JSON.stringify(parsedInput.data),
-      });
-      const result = await response.json();
+        });
+      } catch {
+        throw new Error("Unable to connect. Please try again.");
+      }
+      let result: { code?: string; message?: string; user?: { role?: string } };
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error("Something went wrong. Please try again later.");
+      }
 
       if (!response.ok) {
         if (result.code === "EMAIL_NOT_VERIFIED") setNeedsVerification(true);
@@ -57,13 +67,14 @@ export default function SignInForm() {
         }
       }
 
+      window.dispatchEvent(new Event("omtreasure:auth-changed"));
       router.push(redirect);
       router.refresh();
     } catch (submitError) {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Unable to sign in right now.",
+          : "Something went wrong. Please try again later.",
       );
     } finally {
       setLoading(false);
