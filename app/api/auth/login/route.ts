@@ -82,13 +82,6 @@ export async function POST(request: Request) {
       );
     }
 
-    if (Number(row.email_verified) !== 1) {
-      return NextResponse.json(
-        { success: false, code: "EMAIL_NOT_VERIFIED", message: "Please verify your email address before signing in." },
-        { status: 403 },
-      );
-    }
-
     const user = sanitizeUser(row);
     const token = await createSessionToken(user, Number(row.session_version));
     const response = NextResponse.json({ success: true, message: "Login successful.", user });

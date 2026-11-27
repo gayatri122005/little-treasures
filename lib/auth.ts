@@ -106,11 +106,7 @@ export async function getCurrentUser() {
   );
   const row = rows[0];
 
-  if (
-    !row ||
-    row.account_status !== "active" ||
-    Number(row.email_verified) !== 1
-  ) {
+  if (!row || row.account_status !== "active") {
     return null;
   }
 

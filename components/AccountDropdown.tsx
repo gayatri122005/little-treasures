@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Icon from "@/components/icons";
+import { useStorefront } from "@/components/StorefrontContext";
 
 const accountLinks = [
   ["user", "My Profile", "/customer-dashboard#profile-settings"],
@@ -19,15 +20,9 @@ const accountLinks = [
 
 export default function AccountDropdown() {
   const router = useRouter();
+  const { authUser, authLoading } = useStorefront();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    void fetch("/api/auth/me", { credentials: "same-origin", cache: "no-store" })
-      .then((response) => setAuthenticated(response.ok))
-      .catch(() => setAuthenticated(false));
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -55,11 +50,11 @@ export default function AccountDropdown() {
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
     window.dispatchEvent(new Event("omtreasure:auth-changed"));
     setOpen(false);
-    setAuthenticated(false);
     router.refresh();
   }
 
-  const heading = authenticated === null ? "Checking your account…" : authenticated ? "Your account" : "Welcome to OmTreasure";
+  const authenticated = Boolean(authUser);
+  const heading = authLoading ? "Checking your account…" : authenticated ? "Your account" : "Welcome to OmTreasure";
 
   return (
     <div className="account-wrap" ref={wrapperRef}>
@@ -76,13 +71,13 @@ export default function AccountDropdown() {
       {open && (
         <div id="account-menu" className="account-menu" role="menu" onClick={(event) => event.stopPropagation()}>
           <div className="account-menu-heading"><span>{heading}</span></div>
-          {authenticated === false && (
+          {!authLoading && !authenticated && (
             <div className="account-guest-actions">
               <Link href="/signin" role="menuitem" onClick={() => setOpen(false)}>Sign in</Link>
               <Link href="/signup" role="menuitem" onClick={() => setOpen(false)}>Create account</Link>
             </div>
           )}
-          {authenticated === true && (
+          {!authLoading && authenticated && (
             <>
               {accountLinks.map(([icon, label, href]) => (
                 <Link key={label} href={href} role="menuitem" onClick={() => setOpen(false)}>

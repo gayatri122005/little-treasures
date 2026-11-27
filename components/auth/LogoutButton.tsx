@@ -19,6 +19,7 @@ export default function LogoutButton() {
       if (!response.ok) {
         throw new Error("Unable to sign out right now.");
       }
+      window.dispatchEvent(new Event("omtreasure:auth-changed"));
       router.replace("/");
       router.refresh();
     } catch (logoutError) {

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import AuthInput from "@/components/auth/AuthInput";
 import PasswordToggle from "@/components/auth/PasswordToggle";
-import ResendVerificationForm from "@/components/auth/ResendVerificationForm";
 import { loginSchema, validationErrors } from "@/lib/validation";
 
 export default function SignInForm() {
@@ -15,13 +14,11 @@ export default function SignInForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [needsVerification, setNeedsVerification] = useState(false);
   const [form, setForm] = useState({ identifier: "", password: "" });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFieldErrors({});
-    setNeedsVerification(false);
     const parsedInput = loginSchema.safeParse(form);
     if (!parsedInput.success) {
       setFieldErrors(validationErrors(parsedInput.error));
@@ -50,7 +47,6 @@ export default function SignInForm() {
       }
 
       if (!response.ok) {
-        if (result.code === "EMAIL_NOT_VERIFIED") setNeedsVerification(true);
         throw new Error(result.message || "Unable to sign in.");
       }
 
@@ -154,9 +150,6 @@ export default function SignInForm() {
         Your account details are protected by a secure, HTTP-only session.
       </p>
       </form>
-      {needsVerification && (
-        <ResendVerificationForm initialEmail={form.identifier.includes("@") ? form.identifier : ""} />
-      )}
     </>
   );
 }

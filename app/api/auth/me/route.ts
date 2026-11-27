@@ -11,12 +11,12 @@ export async function GET() {
         authenticated: false,
         user: null,
       },
-      { status: 401 },
+      { status: 401, headers: { "Cache-Control": "private, no-store" } },
     );
   }
 
-  return NextResponse.json({
-    authenticated: true,
-    user,
-  });
+  return NextResponse.json(
+    { authenticated: true, user },
+    { headers: { "Cache-Control": "private, no-store" } },
+  );
 }

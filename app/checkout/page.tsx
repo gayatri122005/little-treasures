@@ -29,7 +29,7 @@ async function loadCheckoutScript() {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems } = useStorefront();
+  const { authLoading, authUser, cartItems } = useStorefront();
   const subtotal = useMemo(() => cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cartItems]);
   const [address, setAddress] = useState<AddressForm>({ fullName: "", email: "", phone: "", addressLine1: "", addressLine2: "", city: "", state: "", postalCode: "", country: "India" });
   const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "cod">("razorpay");
@@ -40,12 +40,21 @@ export default function CheckoutPage() {
   const [paymentEnabled, setPaymentEnabled] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "same-origin" }).then(async (response) => {
-      if (!response.ok) { router.replace(`/signin?redirect=${encodeURIComponent("/checkout")}`); return; }
-      const result = await response.json();
-      if (result.user) setAddress((current) => ({ ...current, fullName: result.user.full_name || "", email: result.user.email || "", phone: result.user.mobile || "" }));
-    }).catch(() => setError("Unable to load your account details."));
-  }, [router]);
+    if (authLoading) return;
+    if (!authUser) {
+      router.replace(`/signin?redirect=${encodeURIComponent("/checkout")}`);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setAddress((current) => ({
+        ...current,
+        fullName: authUser.full_name || "",
+        email: authUser.email || "",
+        phone: authUser.mobile || "",
+      }));
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [authLoading, authUser, router]);
 
   useEffect(() => {
     if (!cartItems.length) return;

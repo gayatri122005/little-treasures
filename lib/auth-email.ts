@@ -53,8 +53,8 @@ export async function sendAuthEmail(message: AuthEmail): Promise<AuthEmailResult
       });
 
       if (response.ok) return { sent: true };
-      const details = await response.text().catch(() => "");
-      console.error("Authentication email delivery failed:", response.status, details.slice(0, 300));
+      await response.body?.cancel().catch(() => undefined);
+      console.error("Authentication email delivery failed with provider status:", response.status);
       if (response.status < 500 || attempt === 2) break;
     }
     return { sent: false, reason: "delivery_failed" };

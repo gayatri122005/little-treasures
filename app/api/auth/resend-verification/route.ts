@@ -57,6 +57,7 @@ export async function POST(request: Request) {
     }
 
     const config = authEmailConfiguration();
+    let emailSent = false;
     if (userId && token && config) {
       const [rows] = await pool.execute<RowDataPacket[]>(
         "SELECT full_name FROM users WHERE id = ? LIMIT 1",
@@ -64,15 +65,20 @@ export async function POST(request: Request) {
       );
       const name = String(rows[0]?.full_name ?? "there");
       const url = `${config.baseUrl}/verify-email?token=${encodeURIComponent(token)}`;
-      await sendAuthEmail({
+      const emailResult = await sendAuthEmail({
         to: email,
         subject: "Your OMTreasure verification link",
         text: `Hello ${name}, verify your email using this link: ${url}. This link expires in 30 minutes.`,
         html: `<p>Hello ${escapeEmailHtml(name)},</p><p><a href="${escapeEmailHtml(url)}">Verify your email address</a></p><p>This link expires in 30 minutes.</p>`,
       });
+      emailSent = emailResult.sent;
     }
 
-    return NextResponse.json({ success: true, message: genericMessage });
+    return NextResponse.json({
+      success: true,
+      emailSent,
+      message: genericMessage,
+    });
   } catch (error) {
     console.error("Verification email request failed:", (error as { code?: string })?.code ?? "unexpected error");
     return NextResponse.json({ success: false, message: "Unable to process the request right now." }, { status: 500 });

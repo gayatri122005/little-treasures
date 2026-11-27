@@ -19,6 +19,14 @@ import {
 } from "@/lib/storefront-storage";
 import { usePathname, useRouter } from "next/navigation";
 
+export type StorefrontAuthUser = {
+  id: number;
+  full_name: string;
+  email: string;
+  mobile?: string | null;
+  role: "customer" | "admin";
+};
+
 type StorefrontContextValue = {
   cartItems: CartItem[];
   cartCount: number;
@@ -28,6 +36,8 @@ type StorefrontContextValue = {
   wishlistLoading: boolean;
   wishlistError: string | null;
   wishlistNotice: string;
+  authUser: StorefrontAuthUser | null;
+  authLoading: boolean;
   storageNotice: string;
   searchTerm: string;
   selectedCategory: string | null;
@@ -64,8 +74,40 @@ export function StorefrontProvider({
   const [storageWriteNotice, setStorageWriteNotice] = useState("");
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [authUser, setAuthUser] = useState<StorefrontAuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
+    async function loadAuth() {
+      try {
+        const response = await fetch("/api/auth/me", { credentials: "same-origin", cache: "no-store" });
+        const payload = (await response.json()) as { authenticated?: boolean; user?: StorefrontAuthUser | null };
+        if (cancelled) return;
+        setAuthUser(response.ok && payload.authenticated && payload.user ? payload.user : null);
+      } catch {
+        if (!cancelled) setAuthUser(null);
+      } finally {
+        if (!cancelled) setAuthLoading(false);
+      }
+    }
+
+    void loadAuth();
+    const refresh = () => {
+      setAuthLoading(true);
+      setWishlistProducts([]);
+      setWishlistError(null);
+      void loadAuth();
+    };
+    window.addEventListener("omtreasure:auth-changed", refresh);
+    return () => { cancelled = true; window.removeEventListener("omtreasure:auth-changed", refresh); };
+  }, []);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!authUser) return;
+
     async function loadWishlist() {
       setWishlistLoading(true);
       try {
@@ -81,9 +123,10 @@ export function StorefrontProvider({
     const refresh = () => void loadWishlist();
     window.addEventListener("omtreasure:auth-changed", refresh);
     return () => window.removeEventListener("omtreasure:auth-changed", refresh);
-  }, []);
+  }, [authLoading, authUser]);
 
   const wishlistIds = wishlistProducts.map((product) => product.id);
+  const displayedWishlistLoading = authLoading || Boolean(authUser && wishlistLoading);
   const storageNotice = storageWriteNotice || cartSnapshot.notice;
 
   const value = useMemo<StorefrontContextValue>(() => {
@@ -140,14 +183,11 @@ export function StorefrontProvider({
 
     async function toggleWishlist(product: Product) {
       if (wishlistPendingIds.includes(product.id)) return;
-      let authenticatedResponse: Response;
-      try {
-        authenticatedResponse = await fetch("/api/auth/me", { credentials: "same-origin", cache: "no-store" });
-      } catch {
-        setWishlistNotice("We could not check your sign-in status. Please try again.");
+      if (authLoading) {
+        setWishlistNotice("Checking your sign-in status. Please try again in a moment.");
         return;
       }
-      if (!authenticatedResponse.ok) { router.push(`/signin?redirect=${encodeURIComponent(pathname)}`); return; }
+      if (!authUser) { router.push(`/signin?redirect=${encodeURIComponent(pathname)}`); return; }
       const removing = wishlistProducts.some((item) => item.id === product.id);
       const previous = wishlistProducts;
       setWishlistPendingIds((ids) => [...ids, product.id]);
@@ -168,9 +208,11 @@ export function StorefrontProvider({
       wishlistIds,
       wishlistProducts,
       wishlistCount: wishlistProducts.length,
-      wishlistLoading,
+      wishlistLoading: displayedWishlistLoading,
       wishlistError,
       wishlistNotice,
+      authUser,
+      authLoading,
       storageNotice,
       searchTerm,
       selectedCategory,
@@ -188,10 +230,12 @@ export function StorefrontProvider({
     storageNotice,
     searchTerm,
     selectedCategory,
-    wishlistLoading,
+    displayedWishlistLoading,
     wishlistError,
     wishlistNotice,
     wishlistPendingIds,
+    authUser,
+    authLoading,
     router,
     pathname,
   ]);
