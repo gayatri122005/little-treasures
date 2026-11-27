@@ -97,6 +97,22 @@ async function main() {
       KEY idx_auth_rate_limit_updated (updated_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
 
+    await connection.query(`CREATE TABLE IF NOT EXISTS auth_sessions (
+      id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+      user_id BIGINT UNSIGNED NOT NULL,
+      token_hash CHAR(64) NOT NULL,
+      session_version INT UNSIGNED NOT NULL DEFAULT 0,
+      expires_at DATETIME(3) NOT NULL,
+      revoked_at DATETIME(3) DEFAULT NULL,
+      created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+      last_seen_at DATETIME(3) DEFAULT NULL,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_auth_session_token_hash (token_hash),
+      KEY idx_auth_session_user (user_id, revoked_at, expires_at),
+      CONSTRAINT fk_auth_session_user FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
+
     console.log("Authentication migration applied. Existing user records were preserved.");
   } finally {
     await connection.end();

@@ -37,7 +37,7 @@ export default function VerifyEmailAction() {
     return (
       <div className="space-y-4 text-center">
         <p role="status" className="rounded border border-[#d5e0d4] bg-[#f1f6ef] px-4 py-3 text-sm text-[#38513a]">Your email is verified. Your account is ready.</p>
-        <button type="button" onClick={() => { router.replace("/customer-dashboard"); router.refresh(); }} className="min-h-12 w-full rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[#9A3F33]">CONTINUE TO YOUR ACCOUNT</button>
+        <button type="button" onClick={() => { router.replace("/customer-dashboard"); router.refresh(); }} className="min-h-12 w-full rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[var(--purple-dark)]">CONTINUE TO YOUR ACCOUNT</button>
       </div>
     );
   }
@@ -46,9 +46,9 @@ export default function VerifyEmailAction() {
     <div>
       {token ? (
         <>
-          <p className="mb-4 text-sm leading-6 text-[#6E655F]">Confirm your email address to activate your OMTreasure account.</p>
+          <p className="mb-4 text-sm leading-6 text-[var(--muted)]">Confirm your email address to activate your OMTreasure account.</p>
           {error && <p role="alert" className="mb-4 rounded border border-[#f0d2d0] bg-[#fff2f1] px-3 py-2.5 text-sm text-[#81362e]">{error}</p>}
-          <button type="button" onClick={verify} disabled={busy} className="min-h-12 w-full rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[#9A3F33] disabled:opacity-70">
+          <button type="button" onClick={verify} disabled={busy} className="min-h-12 w-full rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[var(--purple-dark)] disabled:opacity-70">
             {busy ? "VERIFYING…" : "VERIFY EMAIL"}
           </button>
           {error && <ResendVerificationForm />}
@@ -59,7 +59,7 @@ export default function VerifyEmailAction() {
           <ResendVerificationForm />
         </div>
       )}
-      <p className="mt-5 text-center text-xs text-[#6E655F]">Need to sign in? <Link href="/signin" className="font-semibold text-[#1E1B18] underline underline-offset-4">Go to sign in</Link></p>
+      <p className="mt-5 text-center text-xs text-[var(--muted)]">Need to sign in? <Link href="/signin" className="font-semibold text-[var(--ink)] underline underline-offset-4">Go to sign in</Link></p>
     </div>
   );
 }

@@ -84,8 +84,8 @@ export default function SignUpForm() {
           )}
         </div>
         <ResendVerificationForm initialEmail={complete.email} />
-        <p className="pt-1 text-center text-xs text-[#6E655F]">
-          Already verified? <Link href="/signin" className="font-semibold text-[#1E1B18] underline underline-offset-4">Sign in</Link>
+        <p className="pt-1 text-center text-xs text-[var(--muted)]">
+          Already verified? <Link href="/signin" className="font-semibold text-[var(--ink)] underline underline-offset-4">Sign in</Link>
         </p>
       </section>
     );
@@ -164,7 +164,7 @@ export default function SignUpForm() {
           required
         />
       </div>
-      <p className="-mt-1 text-[11px] leading-5 text-[#6E655F]">
+      <p className="-mt-1 text-[11px] leading-5 text-[var(--muted)]">
         Use at least 8 characters with an uppercase letter, lowercase letter, number, and special character.
       </p>
 
@@ -177,11 +177,11 @@ export default function SignUpForm() {
       <button
         type="submit"
         disabled={loading}
-        className="flex min-h-12 w-full items-center justify-center rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-70"
+        className="flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-not-allowed disabled:opacity-70"
       >
         {loading ? "CREATING YOUR ACCOUNT..." : "CREATE ACCOUNT"}
       </button>
-      <p className="text-center text-[10px] leading-5 text-[#6E655F]">
+      <p className="text-center text-[10px] leading-5 text-[var(--muted)]">
         Your password is securely hashed before it is stored. Verify your email before signing in.
       </p>
     </form>

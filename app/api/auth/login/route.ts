@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
     if (Number(row.email_verified) !== 1) {
       return NextResponse.json(
-        { success: false, code: "EMAIL_NOT_VERIFIED", message: "Verify your email address before signing in." },
+        { success: false, code: "EMAIL_NOT_VERIFIED", message: "Please verify your email address before signing in." },
         { status: 403 },
       );
     }

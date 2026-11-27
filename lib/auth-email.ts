@@ -13,7 +13,7 @@ export type AuthEmailResult =
 
 export function authEmailConfiguration() {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.ORDER_EMAIL_FROM;
+  const from = process.env.AUTH_EMAIL_FROM || process.env.ORDER_EMAIL_FROM;
   const baseUrl = process.env.AUTH_BASE_URL;
 
   if (!apiKey || !from || !baseUrl) return null;
@@ -34,28 +34,30 @@ export async function sendAuthEmail(message: AuthEmail): Promise<AuthEmailResult
   if (!config) return { sent: false, reason: "not_configured" };
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: config.from,
-        to: [message.to],
-        subject: message.subject,
-        text: message.text,
-        html: message.html,
-      }),
-      cache: "no-store",
-    });
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${config.apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: config.from,
+          to: [message.to],
+          subject: message.subject,
+          text: message.text,
+          html: message.html,
+        }),
+        cache: "no-store",
+        signal: AbortSignal.timeout(10_000),
+      });
 
-    if (!response.ok) {
-      console.error("Authentication email delivery failed:", response.status);
-      return { sent: false, reason: "delivery_failed" };
+      if (response.ok) return { sent: true };
+      const details = await response.text().catch(() => "");
+      console.error("Authentication email delivery failed:", response.status, details.slice(0, 300));
+      if (response.status < 500 || attempt === 2) break;
     }
-
-    return { sent: true };
+    return { sent: false, reason: "delivery_failed" };
   } catch {
     console.error("Authentication email delivery failed: provider unavailable.");
     return { sent: false, reason: "delivery_failed" };

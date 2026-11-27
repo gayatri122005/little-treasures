@@ -653,31 +653,31 @@ export default function ProductManagement() {
   const categoryCount = products.length;
 
   return (
-    <main className="min-h-screen bg-[#F1EBE1] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
+    <main className="min-h-screen bg-[var(--surface-soft)] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-[1440px]">
         <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-[#6E655F]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-[var(--muted)]">
               Admin workspace / catalog
             </p>
-            <h1 className="serif-display mt-2 text-4xl text-[#1E1B18] sm:text-5xl">
+            <h1 className="serif-display mt-2 text-4xl text-[var(--ink)] sm:text-5xl">
               Product & media management
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#6E655F]">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
               Manage the catalog, product imagery, videos, publishing, and stock.
             </p>
           </div>
           <div className="flex gap-2">
             <a
               href="/admin"
-              className="inline-flex min-h-11 items-center rounded-full border border-[#E3D8C9] px-4 text-xs font-semibold text-[#1E1B18] hover:border-[#1E1B18]"
+              className="inline-flex min-h-11 items-center rounded-full border border-[var(--line)] px-4 text-xs font-semibold text-[var(--ink)] hover:border-[var(--ink)]"
             >
               ADMIN OVERVIEW
             </a>
             <button
               type="button"
               onClick={openNewProduct}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#B85042] px-5 text-xs font-semibold tracking-[0.05em] text-white hover:bg-[#9A3F33]"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--purple)] px-5 text-xs font-semibold tracking-[0.05em] text-white hover:bg-[var(--purple-dark)]"
             >
               <Icon name="plus" className="size-4" />
               ADD PRODUCT
@@ -687,7 +687,7 @@ export default function ProductManagement() {
 
         <nav
           aria-label="Product categories"
-          className="mt-7 flex gap-2 overflow-x-auto border-b border-[#E3D8C9] pb-3"
+          className="mt-7 flex gap-2 overflow-x-auto border-b border-[var(--line)] pb-3"
         >
           {categories.map((item) => (
             <button
@@ -702,14 +702,14 @@ export default function ProductManagement() {
               aria-pressed={category === item}
               className={`min-h-10 shrink-0 rounded-full px-4 text-xs font-semibold transition-colors ${
                 category === item
-                  ? "bg-[#B85042] text-white"
-                  : "bg-white text-[#6E655F] hover:bg-[#E8DCCB]"
+                  ? "bg-[var(--purple)] text-white"
+                  : "bg-white text-[var(--muted)] hover:bg-[var(--line)]"
               }`}
             >
               {item}
             </button>
           ))}
-          <span className="ml-auto hidden self-center text-xs text-[#6E655F] sm:block">
+          <span className="ml-auto hidden self-center text-xs text-[var(--muted)] sm:block">
             {categoryCount} {categoryCount === 1 ? "product" : "products"}
           </span>
         </nav>
@@ -727,13 +727,13 @@ export default function ProductManagement() {
           </div>
         )}
 
-        <section className="mt-5 overflow-hidden rounded-2xl border border-[#E3D8C9] bg-white">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E3D8C9] px-4 py-4 sm:px-6">
+        <section className="mt-5 overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] px-4 py-4 sm:px-6">
             <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#6E655F]">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
                 Category inventory
               </p>
-              <h2 className="serif-display mt-1 text-2xl text-[#1E1B18]">
+              <h2 className="serif-display mt-1 text-2xl text-[var(--ink)]">
                 {category}
               </h2>
             </div>
@@ -745,14 +745,14 @@ export default function ProductManagement() {
                 void loadProducts();
               }}
               disabled={loading}
-              className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#E3D8C9] px-3 text-[10px] font-semibold text-[#6E655F] hover:text-[#1E1B18] disabled:opacity-50"
+              className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[var(--line)] px-3 text-[10px] font-semibold text-[var(--muted)] hover:text-[var(--ink)] disabled:opacity-50"
             >
               <Icon name="refresh" className="size-3.5" />
               REFRESH
             </button>
           </div>
           {loading ? (
-            <div className="px-6 py-16 text-center text-sm text-[#6E655F]" aria-busy="true">
+            <div className="px-6 py-16 text-center text-sm text-[var(--muted)]" aria-busy="true">
               Loading category products…
             </div>
           ) : listError ? (
@@ -772,17 +772,17 @@ export default function ProductManagement() {
             </div>
           ) : products.length === 0 ? (
             <div className="px-6 py-16 text-center">
-              <Icon name="sparkle" className="mx-auto size-7 text-[#B85042]" />
-              <p className="serif-display mt-3 text-2xl text-[#1E1B18]">
+              <Icon name="sparkle" className="mx-auto size-7 text-[var(--purple)]" />
+              <p className="serif-display mt-3 text-2xl text-[var(--ink)]">
                 Nothing here just yet
               </p>
-              <p className="mt-2 text-sm text-[#6E655F]">
+              <p className="mt-2 text-sm text-[var(--muted)]">
                 Add the first {category.toLowerCase()} product to your catalog.
               </p>
               <button
                 type="button"
                 onClick={openNewProduct}
-                className="mt-5 rounded-full bg-[#B85042] px-5 py-3 text-[10px] font-semibold tracking-[0.1em] text-white hover:bg-[#9A3F33]"
+                className="mt-5 rounded-full bg-[var(--purple)] px-5 py-3 text-[10px] font-semibold tracking-[0.1em] text-white hover:bg-[var(--purple-dark)]"
               >
                 ADD FIRST PRODUCT
               </button>
@@ -791,7 +791,7 @@ export default function ProductManagement() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] text-left">
                 <thead>
-                  <tr className="bg-[#F1EBE1] text-[9px] uppercase tracking-[0.12em] text-[#6E655F]">
+                  <tr className="bg-[var(--surface-soft)] text-[9px] uppercase tracking-[0.12em] text-[var(--muted)]">
                     <th className="px-4 py-3 font-semibold sm:px-6">Product</th>
                     <th className="px-4 py-3 font-semibold">Price</th>
                     <th className="px-4 py-3 font-semibold">Stock</th>
@@ -799,12 +799,12 @@ export default function ProductManagement() {
                     <th className="px-4 py-3 text-right font-semibold sm:px-6">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E8DCCB]">
+                <tbody className="divide-y divide-[var(--line)]">
                   {products.map((product) => (
                     <tr key={product.id}>
                       <td className="px-4 py-3 sm:px-6">
                         <div className="flex items-center gap-3">
-                          <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-[#F1EBE1]">
+                          <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-[var(--surface-soft)]">
                             {product.images[0] ? (
                               <Image
                                 src={product.images.find((image) => image.isPrimary)?.path ?? product.images[0].path}
@@ -816,15 +816,15 @@ export default function ProductManagement() {
                               />
                             ) : (
                               <span className="flex size-full items-center justify-center">
-                                <Icon name="sparkle" className="size-5 text-[#B85042]" />
+                                <Icon name="sparkle" className="size-5 text-[var(--purple)]" />
                               </span>
                             )}
                           </div>
                           <div className="min-w-0">
-                            <p className="max-w-[280px] truncate text-sm font-medium text-[#1E1B18]">
+                            <p className="max-w-[280px] truncate text-sm font-medium text-[var(--ink)]">
                               {product.name}
                             </p>
-                            <p className="mt-1 text-[10px] text-[#6E655F]">
+                            <p className="mt-1 text-[10px] text-[var(--muted)]">
                               {product.isFeatured ? "Featured · " : ""}
                               {product.isNewArrival ? "New arrival · " : ""}
                               {product.images.length} {product.images.length === 1 ? "image" : "images"}
@@ -835,17 +835,17 @@ export default function ProductManagement() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-[#1E1B18]">
+                      <td className="px-4 py-3 text-sm text-[var(--ink)]">
                         {formatPrice(product.price)}
                       </td>
-                      <td className="px-4 py-3 text-sm text-[#1E1B18]">
+                      <td className="px-4 py-3 text-sm text-[var(--ink)]">
                         {product.stock} units
                       </td>
                       <td className="px-4 py-3">
                         <span
                           className={`rounded-full px-3 py-1 text-[9px] font-semibold ${
                             product.status === "draft"
-                              ? "bg-[#F1EBE1] text-[#6E655F]"
+                              ? "bg-[var(--surface-soft)] text-[var(--muted)]"
                               : product.status === "out_of_stock"
                                 ? "bg-[#FAEFEC] text-[#873F30]"
                                 : "bg-[#F5E9E1] text-[#7C3A31]"
@@ -863,14 +863,14 @@ export default function ProductManagement() {
                           <button
                             type="button"
                             onClick={() => void togglePublished(product)}
-                            className="min-h-9 rounded-full border border-[#E3D8C9] px-3 text-[9px] font-semibold text-[#6E655F] hover:border-[#1E1B18] hover:text-[#1E1B18]"
+                            className="min-h-9 rounded-full border border-[var(--line)] px-3 text-[9px] font-semibold text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]"
                           >
                             {product.isPublished ? "UNPUBLISH" : "PUBLISH"}
                           </button>
                           <button
                             type="button"
                             onClick={() => openEditProduct(product)}
-                            className="min-h-9 rounded-full bg-[#B85042] px-3 text-[9px] font-semibold text-white hover:bg-[#9A3F33]"
+                            className="min-h-9 rounded-full bg-[var(--purple)] px-3 text-[9px] font-semibold text-white hover:bg-[var(--purple-dark)]"
                           >
                             EDIT
                           </button>
@@ -894,19 +894,19 @@ export default function ProductManagement() {
       </div>
 
       {formOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#1E1B18]/65 p-3 sm:p-6">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[var(--ink)]/65 p-3 sm:p-6">
           <section
             role="dialog"
             aria-modal="true"
             aria-labelledby="product-editor-title"
             className="mx-auto my-2 max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl sm:my-6"
           >
-            <header className="flex items-start justify-between gap-4 border-b border-[#E3D8C9] px-5 py-4 sm:px-7">
+            <header className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-5 py-4 sm:px-7">
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#6E655F]">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
                   {form.id ? "Edit catalog item" : "New catalog item"}
                 </p>
-                <h2 id="product-editor-title" className="serif-display mt-1 text-3xl text-[#1E1B18]">
+                <h2 id="product-editor-title" className="serif-display mt-1 text-3xl text-[var(--ink)]">
                   {form.id ? "Update product" : "Add a product"}
                 </h2>
               </div>
@@ -915,7 +915,7 @@ export default function ProductManagement() {
                 disabled={saving}
                 onClick={resetForm}
                 aria-label="Close product editor"
-                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#F1EBE1] text-[#1E1B18] hover:bg-[#E8DCCB]"
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[var(--ink)] hover:bg-[var(--line)]"
               >
                 <Icon name="close" className="size-5" />
               </button>
@@ -925,18 +925,18 @@ export default function ProductManagement() {
               <div className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
                 <div className="space-y-5">
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="block text-xs font-semibold text-[#1E1B18] sm:col-span-2">
+                    <label className="block text-xs font-semibold text-[var(--ink)] sm:col-span-2">
                       Product name
                       <input
                         required
                         maxLength={160}
                         value={form.name}
                         onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                        className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] px-3 text-sm font-normal outline-none focus:border-[#1E1B18]"
+                        className="mt-2 min-h-11 w-full rounded-xl border border-[var(--line)] px-3 text-sm font-normal outline-none focus:border-[var(--ink)]"
                         placeholder="e.g. Handmade Toran or Girls Frock"
                       />
                     </label>
-                    <label className="block text-xs font-semibold text-[#1E1B18]">
+                    <label className="block text-xs font-semibold text-[var(--ink)]">
                       Category
                       <select
                         value={form.category}
@@ -944,26 +944,26 @@ export default function ProductManagement() {
                           const nextCategory = event.target.value;
                           setForm((current) => ({ ...current, category: nextCategory, productType: productTypesForCategory(nextCategory)[0] }));
                         }}
-                        className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] bg-white px-3 text-sm font-normal"
+                        className="mt-2 min-h-11 w-full rounded-xl border border-[var(--line)] bg-white px-3 text-sm font-normal"
                       >
                         {categories.map((item) => (
                           <option key={item} value={item}>{item}</option>
                         ))}
                       </select>
                     </label>
-                    <label className="block text-xs font-semibold text-[#1E1B18]">
+                    <label className="block text-xs font-semibold text-[var(--ink)]">
                       Product type
                       <select
                         value={form.productType}
                         onChange={(event) => setForm((current) => ({ ...current, productType: event.target.value }))}
-                        className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] bg-white px-3 text-sm font-normal"
+                        className="mt-2 min-h-11 w-full rounded-xl border border-[var(--line)] bg-white px-3 text-sm font-normal"
                       >
                         {productTypesForCategory(form.category).map((item) => (
                           <option key={item} value={item}>{item}</option>
                         ))}
                       </select>
                     </label>
-                    <label className="block text-xs font-semibold text-[#1E1B18]">
+                    <label className="block text-xs font-semibold text-[var(--ink)]">
                       Price (₹)
                       <input
                         required
@@ -973,11 +973,11 @@ export default function ProductManagement() {
                         step="0.01"
                         value={form.price}
                         onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))}
-                        className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] px-3 text-sm font-normal"
+                        className="mt-2 min-h-11 w-full rounded-xl border border-[var(--line)] px-3 text-sm font-normal"
                         placeholder="0.00"
                       />
                     </label>
-                    <label className="block text-xs font-semibold text-[#1E1B18]">
+                    <label className="block text-xs font-semibold text-[var(--ink)]">
                       Available stock
                       <input
                         required
@@ -987,28 +987,28 @@ export default function ProductManagement() {
                         step="1"
                         value={form.stock}
                         onChange={(event) => setForm((current) => ({ ...current, stock: event.target.value }))}
-                        className="mt-2 min-h-11 w-full rounded-xl border border-[#E3D8C9] px-3 text-sm font-normal"
+                        className="mt-2 min-h-11 w-full rounded-xl border border-[var(--line)] px-3 text-sm font-normal"
                       />
                     </label>
-                    <label className="block text-xs font-semibold text-[#1E1B18] sm:col-span-2">
+                    <label className="block text-xs font-semibold text-[var(--ink)] sm:col-span-2">
                       Description
                       <textarea
                         maxLength={10000}
                         rows={5}
                         value={form.description}
                         onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-                        className="mt-2 w-full resize-y rounded-xl border border-[#E3D8C9] px-3 py-3 text-sm font-normal leading-6"
+                        className="mt-2 w-full resize-y rounded-xl border border-[var(--line)] px-3 py-3 text-sm font-normal leading-6"
                         placeholder="Tell customers what makes this product special."
                       />
                     </label>
                   </div>
 
-                  <label className="flex min-h-14 items-center justify-between gap-4 rounded-xl border border-[#E3D8C9] px-4 py-3">
+                  <label className="flex min-h-14 items-center justify-between gap-4 rounded-xl border border-[var(--line)] px-4 py-3">
                     <span>
-                      <span className="block text-sm font-semibold text-[#1E1B18]">
+                      <span className="block text-sm font-semibold text-[var(--ink)]">
                         Publish product
                       </span>
-                      <span className="mt-1 block text-[10px] text-[#6E655F]">
+                      <span className="mt-1 block text-[10px] text-[var(--muted)]">
                         Published products appear in the customer collection.
                       </span>
                     </span>
@@ -1016,18 +1016,18 @@ export default function ProductManagement() {
                       type="checkbox"
                       checked={form.isPublished}
                       onChange={(event) => setForm((current) => ({ ...current, isPublished: event.target.checked }))}
-                      className="size-5 accent-[#B85042]"
+                      className="size-5 accent-[var(--purple)]"
                     />
                   </label>
 
-                  <fieldset className="space-y-2 rounded-xl border border-[#E3D8C9] p-4">
-                    <legend className="px-1 text-xs font-semibold text-[#1E1B18]">
+                  <fieldset className="space-y-2 rounded-xl border border-[var(--line)] p-4">
+                    <legend className="px-1 text-xs font-semibold text-[var(--ink)]">
                       Homepage placement
                     </legend>
                     <label className="flex items-center justify-between gap-3 text-xs">
                       <span>
-                        <span className="block font-medium text-[#1E1B18]">Show on homepage</span>
-                        <span className="mt-0.5 block text-[10px] text-[#6E655F]">
+                        <span className="block font-medium text-[var(--ink)]">Show on homepage</span>
+                        <span className="mt-0.5 block text-[10px] text-[var(--muted)]">
                           Keep this product in the homepage collection.
                         </span>
                       </span>
@@ -1035,13 +1035,13 @@ export default function ProductManagement() {
                         type="checkbox"
                         checked={form.showOnHomepage}
                         onChange={(event) => setForm((current) => ({ ...current, showOnHomepage: event.target.checked }))}
-                        className="size-5 accent-[#B85042]"
+                        className="size-5 accent-[var(--purple)]"
                       />
                     </label>
                     <label className="flex items-center justify-between gap-3 text-xs">
                       <span>
-                        <span className="block font-medium text-[#1E1B18]">Just arrived</span>
-                        <span className="mt-0.5 block text-[10px] text-[#6E655F]">
+                        <span className="block font-medium text-[var(--ink)]">Just arrived</span>
+                        <span className="mt-0.5 block text-[10px] text-[var(--muted)]">
                           Include this product in the new arrivals section.
                         </span>
                       </span>
@@ -1049,13 +1049,13 @@ export default function ProductManagement() {
                         type="checkbox"
                         checked={form.isNewArrival}
                         onChange={(event) => setForm((current) => ({ ...current, isNewArrival: event.target.checked }))}
-                        className="size-5 accent-[#B85042]"
+                        className="size-5 accent-[var(--purple)]"
                       />
                     </label>
                     <label className="flex items-center justify-between gap-3 text-xs">
                       <span>
-                        <span className="block font-medium text-[#1E1B18]">Shop our favorites</span>
-                        <span className="mt-0.5 block text-[10px] text-[#6E655F]">
+                        <span className="block font-medium text-[var(--ink)]">Shop our favorites</span>
+                        <span className="mt-0.5 block text-[10px] text-[var(--muted)]">
                           Feature this product in the favorites section.
                         </span>
                       </span>
@@ -1063,7 +1063,7 @@ export default function ProductManagement() {
                         type="checkbox"
                         checked={form.isFeatured}
                         onChange={(event) => setForm((current) => ({ ...current, isFeatured: event.target.checked }))}
-                        className="size-5 accent-[#B85042]"
+                        className="size-5 accent-[var(--purple)]"
                       />
                     </label>
                   </fieldset>
@@ -1073,14 +1073,14 @@ export default function ProductManagement() {
                   <section>
                     <div className="flex items-end justify-between gap-3">
                       <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[#1E1B18]">
+                        <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--ink)]">
                           Product images
                         </h3>
-                        <p className="mt-1 text-[10px] leading-4 text-[#6E655F]">
+                        <p className="mt-1 text-[10px] leading-4 text-[var(--muted)]">
                           JPG, JPEG, PNG, WebP · up to 8 MB each · max 8
                         </p>
                       </div>
-                      <label className="cursor-pointer rounded-full border border-[#E3D8C9] px-3 py-2 text-[9px] font-semibold text-[#1E1B18] hover:border-[#1E1B18]">
+                      <label className="cursor-pointer rounded-full border border-[var(--line)] px-3 py-2 text-[9px] font-semibold text-[var(--ink)] hover:border-[var(--ink)]">
                         ADD IMAGES
                         <input
                           type="file"
@@ -1095,15 +1095,15 @@ export default function ProductManagement() {
                       </label>
                     </div>
                     {form.images.length === 0 ? (
-                      <div className="mt-3 rounded-xl border border-dashed border-[#E3D8C9] px-4 py-8 text-center text-xs text-[#6E655F]">
+                      <div className="mt-3 rounded-xl border border-dashed border-[var(--line)] px-4 py-8 text-center text-xs text-[var(--muted)]">
                         Add one or more product photos to preview them here.
                       </div>
                     ) : (
                       <div className="mt-3 space-y-3">
                         {form.images.map((image) => (
-                          <article key={image.key} className="rounded-xl border border-[#E3D8C9] p-3">
+                          <article key={image.key} className="rounded-xl border border-[var(--line)] p-3">
                             <div className="flex gap-3">
-                              <div className="relative aspect-[0.8] w-20 shrink-0 overflow-hidden rounded-lg bg-[#F1EBE1]">
+                              <div className="relative aspect-[0.8] w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--surface-soft)]">
                                 <Image
                                   src={image.src}
                                   alt={image.name}
@@ -1118,11 +1118,11 @@ export default function ProductManagement() {
                                 />
                               </div>
                               <div className="min-w-0 flex-1">
-                                <p className="truncate text-[11px] font-medium text-[#1E1B18]">
+                                <p className="truncate text-[11px] font-medium text-[var(--ink)]">
                                   {image.name}
                                 </p>
                                 {image.file && (
-                                  <p className="mt-1 text-[9px] text-[#6E655F]">
+                                  <p className="mt-1 text-[9px] text-[var(--muted)]">
                                     {formatFileSize(image.file.size)}
                                   </p>
                                 )}
@@ -1138,7 +1138,7 @@ export default function ProductManagement() {
                                         primary: item.key === image.key,
                                       })),
                                     }))}
-                                    className="accent-[#B85042]"
+                                    className="accent-[var(--purple)]"
                                   />
                                   Primary image
                                 </label>
@@ -1153,7 +1153,7 @@ export default function ProductManagement() {
                               </button>
                             </div>
                             <div className="mt-3 grid grid-cols-2 gap-2">
-                              <label className="text-[9px] font-medium text-[#6E655F]">
+                              <label className="text-[9px] font-medium text-[var(--muted)]">
                                 Width (px)
                                 <input
                                   type="number"
@@ -1166,11 +1166,11 @@ export default function ProductManagement() {
                                       item.key === image.key ? { ...item, width: event.target.value } : item,
                                     ),
                                   }))}
-                                  className="mt-1 min-h-9 w-full rounded-lg border border-[#E3D8C9] px-2 text-xs text-[#1E1B18]"
+                                  className="mt-1 min-h-9 w-full rounded-lg border border-[var(--line)] px-2 text-xs text-[var(--ink)]"
                                   placeholder="Auto"
                                 />
                               </label>
-                              <label className="text-[9px] font-medium text-[#6E655F]">
+                              <label className="text-[9px] font-medium text-[var(--muted)]">
                                 Height (px)
                                 <input
                                   type="number"
@@ -1183,11 +1183,11 @@ export default function ProductManagement() {
                                       item.key === image.key ? { ...item, height: event.target.value } : item,
                                     ),
                                   }))}
-                                  className="mt-1 min-h-9 w-full rounded-lg border border-[#E3D8C9] px-2 text-xs text-[#1E1B18]"
+                                  className="mt-1 min-h-9 w-full rounded-lg border border-[var(--line)] px-2 text-xs text-[var(--ink)]"
                                   placeholder="Auto"
                                 />
                               </label>
-                              <label className="text-[9px] font-medium text-[#6E655F]">
+                              <label className="text-[9px] font-medium text-[var(--muted)]">
                                 Aspect / resize
                                 <select
                                   value={image.fit}
@@ -1199,13 +1199,13 @@ export default function ProductManagement() {
                                         : item,
                                     ),
                                   }))}
-                                  className="mt-1 min-h-9 w-full rounded-lg border border-[#E3D8C9] bg-white px-2 text-xs text-[#1E1B18]"
+                                  className="mt-1 min-h-9 w-full rounded-lg border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink)]"
                                 >
                                   <option value="cover">Crop to fill</option>
                                   <option value="contain">Fit inside</option>
                                 </select>
                               </label>
-                              <label className="text-[9px] font-medium text-[#6E655F]">
+                              <label className="text-[9px] font-medium text-[var(--muted)]">
                                 Image position
                                 <select
                                   value={image.position}
@@ -1217,7 +1217,7 @@ export default function ProductManagement() {
                                         : item,
                                     ),
                                   }))}
-                                  className="mt-1 min-h-9 w-full rounded-lg border border-[#E3D8C9] bg-white px-2 text-xs text-[#1E1B18]"
+                                  className="mt-1 min-h-9 w-full rounded-lg border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink)]"
                                 >
                                   {positions.map((position) => (
                                     <option key={position.value} value={position.value}>
@@ -1236,14 +1236,14 @@ export default function ProductManagement() {
                   <section>
                     <div className="flex items-end justify-between gap-3">
                       <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[#1E1B18]">
+                        <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--ink)]">
                           Product videos
                         </h3>
-                        <p className="mt-1 text-[10px] leading-4 text-[#6E655F]">
+                        <p className="mt-1 text-[10px] leading-4 text-[var(--muted)]">
                           MP4, WebM · up to 40 MB each · max 2
                         </p>
                       </div>
-                      <label className="cursor-pointer rounded-full border border-[#E3D8C9] px-3 py-2 text-[9px] font-semibold text-[#1E1B18] hover:border-[#1E1B18]">
+                      <label className="cursor-pointer rounded-full border border-[var(--line)] px-3 py-2 text-[9px] font-semibold text-[var(--ink)] hover:border-[var(--ink)]">
                         ADD VIDEO
                         <input
                           type="file"
@@ -1260,7 +1260,7 @@ export default function ProductManagement() {
                     {form.videos.length > 0 && (
                       <div className="mt-3 space-y-3">
                         {form.videos.map((video) => (
-                          <article key={video.key} className="rounded-xl border border-[#E3D8C9] p-3">
+                          <article key={video.key} className="rounded-xl border border-[var(--line)] p-3">
                             <div className="flex gap-3">
                               <video
                                 src={video.src}
@@ -1268,18 +1268,18 @@ export default function ProductManagement() {
                                 playsInline
                                 preload="metadata"
                                 poster={video.thumbnail ?? undefined}
-                                className="aspect-video w-28 shrink-0 rounded-lg bg-[#1E1B18] object-contain"
+                                className="aspect-video w-28 shrink-0 rounded-lg bg-[var(--ink)] object-contain"
                               />
                               <div className="min-w-0 flex-1">
-                                <p className="truncate text-[10px] font-medium text-[#1E1B18]">
+                                <p className="truncate text-[10px] font-medium text-[var(--ink)]">
                                   {video.name}
                                 </p>
                                 {video.file && (
-                                  <p className="mt-1 text-[9px] text-[#6E655F]">
+                                  <p className="mt-1 text-[9px] text-[var(--muted)]">
                                     {formatFileSize(video.file.size)}
                                   </p>
                                 )}
-                                <label className="mt-2 block text-[9px] font-medium text-[#6E655F]">
+                                <label className="mt-2 block text-[9px] font-medium text-[var(--muted)]">
                                   Video thumbnail
                                   <select
                                     value={video.thumbnailImageKey ?? ""}
@@ -1291,7 +1291,7 @@ export default function ProductManagement() {
                                           : item,
                                       ),
                                     }))}
-                                    className="mt-1 min-h-9 w-full rounded-lg border border-[#E3D8C9] bg-white px-2 text-[10px] text-[#1E1B18]"
+                                    className="mt-1 min-h-9 w-full rounded-lg border border-[var(--line)] bg-white px-2 text-[10px] text-[var(--ink)]"
                                   >
                                     <option value="">
                                       {video.thumbnail ? "Keep current thumbnail" : "No thumbnail"}
@@ -1328,31 +1328,31 @@ export default function ProductManagement() {
               )}
               {saving && (
                 <div className="px-5 pb-4 sm:px-7" aria-live="polite">
-                  <div className="mb-1 flex justify-between text-[10px] text-[#6E655F]">
+                  <div className="mb-1 flex justify-between text-[10px] text-[var(--muted)]">
                     <span>Saving product and media…</span>
                     <span>{uploadProgress}%</span>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-[#E8DCCB]">
+                  <div className="h-2 overflow-hidden rounded-full bg-[var(--line)]">
                     <div
-                      className="h-full rounded-full bg-[#B85042] transition-[width]"
+                      className="h-full rounded-full bg-[var(--purple)] transition-[width]"
                       style={{ width: `${uploadProgress}%` }}
                     />
                   </div>
                 </div>
               )}
-              <footer className="sticky bottom-0 flex flex-wrap justify-end gap-2 border-t border-[#E3D8C9] bg-white px-5 py-4 sm:px-7">
+              <footer className="sticky bottom-0 flex flex-wrap justify-end gap-2 border-t border-[var(--line)] bg-white px-5 py-4 sm:px-7">
                 <button
                   type="button"
                   disabled={saving}
                   onClick={resetForm}
-                  className="min-h-11 rounded-full border border-[#E3D8C9] px-5 text-xs font-semibold text-[#6E655F] disabled:opacity-50"
+                  className="min-h-11 rounded-full border border-[var(--line)] px-5 text-xs font-semibold text-[var(--muted)] disabled:opacity-50"
                 >
                   CANCEL
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="min-h-11 rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.05em] text-white hover:bg-[#9A3F33] disabled:cursor-wait disabled:opacity-60"
+                  className="min-h-11 rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.05em] text-white hover:bg-[var(--purple-dark)] disabled:cursor-wait disabled:opacity-60"
                 >
                   {saving ? "SAVING…" : form.id ? "SAVE CHANGES" : "SAVE PRODUCT"}
                 </button>

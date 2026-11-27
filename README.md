@@ -22,12 +22,15 @@ STORE_SHIPPING_AMOUNT=0
 STORE_TAX_RATE_PERCENT=0
 ENABLE_COD=true
 RESEND_API_KEY=
+AUTH_EMAIL_FROM=
 ORDER_EMAIL_FROM=
 ```
 
 `STORE_SHIPPING_AMOUNT` is the flat shipping charge in rupees. The tax percentage is applied to subtotal plus shipping. Both default to zero, and discounts currently remain zero because no promotion rules exist in this project. Set these values to the merchant’s approved pricing and tax configuration before accepting orders. Set `ENABLE_COD=false` to hide and reject COD checkout.
 
-Order emails use Resend’s email API when both `RESEND_API_KEY` and `ORDER_EMAIL_FROM` are configured. Verify the sender domain with the email provider before production. Without these values, orders and payments still work, but email delivery is skipped.
+Authentication and order emails use Resend’s email API when `RESEND_API_KEY`, `AUTH_EMAIL_FROM` (or the legacy `ORDER_EMAIL_FROM`), and `AUTH_BASE_URL` are configured. Verify the sender domain with Resend before production. Without these values, accounts and orders are still stored safely, but verification, reset, and notification emails cannot be delivered.
+
+For production email delivery, set `AUTH_BASE_URL` to the public HTTPS site URL, use a verified Resend sender in `AUTH_EMAIL_FROM`, and configure the sender domain’s SPF/DKIM records in Resend. Keep all three values server-side; do not use a `NEXT_PUBLIC_` prefix for the API key.
 
 ## Razorpay Test Mode
 

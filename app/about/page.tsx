@@ -14,7 +14,7 @@ export default function AboutPage() {
         <h1 className="serif-display mt-3 max-w-3xl text-4xl leading-tight sm:text-6xl">
           Beautiful finds for every little moment.
         </h1>
-        <p className="mt-6 max-w-2xl text-base leading-7 text-[#6E655F]">
+        <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--muted)]">
           OMTreasure brings together three product collections: Home &amp; Decor,
           Kids Wear, and Fashion &amp; Hair Accessories. Browse the products and
           details currently available in each collection.

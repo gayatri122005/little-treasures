@@ -54,12 +54,12 @@ export default function ForgotPasswordForm() {
         />
         {message && <p role="status" className="rounded border border-[#d5e0d4] bg-[#f1f6ef] px-3 py-2.5 text-sm leading-6 text-[#38513a]">{message}</p>}
         {error && <p role="alert" className="rounded border border-[#f0d2d0] bg-[#fff2f1] px-3 py-2.5 text-sm text-[#81362e]">{error}</p>}
-        <button type="submit" disabled={busy} className="flex min-h-12 w-full items-center justify-center rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[#9A3F33] disabled:opacity-70">
+        <button type="submit" disabled={busy} className="flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[var(--purple-dark)] disabled:opacity-70">
           {busy ? "REQUESTING LINK…" : "SEND RESET LINK"}
         </button>
       </form>
-      <p className="mt-5 text-center text-xs text-[#6E655F]">
-        Remembered your password? <Link href="/signin" className="font-semibold text-[#1E1B18] underline underline-offset-4">Sign in</Link>
+      <p className="mt-5 text-center text-xs text-[var(--muted)]">
+        Remembered your password? <Link href="/signin" className="font-semibold text-[var(--ink)] underline underline-offset-4">Sign in</Link>
       </p>
     </div>
   );

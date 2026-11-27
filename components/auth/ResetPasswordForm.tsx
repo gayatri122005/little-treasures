@@ -82,10 +82,10 @@ export default function ResetPasswordForm() {
         maxLength={72}
         required
       />
-      <p className="text-[11px] leading-5 text-[#6E655F]">Use at least 8 characters with an uppercase letter, lowercase letter, number, and special character.</p>
+      <p className="text-[11px] leading-5 text-[var(--muted)]">Use at least 8 characters with an uppercase letter, lowercase letter, number, and special character.</p>
       {message && <p role="status" className="rounded border border-[#d5e0d4] bg-[#f1f6ef] px-3 py-2.5 text-sm text-[#38513a]">{message}</p>}
       {error && <p role="alert" className="rounded border border-[#f0d2d0] bg-[#fff2f1] px-3 py-2.5 text-sm text-[#81362e]">{error}</p>}
-      <button type="submit" disabled={busy} className="flex min-h-12 w-full items-center justify-center rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[#9A3F33] disabled:opacity-70">
+      <button type="submit" disabled={busy} className="flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.12em] text-white hover:bg-[var(--purple-dark)] disabled:opacity-70">
         {busy ? "UPDATING PASSWORD…" : "UPDATE PASSWORD"}
       </button>
     </form>

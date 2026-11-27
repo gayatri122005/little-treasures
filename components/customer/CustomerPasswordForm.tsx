@@ -64,23 +64,23 @@ export default function CustomerPasswordForm() {
   return (
     <section
       aria-labelledby="change-password-heading"
-      className="rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] p-6 shadow-sm"
+      className="rounded-3xl border border-[var(--line)] bg-[var(--page)] p-6 shadow-sm"
     >
       <p className="eyebrow">Account security</p>
       <h2
         id="change-password-heading"
-        className="serif-display mt-2 text-3xl text-[#1E1B18]"
+        className="serif-display mt-2 text-3xl text-[var(--ink)]"
       >
         Change password
       </h2>
-      <p className="mt-2 text-sm leading-6 text-[#6E655F]">
+      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
         Confirm your current password and choose a new one. You will need to
         sign in again after it is updated.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-5 grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label htmlFor="current-password" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+          <label htmlFor="current-password" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
             Current password
           </label>
           <input
@@ -93,11 +93,11 @@ export default function CustomerPasswordForm() {
             onChange={(event) =>
               setForm((current) => ({ ...current, currentPassword: event.target.value }))
             }
-            className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+            className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
           />
         </div>
         <div>
-          <label htmlFor="new-password" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+          <label htmlFor="new-password" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
             New password
           </label>
           <input
@@ -112,11 +112,11 @@ export default function CustomerPasswordForm() {
             onChange={(event) =>
               setForm((current) => ({ ...current, newPassword: event.target.value }))
             }
-            className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+            className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
           />
         </div>
         <div>
-          <label htmlFor="confirm-new-password" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+          <label htmlFor="confirm-new-password" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
             Confirm new password
           </label>
           <input
@@ -131,10 +131,10 @@ export default function CustomerPasswordForm() {
             onChange={(event) =>
               setForm((current) => ({ ...current, confirmPassword: event.target.value }))
             }
-            className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+            className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
           />
         </div>
-        <p className="text-[11px] leading-5 text-[#6E655F] sm:col-span-2">
+        <p className="text-[11px] leading-5 text-[var(--muted)] sm:col-span-2">
           Use at least 8 characters with an uppercase letter, lowercase letter, number, and special character.
         </p>
         {error && (
@@ -146,13 +146,13 @@ export default function CustomerPasswordForm() {
           <button
             type="submit"
             disabled={busy}
-            className="min-h-11 bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-wait disabled:opacity-60"
+            className="min-h-11 bg-[var(--ink)] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-wait disabled:opacity-60"
           >
             {busy ? "UPDATING…" : "UPDATE PASSWORD"}
           </button>
           <Link
             href="/signin"
-            className="min-h-11 self-start py-3 text-xs font-semibold tracking-[0.08em] text-[#1E1B18] underline-offset-4 hover:underline sm:self-auto"
+            className="min-h-11 self-start py-3 text-xs font-semibold tracking-[0.08em] text-[var(--ink)] underline-offset-4 hover:underline sm:self-auto"
           >
             SIGN IN PAGE
           </Link>

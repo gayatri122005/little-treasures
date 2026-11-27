@@ -71,11 +71,12 @@ export default function SignInForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <>
+      <form onSubmit={handleSubmit} className="space-y-5">
       {searchParams.get("passwordChanged") === "1" && (
         <p
           role="status"
-          className="rounded-[3px] border border-[#B85042] bg-[#B85042] px-3 py-2.5 text-sm text-white"
+          className="rounded-[3px] border border-[var(--purple)] bg-[var(--purple)] px-3 py-2.5 text-sm text-white"
         >
           Your password has been updated. Sign in with your new password.
         </p>
@@ -117,7 +118,7 @@ export default function SignInForm() {
       />
 
       <div className="flex justify-end">
-        <Link href="/forgot-password" className="text-xs font-medium text-[#1E1B18] underline decoration-[#B85042] underline-offset-4 hover:text-[#9A3F33]">
+        <Link href="/forgot-password" className="text-xs font-medium text-[var(--ink)] underline decoration-[var(--purple)] underline-offset-4 hover:text-[var(--purple-dark)]">
           Forgot password?
         </Link>
       </div>
@@ -130,19 +131,21 @@ export default function SignInForm() {
           {error}
         </p>
       )}
-      {needsVerification && form.identifier.includes("@") && <ResendVerificationForm initialEmail={form.identifier} />}
-
       <button
         type="submit"
         disabled={loading}
-        className="flex min-h-12 w-full items-center justify-center rounded-full bg-[#1E1B18] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-70"
+        className="flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--ink)] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-not-allowed disabled:opacity-70"
       >
         {loading ? "SIGNING YOU IN..." : "SIGN IN"}
       </button>
 
-      <p className="text-center text-[10px] leading-5 text-[#6E655F]">
+      <p className="text-center text-[10px] leading-5 text-[var(--muted)]">
         Your account details are protected by a secure, HTTP-only session.
       </p>
-    </form>
+      </form>
+      {needsVerification && (
+        <ResendVerificationForm initialEmail={form.identifier.includes("@") ? form.identifier : ""} />
+      )}
+    </>
   );
 }

@@ -173,12 +173,12 @@ export default function ProductListing({
 
   return (
     <main className="collection-shell min-w-0 py-4 sm:py-6">
-      <header className="relative overflow-hidden rounded-3xl bg-[#F1EBE1] px-5 py-6 sm:px-10 sm:py-8">
+      <header className="relative overflow-hidden rounded-3xl bg-[var(--surface-soft)] px-5 py-6 sm:px-10 sm:py-8">
         <p className="eyebrow">Take your time, find your thing</p>
         <h1 className="serif-display mt-2 text-4xl sm:text-5xl">
           {selectedCategory ?? "Shop all collections"}
         </h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#6E655F]">
+        <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--muted)]">
           {selectedCategoryInfo?.description ??
             "Browse home decor, kids wear, and fashion and hair accessories. Search and filter the collection to find an item."}
         </p>
@@ -189,7 +189,7 @@ export default function ProductListing({
       <div className="grid min-w-0 gap-4 py-4 md:grid-cols-[220px_minmax(0,1fr)] md:gap-5 xl:grid-cols-[250px_minmax(0,1fr)] xl:gap-7">
         <aside
           id="collection-filters"
-          className={`${filtersOpen ? "block" : "hidden md:block"} h-fit min-w-0 space-y-5 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-5 md:sticky md:top-28`}
+          className={`${filtersOpen ? "block" : "hidden md:block"} h-fit min-w-0 space-y-5 rounded-2xl border border-[var(--line)] bg-[var(--page)] p-4 sm:p-5 md:sticky md:top-28`}
         >
           <div>
             <label
@@ -198,8 +198,8 @@ export default function ProductListing({
             >
               SEARCH THE COLLECTION
             </label>
-            <div className="mt-2 flex h-11 items-center gap-2 rounded-xl border border-[#E3D8C9] bg-white px-3">
-              <Icon name="search" className="size-4 text-[#6E655F]" />
+            <div className="mt-2 flex h-11 items-center gap-2 rounded-xl border border-[var(--line)] bg-white px-3">
+              <Icon name="search" className="size-4 text-[var(--muted)]" />
               <input
                 id="catalog-search"
                 value={searchTerm}
@@ -208,7 +208,7 @@ export default function ProductListing({
                   setPage(1);
                 }}
                 placeholder="What are you looking for?"
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#6E655F]"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[var(--muted)]"
               />
             </div>
           </div>
@@ -227,8 +227,8 @@ export default function ProductListing({
                 aria-pressed={!selectedCategory}
                 className={`min-h-10 px-3 text-left text-sm transition-colors ${
                   !selectedCategory
-                    ? "rounded-lg bg-[#1E1B18] text-white"
-                    : "rounded-lg bg-[#FAF7F2] text-[#6E655F] hover:bg-[#F1EBE1]"
+                    ? "rounded-lg bg-[var(--ink)] text-white"
+                    : "rounded-lg bg-[var(--page)] text-[var(--muted)] hover:bg-[var(--surface-soft)]"
                 }`}
               >
                 All categories
@@ -245,8 +245,8 @@ export default function ProductListing({
                   aria-pressed={selectedCategory === category.name}
                   className={`min-h-10 px-3 text-left text-sm transition-colors ${
                     selectedCategory === category.name
-                      ? "rounded-lg bg-[#1E1B18] text-white"
-                      : "rounded-lg bg-[#FAF7F2] text-[#6E655F] hover:bg-[#F1EBE1]"
+                      ? "rounded-lg bg-[var(--ink)] text-white"
+                      : "rounded-lg bg-[var(--page)] text-[var(--muted)] hover:bg-[var(--surface-soft)]"
                   }`}
                 >
                   {category.name}
@@ -267,7 +267,7 @@ export default function ProductListing({
                 setCollectionTag(event.target.value);
                 setPage(1);
               }}
-              className="mt-3 min-h-10 w-full rounded-lg border border-[#E3D8C9] bg-white px-3 text-sm font-normal tracking-normal"
+              className="mt-3 min-h-10 w-full rounded-lg border border-[var(--line)] bg-white px-3 text-sm font-normal tracking-normal"
             >
               <option value="all">All products</option>
               <option value="new-arrivals">Just arrived</option>
@@ -291,9 +291,9 @@ export default function ProductListing({
                 value={minPrice}
                 onChange={(event) => setMinPrice(event.target.value)}
                 placeholder="Min"
-                className="h-10 min-w-0 w-full rounded-lg border border-[#E3D8C9] bg-white px-3 text-sm"
+                className="h-10 min-w-0 w-full rounded-lg border border-[var(--line)] bg-white px-3 text-sm"
               />
-              <span className="text-[#6E655F]">–</span>
+              <span className="text-[var(--muted)]">–</span>
               <label className="sr-only" htmlFor="maximum-price">
                 Maximum price
               </label>
@@ -305,12 +305,12 @@ export default function ProductListing({
                 value={maxPrice}
                 onChange={(event) => setMaxPrice(event.target.value)}
                 placeholder="Max"
-                className="h-10 min-w-0 w-full rounded-lg border border-[#E3D8C9] bg-white px-3 text-sm"
+                className="h-10 min-w-0 w-full rounded-lg border border-[var(--line)] bg-white px-3 text-sm"
               />
             </div>
             <button
               type="submit"
-              className="mt-3 min-h-10 w-full rounded-lg border border-[#1E1B18] text-xs font-semibold tracking-[0.08em] text-[#1E1B18] transition-colors hover:bg-[#1E1B18] hover:text-white"
+              className="mt-3 min-h-10 w-full rounded-lg border border-[var(--ink)] text-xs font-semibold tracking-[0.08em] text-[var(--ink)] transition-colors hover:bg-[var(--ink)] hover:text-white"
             >
               APPLY PRICE
             </button>
@@ -325,7 +325,7 @@ export default function ProductListing({
               id="product-type-filter"
               value={productType}
               onChange={(event) => { setProductType(event.target.value); setPage(1); }}
-              className="mt-3 min-h-10 w-full rounded-lg border border-[#E3D8C9] bg-white px-3 text-sm font-normal tracking-normal"
+              className="mt-3 min-h-10 w-full rounded-lg border border-[var(--line)] bg-white px-3 text-sm font-normal tracking-normal"
             >
               <option value="">All types</option>
               {(selectedCategory && selectedCategory in PRODUCT_TYPES_BY_CATEGORY
@@ -348,7 +348,7 @@ export default function ProductListing({
                 setAvailability(event.target.value);
                 setPage(1);
               }}
-              className="mt-3 min-h-10 w-full rounded-lg border border-[#E3D8C9] bg-white px-3 text-sm font-normal tracking-normal"
+              className="mt-3 min-h-10 w-full rounded-lg border border-[var(--line)] bg-white px-3 text-sm font-normal tracking-normal"
             >
               <option value="all">All products</option>
               <option value="in-stock">In stock</option>
@@ -366,7 +366,7 @@ export default function ProductListing({
             <button
               type="button"
               onClick={clearFilters}
-              className="text-xs font-semibold text-[#B85042] underline underline-offset-4"
+              className="text-xs font-semibold text-[var(--purple)] underline underline-offset-4"
             >
               CLEAR ALL FILTERS
             </button>
@@ -375,7 +375,7 @@ export default function ProductListing({
 
         <section className="min-w-0" aria-label="Product results">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-[#6E655F]" aria-live="polite">
+            <p className="text-sm text-[var(--muted)]" aria-live="polite">
               {loading
                 ? "Finding your good things…"
                 : `${total} ${total === 1 ? "piece" : "pieces"}`}
@@ -386,11 +386,11 @@ export default function ProductListing({
                 onClick={() => setFiltersOpen((open) => !open)}
                 aria-expanded={filtersOpen}
                 aria-controls="collection-filters"
-                className="min-h-10 rounded-lg border border-[#E3D8C9] bg-white px-3 text-xs font-medium text-[#1E1B18] md:hidden"
+                className="min-h-10 rounded-lg border border-[var(--line)] bg-white px-3 text-xs font-medium text-[var(--ink)] md:hidden"
               >
                 {filtersOpen ? "Hide filters" : "Filters & search"}
               </button>
-              <label className="flex min-w-0 items-center gap-2 text-xs text-[#6E655F]">
+              <label className="flex min-w-0 items-center gap-2 text-xs text-[var(--muted)]">
                 <span className="hidden sm:inline">SORT BY</span>
                 <select
                   aria-label="Sort products"
@@ -399,7 +399,7 @@ export default function ProductListing({
                     setSort(event.target.value);
                     setPage(1);
                   }}
-                  className="min-h-10 max-w-full rounded-lg border border-[#E3D8C9] bg-white px-2 sm:px-3 text-xs text-[#1E1B18]"
+                  className="min-h-10 max-w-full rounded-lg border border-[var(--line)] bg-white px-2 sm:px-3 text-xs text-[var(--ink)]"
                 >
                   <option value="newest">Newest</option>
                   <option value="price-asc">Price: low to high</option>
@@ -419,24 +419,24 @@ export default function ProductListing({
             >
               {Array.from({ length: pageSize }, (_, index) => (
                 <div key={index} aria-hidden="true" className="animate-pulse">
-                  <div className="aspect-[0.82] rounded-2xl bg-[#F1EBE1]" />
-                  <div className="mt-4 h-3 w-1/3 rounded bg-[#F1EBE1]" />
-                  <div className="mt-2 h-4 w-2/3 rounded bg-[#F1EBE1]" />
+                  <div className="aspect-[0.82] rounded-2xl bg-[var(--surface-soft)]" />
+                  <div className="mt-4 h-3 w-1/3 rounded bg-[var(--surface-soft)]" />
+                  <div className="mt-2 h-4 w-2/3 rounded bg-[var(--surface-soft)]" />
                 </div>
               ))}
             </div>
           ) : error ? (
-            <div role="alert" className="bg-[#F1EBE1] px-6 py-12 text-center">
+            <div role="alert" className="bg-[var(--surface-soft)] px-6 py-12 text-center">
               <h2 className="serif-display text-2xl">
                 The collection is taking a moment
               </h2>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#6E655F]">
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--muted)]">
                 {error}
               </p>
               <button
                 type="button"
                 onClick={() => setRequestVersion((version) => version + 1)}
-                className="mt-5 rounded-full bg-[#1E1B18] px-5 py-3 text-[10px] font-semibold tracking-[0.12em] text-white hover:bg-[#0A2B26]"
+                className="mt-5 rounded-full bg-[var(--ink)] px-5 py-3 text-[10px] font-semibold tracking-[0.12em] text-white hover:bg-[#0A2B26]"
               >
                 TRY AGAIN
               </button>
@@ -459,18 +459,18 @@ export default function ProductListing({
                     type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((current) => current - 1)}
-                    className="min-h-10 rounded-full border border-[#E3D8C9] bg-white px-5 text-xs transition-colors hover:border-[#1E1B18] disabled:opacity-40"
+                    className="min-h-10 rounded-full border border-[var(--line)] bg-white px-5 text-xs transition-colors hover:border-[var(--ink)] disabled:opacity-40"
                   >
                     Previous
                   </button>
-                  <span className="text-xs text-[#6E655F]">
+                  <span className="text-xs text-[var(--muted)]">
                     Page {page} of {pageCount}
                   </span>
                   <button
                     type="button"
                     disabled={page >= pageCount}
                     onClick={() => setPage((current) => current + 1)}
-                    className="min-h-10 rounded-full border border-[#E3D8C9] bg-white px-5 text-xs transition-colors hover:border-[#1E1B18] disabled:opacity-40"
+                    className="min-h-10 rounded-full border border-[var(--line)] bg-white px-5 text-xs transition-colors hover:border-[var(--ink)] disabled:opacity-40"
                   >
                     Next
                   </button>
@@ -478,18 +478,18 @@ export default function ProductListing({
               )}
             </>
           ) : (
-            <div className="bg-[#F1EBE1] px-6 py-12 text-center">
-              <Icon name="search" className="mx-auto size-7 text-[#B85042]" />
+            <div className="bg-[var(--surface-soft)] px-6 py-12 text-center">
+              <Icon name="search" className="mx-auto size-7 text-[var(--purple)]" />
               <h2 className="serif-display mt-3 text-2xl">
                 Nothing found just yet
               </h2>
-              <p className="mt-2 text-sm leading-6 text-[#6E655F]">
+              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                 Try another search or clear a filter to explore the collection.
               </p>
               <button
                 type="button"
                 onClick={clearFilters}
-                className="mt-4 text-xs font-semibold text-[#1E1B18] underline underline-offset-4"
+                className="mt-4 text-xs font-semibold text-[var(--ink)] underline underline-offset-4"
               >
                 CLEAR FILTERS
               </button>

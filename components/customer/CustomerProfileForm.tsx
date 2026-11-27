@@ -182,24 +182,24 @@ export default function CustomerProfileForm({
   return (
     <section
       aria-labelledby="profile-edit-heading"
-      className="rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] p-6 shadow-sm"
+      className="rounded-3xl border border-[var(--line)] bg-[var(--page)] p-6 shadow-sm"
     >
       <p className="eyebrow">Your details</p>
       <h2
         id="profile-edit-heading"
-        className="serif-display mt-2 text-3xl text-[#1E1B18]"
+        className="serif-display mt-2 text-3xl text-[var(--ink)]"
       >
         Edit profile
       </h2>
       {verificationPending && (
-        <div className="mt-4 rounded border border-[#E3D8C9] bg-white p-4 text-sm leading-6 text-[#6E655F]">
-          <p className="font-semibold text-[#1E1B18]">Verify your updated email to sign in again.</p>
+        <div className="mt-4 rounded border border-[var(--line)] bg-white p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="font-semibold text-[var(--ink)]">Verify your updated email to sign in again.</p>
           <p className="mt-1">Your current session has been signed out for security.</p>
           <ResendVerificationForm initialEmail={email} />
         </div>
       )}
-      <div className="mt-5 flex flex-col gap-4 border-b border-[#E3D8C9] pb-5 sm:flex-row sm:items-center">
-        <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#F1EBE1] text-lg font-medium text-[#1E1B18]">
+      <div className="mt-5 flex flex-col gap-4 border-b border-[var(--line)] pb-5 sm:flex-row sm:items-center">
+        <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--surface-soft)] text-lg font-medium text-[var(--ink)]">
           {currentImage ? (
             <Image
               src={currentImage}
@@ -222,7 +222,7 @@ export default function CustomerProfileForm({
         <div className="min-w-0 flex-1">
           <label
             htmlFor="profile-image"
-            className="mb-1.5 block text-xs font-medium text-[#6E655F]"
+            className="mb-1.5 block text-xs font-medium text-[var(--muted)]"
           >
             Profile picture
           </label>
@@ -233,9 +233,9 @@ export default function CustomerProfileForm({
             accept="image/jpeg,image/png,image/webp"
             onChange={handleImageSelection}
             disabled={verificationPending}
-            className="block min-h-11 w-full text-sm file:mr-3 file:min-h-10 file:border-0 file:bg-[#F1EBE1] file:px-3 file:text-xs file:font-medium file:text-[#1E1B18]"
+            className="block min-h-11 w-full text-sm file:mr-3 file:min-h-10 file:border-0 file:bg-[var(--surface-soft)] file:px-3 file:text-xs file:font-medium file:text-[var(--ink)]"
           />
-          <p className="mt-1 text-xs text-[#6E655F]">
+          <p className="mt-1 text-xs text-[var(--muted)]">
             JPG, PNG, or WebP; up to 5 MB.
           </p>
         </div>
@@ -243,13 +243,13 @@ export default function CustomerProfileForm({
           type="button"
           onClick={handleImageUpload}
           disabled={!selectedImage || uploadingImage || verificationPending}
-          className="min-h-11 shrink-0 bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-11 shrink-0 bg-[var(--ink)] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {uploadingImage ? "UPLOADING…" : "UPLOAD PHOTO"}
         </button>
       </div>
       {imageMessage && (
-        <p className="mt-3 text-xs text-[#1E1B18]" aria-live="polite">
+        <p className="mt-3 text-xs text-[var(--ink)]" aria-live="polite">
           {imageMessage}
         </p>
       )}
@@ -262,7 +262,7 @@ export default function CustomerProfileForm({
         <div>
           <label
             htmlFor="profile-full-name"
-            className="mb-1.5 block text-xs font-medium text-[#6E655F]"
+            className="mb-1.5 block text-xs font-medium text-[var(--muted)]"
           >
             Full name
           </label>
@@ -275,13 +275,13 @@ export default function CustomerProfileForm({
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
             disabled={verificationPending}
-            className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+            className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
           />
         </div>
         <div>
           <label
             htmlFor="profile-email"
-            className="mb-1.5 block text-xs font-medium text-[#6E655F]"
+            className="mb-1.5 block text-xs font-medium text-[var(--muted)]"
           >
             Email address
           </label>
@@ -295,15 +295,15 @@ export default function CustomerProfileForm({
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             disabled={verificationPending}
-            className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+            className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
           />
         </div>
         <div>
           <label
             htmlFor="profile-mobile"
-            className="mb-1.5 block text-xs font-medium text-[#6E655F]"
+            className="mb-1.5 block text-xs font-medium text-[var(--muted)]"
           >
-            Mobile number <span className="font-normal text-[#6E655F]">(optional)</span>
+            Mobile number <span className="font-normal text-[var(--muted)]">(optional)</span>
           </label>
           <input
             id="profile-mobile"
@@ -314,20 +314,20 @@ export default function CustomerProfileForm({
             value={mobile}
             onChange={(event) => setMobile(event.target.value)}
             disabled={verificationPending}
-            className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+            className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
           />
         </div>
         <div className="flex items-end">
           <button
             type="submit"
             disabled={saving || verificationPending}
-            className="min-h-11 w-full bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-wait disabled:opacity-60 sm:w-auto"
+            className="min-h-11 w-full bg-[var(--ink)] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-wait disabled:opacity-60 sm:w-auto"
           >
             {saving ? "SAVING…" : "SAVE CHANGES"}
           </button>
         </div>
         <p
-          className="min-h-5 text-xs text-[#1E1B18] sm:col-span-2"
+          className="min-h-5 text-xs text-[var(--ink)] sm:col-span-2"
           aria-live="polite"
         >
           {message}

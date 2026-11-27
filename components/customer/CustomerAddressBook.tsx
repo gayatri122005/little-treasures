@@ -262,14 +262,14 @@ export default function CustomerAddressBook({
   return (
     <section
       aria-labelledby="saved-addresses-heading"
-      className="rounded-3xl border border-[#E3D8C9] bg-[#FAF7F2] p-6 shadow-sm"
+      className="rounded-3xl border border-[var(--line)] bg-[var(--page)] p-6 shadow-sm"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="eyebrow">Delivery details</p>
           <h2
             id="saved-addresses-heading"
-            className="serif-display mt-2 text-3xl text-[#1E1B18]"
+            className="serif-display mt-2 text-3xl text-[var(--ink)]"
           >
             Saved addresses
           </h2>
@@ -279,7 +279,7 @@ export default function CustomerAddressBook({
             type="button"
             onClick={startNewAddress}
             disabled={busy}
-            className="min-h-11 rounded-full bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:opacity-60"
+            className="min-h-11 rounded-full bg-[var(--ink)] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:opacity-60"
           >
             ADD ADDRESS
           </button>
@@ -287,7 +287,7 @@ export default function CustomerAddressBook({
       </div>
 
       {message && (
-        <p className="mt-4 text-sm text-[#1E1B18]" aria-live="polite">
+        <p className="mt-4 text-sm text-[var(--ink)]" aria-live="polite">
           {message}
         </p>
       )}
@@ -300,7 +300,7 @@ export default function CustomerAddressBook({
       {formOpen && (
         <form onSubmit={handleSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="address-label" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+            <label htmlFor="address-label" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
               Address label
             </label>
             <input
@@ -309,11 +309,11 @@ export default function CustomerAddressBook({
               placeholder="Home, work..."
               value={formValues.label}
               onChange={(event) => setFormValues({ ...formValues, label: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="address-name" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+            <label htmlFor="address-name" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
               Recipient name
             </label>
             <input
@@ -323,12 +323,12 @@ export default function CustomerAddressBook({
               maxLength={120}
               value={formValues.fullName}
               onChange={(event) => setFormValues({ ...formValues, fullName: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="address-phone" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
-              Phone <span className="font-normal text-[#6E655F]">(optional)</span>
+            <label htmlFor="address-phone" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
+              Phone <span className="font-normal text-[var(--muted)]">(optional)</span>
             </label>
             <input
               id="address-phone"
@@ -337,11 +337,11 @@ export default function CustomerAddressBook({
               maxLength={32}
               value={formValues.phone}
               onChange={(event) => setFormValues({ ...formValues, phone: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="address-line-1" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+            <label htmlFor="address-line-1" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
               Street address
             </label>
             <input
@@ -351,12 +351,12 @@ export default function CustomerAddressBook({
               maxLength={255}
               value={formValues.addressLine1}
               onChange={(event) => setFormValues({ ...formValues, addressLine1: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="address-line-2" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
-              Apartment, suite, etc. <span className="font-normal text-[#6E655F]">(optional)</span>
+            <label htmlFor="address-line-2" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
+              Apartment, suite, etc. <span className="font-normal text-[var(--muted)]">(optional)</span>
             </label>
             <input
               id="address-line-2"
@@ -364,11 +364,11 @@ export default function CustomerAddressBook({
               maxLength={255}
               value={formValues.addressLine2}
               onChange={(event) => setFormValues({ ...formValues, addressLine2: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="address-city" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+            <label htmlFor="address-city" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
               City
             </label>
             <input
@@ -378,12 +378,12 @@ export default function CustomerAddressBook({
               maxLength={100}
               value={formValues.city}
               onChange={(event) => setFormValues({ ...formValues, city: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="address-state" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
-              State / region <span className="font-normal text-[#6E655F]">(optional)</span>
+            <label htmlFor="address-state" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
+              State / region <span className="font-normal text-[var(--muted)]">(optional)</span>
             </label>
             <input
               id="address-state"
@@ -391,12 +391,12 @@ export default function CustomerAddressBook({
               maxLength={100}
               value={formValues.state}
               onChange={(event) => setFormValues({ ...formValues, state: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="address-postal" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
-              Postal code <span className="font-normal text-[#6E655F]">(optional)</span>
+            <label htmlFor="address-postal" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
+              Postal code <span className="font-normal text-[var(--muted)]">(optional)</span>
             </label>
             <input
               id="address-postal"
@@ -404,11 +404,11 @@ export default function CustomerAddressBook({
               maxLength={25}
               value={formValues.postalCode}
               onChange={(event) => setFormValues({ ...formValues, postalCode: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="address-country" className="mb-1.5 block text-xs font-medium text-[#6E655F]">
+            <label htmlFor="address-country" className="mb-1.5 block text-xs font-medium text-[var(--muted)]">
               Country
             </label>
             <input
@@ -418,15 +418,15 @@ export default function CustomerAddressBook({
               maxLength={100}
               value={formValues.country}
               onChange={(event) => setFormValues({ ...formValues, country: event.target.value })}
-              className="min-h-11 w-full border border-[#E3D8C9] bg-white px-3 text-sm"
+              className="min-h-11 w-full border border-[var(--line)] bg-white px-3 text-sm"
             />
           </div>
-          <label className="flex min-h-11 items-center gap-2 text-sm text-[#6E655F] sm:col-span-2">
+          <label className="flex min-h-11 items-center gap-2 text-sm text-[var(--muted)] sm:col-span-2">
             <input
               type="checkbox"
               checked={formValues.isDefault}
               onChange={(event) => setFormValues({ ...formValues, isDefault: event.target.checked })}
-              className="size-4 accent-[#1E1B18]"
+              className="size-4 accent-[var(--ink)]"
             />
             Make this my default shipping address
           </label>
@@ -434,7 +434,7 @@ export default function CustomerAddressBook({
             <button
               type="submit"
               disabled={busy}
-              className="min-h-11 bg-[#1E1B18] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-wait disabled:opacity-60"
+              className="min-h-11 bg-[var(--ink)] px-5 text-xs font-semibold tracking-[0.1em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-wait disabled:opacity-60"
             >
               {busy ? "SAVING…" : editingAddressId === null ? "SAVE ADDRESS" : "UPDATE ADDRESS"}
             </button>
@@ -442,7 +442,7 @@ export default function CustomerAddressBook({
               type="button"
               onClick={closeForm}
               disabled={busy}
-              className="min-h-11 border border-[#E3D8C9] px-5 text-xs font-semibold tracking-[0.1em] text-[#1E1B18] disabled:opacity-60"
+              className="min-h-11 border border-[var(--line)] px-5 text-xs font-semibold tracking-[0.1em] text-[var(--ink)] disabled:opacity-60"
             >
               CANCEL
             </button>
@@ -451,7 +451,7 @@ export default function CustomerAddressBook({
       )}
 
       {addresses.length === 0 && !formOpen ? (
-        <p className="mt-6 text-sm text-[#6E655F]">
+        <p className="mt-6 text-sm text-[var(--muted)]">
           You have not saved a delivery address yet.
         </p>
       ) : (
@@ -459,20 +459,20 @@ export default function CustomerAddressBook({
           {addresses.map((address) => (
             <li
               key={address.id}
-              className="rounded-2xl border border-[#E3D8C9] bg-white p-5"
+              className="rounded-2xl border border-[var(--line)] bg-white p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="font-medium text-[#1E1B18]">
+                <h3 className="font-medium text-[var(--ink)]">
                   {address.label || "Saved address"}
                 </h3>
                 {address.isDefault && (
-                  <span className="rounded-full bg-[#B85042] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
+                  <span className="rounded-full bg-[var(--purple)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
                     Default
                   </span>
                 )}
               </div>
-              <p className="mt-3 text-sm leading-6 text-[#6E655F]">
-                <span className="font-medium text-[#1E1B18]">{address.fullName}</span>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                <span className="font-medium text-[var(--ink)]">{address.fullName}</span>
                 <br />
                 {address.addressLine1}
                 {address.addressLine2 && <><br />{address.addressLine2}</>}
@@ -487,7 +487,7 @@ export default function CustomerAddressBook({
                   type="button"
                   onClick={() => startEditing(address)}
                   disabled={busy}
-                  className="min-h-8 text-[#1E1B18] underline-offset-4 hover:underline disabled:opacity-50"
+                  className="min-h-8 text-[var(--ink)] underline-offset-4 hover:underline disabled:opacity-50"
                 >
                   EDIT
                 </button>
@@ -496,7 +496,7 @@ export default function CustomerAddressBook({
                     type="button"
                     onClick={() => makeDefault(address)}
                     disabled={busy}
-                    className="min-h-8 text-[#1E1B18] underline-offset-4 hover:underline disabled:opacity-50"
+                    className="min-h-8 text-[var(--ink)] underline-offset-4 hover:underline disabled:opacity-50"
                   >
                     MAKE DEFAULT
                   </button>

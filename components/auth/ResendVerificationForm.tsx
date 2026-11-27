@@ -38,8 +38,8 @@ export default function ResendVerificationForm({ initialEmail = "" }: { initialE
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 space-y-3 border-t border-[#E3D8C9] pt-4">
-      <label htmlFor="resend-verification-email" className="block text-xs font-semibold text-[#1E1B18]">
+    <form onSubmit={handleSubmit} className="mt-4 space-y-3 border-t border-[var(--line)] pt-4">
+      <label htmlFor="resend-verification-email" className="block text-xs font-semibold text-[var(--ink)]">
         Resend verification link
       </label>
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -51,12 +51,12 @@ export default function ResendVerificationForm({ initialEmail = "" }: { initialE
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
-          className="min-h-11 min-w-0 flex-1 rounded border border-[#E3D8C9] bg-white px-3 text-sm outline-none focus:border-[#B85042]"
+          className="min-h-11 min-w-0 flex-1 rounded border border-[var(--line)] bg-white px-3 text-sm outline-none focus:border-[var(--purple)]"
         />
         <button
           type="submit"
           disabled={busy}
-          className="min-h-11 rounded-full bg-[#1E1B18] px-4 text-[10px] font-semibold tracking-[0.08em] text-white disabled:opacity-60"
+          className="min-h-11 rounded-full bg-[var(--ink)] px-4 text-[10px] font-semibold tracking-[0.08em] text-white disabled:opacity-60"
         >
           {busy ? "SENDING…" : "RESEND LINK"}
         </button>

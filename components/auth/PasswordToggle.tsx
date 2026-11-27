@@ -14,7 +14,7 @@ export default function PasswordToggle({
       type="button"
       onClick={onToggle}
       aria-pressed={visible}
-      className="text-[11px] font-medium text-[#1E1B18] hover:text-[#9A3F33]"
+      className="text-[11px] font-medium text-[var(--ink)] hover:text-[var(--purple-dark)]"
     >
       {visible ? "Hide" : "Show"}
     </button>

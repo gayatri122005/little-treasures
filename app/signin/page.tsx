@@ -21,7 +21,7 @@ export default function SignInPage() {
       <Suspense
         fallback={
           <div
-            className="min-h-12 animate-pulse rounded-full bg-[#F1EBE1]"
+            className="min-h-12 animate-pulse rounded-full bg-[var(--surface-soft)]"
             aria-label="Loading sign-in form"
           />
         }

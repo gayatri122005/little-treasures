@@ -102,12 +102,12 @@ export default function ProductDetails({ productId }: { productId: string }) {
         aria-busy="true"
         aria-label="Loading product"
       >
-        <div className="mx-auto aspect-[4/5] w-full max-w-[550px] animate-pulse rounded-2xl bg-[#F1EBE1]" />
+        <div className="mx-auto aspect-[4/5] w-full max-w-[550px] animate-pulse rounded-2xl bg-[var(--surface-soft)]" />
         <div className="space-y-4 py-8">
-          <div className="h-3 w-1/4 animate-pulse bg-[#F1EBE1]" />
-          <div className="h-10 w-3/4 animate-pulse bg-[#F1EBE1]" />
-          <div className="h-6 w-1/3 animate-pulse bg-[#F1EBE1]" />
-          <div className="mt-8 h-24 animate-pulse bg-[#F1EBE1]" />
+          <div className="h-3 w-1/4 animate-pulse bg-[var(--surface-soft)]" />
+          <div className="h-10 w-3/4 animate-pulse bg-[var(--surface-soft)]" />
+          <div className="h-6 w-1/3 animate-pulse bg-[var(--surface-soft)]" />
+          <div className="mt-8 h-24 animate-pulse bg-[var(--surface-soft)]" />
         </div>
       </main>
     );
@@ -116,14 +116,14 @@ export default function ProductDetails({ productId }: { productId: string }) {
   if (notFound) {
     return (
       <main className="page-shell flex min-h-[65vh] flex-col items-center justify-center py-16 text-center">
-        <Icon name="sparkle" className="size-8 text-[#B85042]" />
+        <Icon name="sparkle" className="size-8 text-[var(--purple)]" />
         <h1 className="serif-display mt-4 text-3xl">We couldn&apos;t find that treasure</h1>
-        <p className="mt-2 text-sm text-[#6E655F]">
+        <p className="mt-2 text-sm text-[var(--muted)]">
           It may have moved on to a new home.
         </p>
         <Link
           href="/products"
-          className="mt-6 rounded-full bg-[#1E1B18] px-6 py-3 text-xs font-semibold tracking-[0.1em] text-white hover:bg-[#0A2B26]"
+          className="mt-6 rounded-full bg-[var(--ink)] px-6 py-3 text-xs font-semibold tracking-[0.1em] text-white hover:bg-[#0A2B26]"
         >
           EXPLORE THE COLLECTION
         </Link>
@@ -135,12 +135,12 @@ export default function ProductDetails({ productId }: { productId: string }) {
     return (
       <main className="page-shell flex min-h-[65vh] flex-col items-center justify-center px-5 py-16 text-center">
         <h1 className="serif-display text-3xl">This item is unavailable</h1>
-        <p className="mt-3 max-w-md text-sm leading-6 text-[#6E655F]">
+        <p className="mt-3 max-w-md text-sm leading-6 text-[var(--muted)]">
           {error ?? "We couldn’t load this product just now. Please try again later."}
         </p>
         <Link
           href="/products"
-          className="mt-6 rounded-full bg-[#1E1B18] px-6 py-3 text-xs font-semibold tracking-[0.1em] text-white hover:bg-[#0A2B26]"
+          className="mt-6 rounded-full bg-[var(--ink)] px-6 py-3 text-xs font-semibold tracking-[0.1em] text-white hover:bg-[#0A2B26]"
         >
           BACK TO THE COLLECTION
         </Link>
@@ -182,17 +182,17 @@ export default function ProductDetails({ productId }: { productId: string }) {
     <main className="page-shell min-h-[65vh] pb-36 pt-8 sm:py-12 md:pb-12">
       <nav
         aria-label="Breadcrumb"
-        className="mb-6 flex flex-wrap items-center text-xs text-[#6E655F]"
+        className="mb-6 flex flex-wrap items-center text-xs text-[var(--muted)]"
       >
-        <Link href="/" className="hover:text-[#B85042]">
+        <Link href="/" className="hover:text-[var(--purple)]">
           Home
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/products" className="hover:text-[#B85042]">
+        <Link href="/products" className="hover:text-[var(--purple)]">
           Collection
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-[#1E1B18]">{product.name}</span>
+        <span className="text-[var(--ink)]">{product.name}</span>
       </nav>
 
       <div className="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,1.18fr)_minmax(350px,0.82fr)] lg:gap-10 xl:gap-14">
@@ -204,7 +204,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
               playsInline
               preload="metadata"
               poster={activeVideo.thumbnail ?? undefined}
-              className="hidden aspect-[4/5] w-full rounded-xl bg-[#1E1B18] object-contain lg:block"
+              className="hidden aspect-[4/5] w-full rounded-xl bg-[var(--ink)] object-contain lg:block"
             >
               <source src={activeVideo.src} />
               Your browser does not support product video playback.
@@ -220,7 +220,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
                     setDesktopImageOpen(true);
                   }}
                   aria-label={`View product image ${index + 1} larger`}
-                  className="group relative aspect-[0.88] overflow-hidden rounded-xl bg-[#F1EBE1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B85042]"
+                  className="group relative aspect-[0.88] overflow-hidden rounded-xl bg-[var(--surface-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--purple)]"
                 >
                   <Image
                     src={image}
@@ -236,7 +236,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
               ))}
             </div>
           ) : null}
-          <div className={`product-gallery-main group relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#F1EBE1] ${images.length > 1 || activeVideo ? "lg:hidden" : ""}`}>
+          <div className={`product-gallery-main group relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[var(--surface-soft)] ${images.length > 1 || activeVideo ? "lg:hidden" : ""}`}>
             {activeVideo ? (
               <video
                 key={activeVideo.src}
@@ -269,14 +269,14 @@ export default function ProductDetails({ productId }: { productId: string }) {
                       : "Zoom product image"
                   }
                   aria-pressed={imageZoomed}
-                  className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full bg-[#FAF7F2]/95 text-[#1E1B18] shadow-sm transition-colors hover:bg-white"
+                  className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full bg-[var(--page)]/95 text-[var(--ink)] shadow-sm transition-colors hover:bg-white"
                 >
                   <Icon name="search" className="size-4" />
                 </button>
               </>
             ) : (
-              <div className="flex h-full flex-col items-center justify-center gap-2 text-[#6E655F]">
-                <Icon name="sparkle" className="size-8 text-[#B85042]" />
+              <div className="flex h-full flex-col items-center justify-center gap-2 text-[var(--muted)]">
+                <Icon name="sparkle" className="size-8 text-[var(--purple)]" />
                 <span className="text-xs">Image coming soon</span>
               </div>
             )}
@@ -298,9 +298,9 @@ export default function ProductDetails({ productId }: { productId: string }) {
                   }}
                   aria-label={`View product image ${index + 1}`}
                   aria-pressed={selectedVideo === null && selectedImage === image}
-                  className={`relative aspect-[4/5] w-[62px] shrink-0 overflow-hidden rounded-lg border-2 bg-[#F1EBE1] transition-colors sm:w-[72px] ${
+                  className={`relative aspect-[4/5] w-[62px] shrink-0 overflow-hidden rounded-lg border-2 bg-[var(--surface-soft)] transition-colors sm:w-[72px] ${
                     selectedVideo === null && selectedImage === image
-                      ? "border-[#1E1B18]"
+                      ? "border-[var(--ink)]"
                       : "border-transparent"
                   }`}
                 >
@@ -324,9 +324,9 @@ export default function ProductDetails({ productId }: { productId: string }) {
                   }}
                   aria-label={`Play product video ${index + 1}`}
                   aria-pressed={selectedVideo === video.src}
-                  className={`relative flex aspect-[4/5] w-[62px] shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 bg-[#1E1B18] text-white transition-colors sm:w-[72px] ${
+                  className={`relative flex aspect-[4/5] w-[62px] shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 bg-[var(--ink)] text-white transition-colors sm:w-[72px] ${
                     selectedVideo === video.src
-                      ? "border-[#1E1B18]"
+                      ? "border-[var(--ink)]"
                       : "border-transparent"
                   }`}
                 >
@@ -347,22 +347,22 @@ export default function ProductDetails({ productId }: { productId: string }) {
           )}
         </div>
 
-        <section className="flex min-w-0 w-full flex-col items-start self-start rounded-2xl border border-[#E3D8C9] bg-[#F1EBE1] p-5 sm:p-7 lg:sticky lg:top-28 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
+        <section className="flex min-w-0 w-full flex-col items-start self-start rounded-2xl border border-[var(--line)] bg-[var(--surface-soft)] p-5 sm:p-7 lg:sticky lg:top-28 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
           <p className="eyebrow">{product.category}</p>
-          {product.productType && <p className="mt-2 text-xs text-[#6E655F]">{product.productType}</p>}
+          {product.productType && <p className="mt-2 text-xs text-[var(--muted)]">{product.productType}</p>}
           <h1 className="serif-display mt-3 text-4xl leading-[1.05] sm:text-5xl">
             {product.name}
           </h1>
-          <p className="mt-5 text-2xl font-medium text-[#1E1B18]">{formatPrice(product.price)}</p>
+          <p className="mt-5 text-2xl font-medium text-[var(--ink)]">{formatPrice(product.price)}</p>
           {(product.isNewArrival || product.isFeatured) && (
             <div className="mt-3 flex flex-wrap gap-2">
               {product.isNewArrival && (
-                <span className="rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#9A3F33]">
+                <span className="rounded-full bg-[var(--line)] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--purple-dark)]">
                   Just arrived
                 </span>
               )}
               {product.isFeatured && (
-                <span className="rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#6E655F]">
+                <span className="rounded-full bg-[var(--line)] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted)]">
                   Our favorite
                 </span>
               )}
@@ -370,17 +370,17 @@ export default function ProductDetails({ productId }: { productId: string }) {
           )}
           <p
             className={`mt-3 text-xs ${
-              available ? "rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[#6E655F]" : "rounded-full bg-[#E8DCCB] px-3 py-1.5 text-[#9A3F33]"
+              available ? "rounded-full bg-[var(--line)] px-3 py-1.5 text-[var(--muted)]" : "rounded-full bg-[var(--line)] px-3 py-1.5 text-[var(--purple-dark)]"
             }`}
           >
             {available ? `${product.stock} available` : "Currently unavailable"}
           </p>
-          <p className="mt-6 whitespace-pre-line text-sm leading-7 text-[#6E655F]">
+          <p className="mt-6 whitespace-pre-line text-sm leading-7 text-[var(--muted)]">
             {product.description || "No description has been added for this product yet."}
           </p>
 
           <div className="mt-6 flex w-full flex-wrap items-center gap-4">
-            <div className="flex h-12 items-center rounded-full border border-[#E3D8C9] bg-[#FAF7F2]">
+            <div className="flex h-12 items-center rounded-full border border-[var(--line)] bg-[var(--page)]">
               <button
                 type="button"
                 onClick={() => setQuantity((current) => Math.max(1, current - 1))}
@@ -409,7 +409,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
               type="button"
               onClick={() => addProductToCart(product)}
               disabled={!available}
-              className="hidden min-h-12 flex-1 rounded-full bg-[#B85042] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50 md:flex md:items-center md:justify-center"
+              className="hidden min-h-12 flex-1 rounded-full bg-[var(--purple)] px-6 text-xs font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-not-allowed disabled:opacity-50 md:flex md:items-center md:justify-center"
             >
               {available ? "ADD TO BAG" : "SOLD OUT"}
             </button>
@@ -418,7 +418,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
             type="button"
             onClick={() => buyNow(product)}
             disabled={!available}
-            className="mt-3 hidden min-h-12 w-full rounded-full border border-[#1E1B18] bg-[#FAF7F2] px-6 text-xs font-semibold tracking-[0.12em] text-[#1E1B18] transition-colors hover:bg-[#1E1B18] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 md:block"
+            className="mt-3 hidden min-h-12 w-full rounded-full border border-[var(--ink)] bg-[var(--page)] px-6 text-xs font-semibold tracking-[0.12em] text-[var(--ink)] transition-colors hover:bg-[var(--ink)] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 md:block"
           >
             BUY NOW
           </button>
@@ -426,34 +426,34 @@ export default function ProductDetails({ productId }: { productId: string }) {
             type="button"
             onClick={() => toggleWishlist(product)}
             aria-pressed={isWishlisted}
-            className="mt-4 inline-flex min-h-10 items-center gap-2 text-xs font-medium text-[#6E655F] transition-colors hover:text-[#9A3F33]"
+            className="mt-4 inline-flex min-h-10 items-center gap-2 text-xs font-medium text-[var(--muted)] transition-colors hover:text-[var(--purple-dark)]"
           >
             <Icon
               name="heart"
-              className={`size-4 ${isWishlisted ? "fill-[#B85042] text-[#1E1B18]" : ""}`}
+              className={`size-4 ${isWishlisted ? "fill-[var(--purple)] text-[var(--ink)]" : ""}`}
             />
             {isWishlisted ? "SAVED TO WISHLIST" : "SAVE TO WISHLIST"}
           </button>
-          <p className="mt-3 min-h-5 text-xs text-[#1E1B18]" aria-live="polite">
+          <p className="mt-3 min-h-5 text-xs text-[var(--ink)]" aria-live="polite">
             {notice}
           </p>
         </section>
       </div>
 
       {desktopImageOpen && selectedImage && (
-        <div className="fixed inset-0 z-[60] hidden items-center justify-center bg-[#1E1B18]/85 p-8 lg:flex" role="dialog" aria-modal="true" aria-label="Enlarged product image">
+        <div className="fixed inset-0 z-[60] hidden items-center justify-center bg-[var(--ink)]/85 p-8 lg:flex" role="dialog" aria-modal="true" aria-label="Enlarged product image">
           <button type="button" className="absolute inset-0 cursor-zoom-out" onClick={() => setDesktopImageOpen(false)} aria-label="Dismiss enlarged image preview" />
           <div className="relative z-10 h-[min(86vh,900px)] w-[min(84vw,1100px)]">
             <Image src={selectedImage} alt={product.name} fill unoptimized sizes="84vw" className="object-contain" />
           </div>
-          <button type="button" onClick={() => setDesktopImageOpen(false)} aria-label="Close enlarged image" className="absolute right-5 top-5 z-20 flex size-11 items-center justify-center rounded-full bg-[#FAF7F2] text-[#1E1B18] shadow-lg">
+          <button type="button" onClick={() => setDesktopImageOpen(false)} aria-label="Close enlarged image" className="absolute right-5 top-5 z-20 flex size-11 items-center justify-center rounded-full bg-[var(--page)] text-[var(--ink)] shadow-lg">
             <Icon name="close" className="size-5" />
           </button>
         </div>
       )}
 
       {relatedProducts.length > 0 && (
-        <section className="mt-16 border-t border-[#E3D8C9] pt-10">
+        <section className="mt-16 border-t border-[var(--line)] pt-10">
           <p className="eyebrow">A few more to love</p>
           <h2 className="serif-display mt-2 text-3xl">More in {product.category}</h2>
           <div className="mt-7 grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4">
@@ -463,13 +463,13 @@ export default function ProductDetails({ productId }: { productId: string }) {
           </div>
         </section>
       )}
-      <div className="fixed inset-x-0 bottom-[calc(3.625rem+env(safe-area-inset-bottom))] z-30 border-t border-[#E3D8C9] bg-[#FAF7F2]/95 px-3 py-2 shadow-[0_-6px_24px_rgba(30,27,24,0.08)] backdrop-blur-md md:hidden">
+      <div className="fixed inset-x-0 bottom-[calc(3.625rem+env(safe-area-inset-bottom))] z-30 border-t border-[var(--line)] bg-[var(--page)]/95 px-3 py-2 shadow-[0_-6px_24px_rgba(30,27,24,0.08)] backdrop-blur-md md:hidden">
         <div className="mx-auto grid max-w-xl grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => addProductToCart(product)}
             disabled={!available}
-            className="min-h-11 rounded-lg border border-[#B85042] bg-[#FAF7F2] px-3 text-[10px] font-semibold tracking-[0.08em] text-[#9A3F33] disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-11 rounded-lg border border-[var(--purple)] bg-[var(--page)] px-3 text-[10px] font-semibold tracking-[0.08em] text-[var(--purple-dark)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {available ? "ADD TO BAG" : "SOLD OUT"}
           </button>
@@ -477,7 +477,7 @@ export default function ProductDetails({ productId }: { productId: string }) {
             type="button"
             onClick={() => buyNow(product)}
             disabled={!available}
-            className="min-h-11 rounded-lg bg-[#B85042] px-3 text-[10px] font-semibold tracking-[0.08em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-11 rounded-lg bg-[var(--purple)] px-3 text-[10px] font-semibold tracking-[0.08em] text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             BUY NOW
           </button>

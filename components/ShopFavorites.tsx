@@ -36,13 +36,13 @@ export default function ShopFavorites() {
           <h2 id="favorites-title" className="serif-display mt-2 text-4xl sm:text-5xl">
             Shop our favorites.
           </h2>
-          <p className="mt-3 max-w-[440px] text-sm leading-6 text-[#6E655F]">
+          <p className="mt-3 max-w-[440px] text-sm leading-6 text-[var(--muted)]">
             A few pieces our team has chosen to put in the spotlight.
           </p>
         </div>
         <Link
           href="/products"
-          className="inline-flex min-h-10 items-center gap-2 self-start text-xs font-semibold tracking-[0.08em] text-[#1E1B18] transition-colors hover:text-[#9A3F33] sm:self-auto"
+          className="inline-flex min-h-10 items-center gap-2 self-start text-xs font-semibold tracking-[0.08em] text-[var(--ink)] transition-colors hover:text-[var(--purple-dark)] sm:self-auto"
         >
           EXPLORE THE COLLECTION
           <Icon name="arrow" className="size-4" />
@@ -53,9 +53,9 @@ export default function ShopFavorites() {
         <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6" aria-busy="true">
           {Array.from({ length: 4 }, (_, index) => (
             <div key={index} aria-hidden="true" className="animate-pulse">
-              <div className="aspect-[0.82] rounded-2xl bg-[#F1EBE1]" />
-              <div className="mt-4 h-3 w-1/3 rounded bg-[#F1EBE1]" />
-              <div className="mt-2 h-4 w-2/3 rounded bg-[#F1EBE1]" />
+              <div className="aspect-[0.82] rounded-2xl bg-[var(--surface-soft)]" />
+              <div className="mt-4 h-3 w-1/3 rounded bg-[var(--surface-soft)]" />
+              <div className="mt-2 h-4 w-2/3 rounded bg-[var(--surface-soft)]" />
             </div>
           ))}
         </div>
@@ -66,10 +66,10 @@ export default function ShopFavorites() {
           ))}
         </div>
       ) : (
-        <div className="mt-7 flex min-h-48 flex-col items-center justify-center rounded-2xl bg-[#F1EBE1] px-6 text-center">
-          <Icon name="heart" className="size-7 text-[#B85042]" />
+        <div className="mt-7 flex min-h-48 flex-col items-center justify-center rounded-2xl bg-[var(--surface-soft)] px-6 text-center">
+          <Icon name="heart" className="size-7 text-[var(--purple)]" />
           <p className="serif-display mt-3 text-2xl">Our favorites are taking shape</p>
-          <p className="mt-1 max-w-md text-sm leading-6 text-[#6E655F]">
+          <p className="mt-1 max-w-md text-sm leading-6 text-[var(--muted)]">
             Browse the collection while our team picks a few special pieces for this space.
           </p>
         </div>

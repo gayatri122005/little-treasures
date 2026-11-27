@@ -56,7 +56,7 @@ export default function PaymentResult({ mode }: { mode: ResultMode }) {
       }
       const Checkout = window.Razorpay;
       if (!Checkout) throw new Error("Secure checkout could not be loaded.");
-      const checkout = new Checkout({ key: result.keyId, amount: Math.round(result.amount * 100), currency: result.currency, name: "OMTreasure", description: `Order ${result.orderNumber}`, order_id: result.gatewayOrderId, prefill: result.customer, theme: { color: "#B85042" }, handler: async (payment: Record<string, string>) => { await fetch("/api/checkout/verify", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ orderId: result.orderId, ...payment }) }); router.push(`/checkout/pending?order=${result.orderId}`); }, modal: { ondismiss: () => router.push(`/checkout/pending?order=${result.orderId}`) } });
+      const checkout = new Checkout({ key: result.keyId, amount: Math.round(result.amount * 100), currency: result.currency, name: "OMTreasure", description: `Order ${result.orderNumber}`, order_id: result.gatewayOrderId, prefill: result.customer, theme: { color: "var(--purple)" }, handler: async (payment: Record<string, string>) => { await fetch("/api/checkout/verify", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ orderId: result.orderId, ...payment }) }); router.push(`/checkout/pending?order=${result.orderId}`); }, modal: { ondismiss: () => router.push(`/checkout/pending?order=${result.orderId}`) } });
       checkout.open();
     } catch (error) { setMessage(error instanceof Error ? error.message : "Unable to retry payment."); }
     finally { setBusy(false); }
@@ -66,29 +66,29 @@ export default function PaymentResult({ mode }: { mode: ResultMode }) {
   const description = actualMode === "success" ? order?.orderType === "cod" ? "Your cash on delivery order has been placed." : "Your payment was verified and your order is confirmed." : actualMode === "failed" ? "Your order has not been confirmed yet. You can safely retry payment." : "We’re checking with Razorpay. This page will never mark an unverified payment as successful.";
 
   return (
-    <main className="min-h-[70vh] bg-[#FAF7F2] px-4 py-12 sm:px-6 sm:py-16">
-      <div className="mx-auto max-w-3xl rounded-3xl border border-[#E3D8C9] bg-white p-6 shadow-sm sm:p-10">
+    <main className="min-h-[70vh] bg-[var(--page)] px-4 py-12 sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-3xl rounded-3xl border border-[var(--line)] bg-white p-6 shadow-sm sm:p-10">
         <div className={`flex size-14 items-center justify-center rounded-full text-2xl ${actualMode === "success" ? "bg-[#e9f5ea] text-[#28613b]" : actualMode === "failed" ? "bg-[#fff0ee] text-[#9d3c33]" : "bg-[#fff7e7] text-[#8a6518]"}`}>{actualMode === "success" ? "✓" : actualMode === "failed" ? "!" : "…"}</div>
         <p className="eyebrow mt-5">OMTreasure · Order update</p>
         <h1 className="serif-display mt-2 text-4xl sm:text-5xl">{loading ? "Checking your order…" : title}</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#6E655F]">{message || description}</p>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">{message || description}</p>
         {order && <>
-          <div className="mt-7 grid gap-3 rounded-2xl bg-[#FAF7F2] p-4 sm:grid-cols-3 sm:p-5">
-            <div><p className="text-[10px] uppercase tracking-wider text-[#6E655F]">Order number</p><p className="mt-1 text-sm font-semibold">{order.orderNumber}</p></div>
-            <div><p className="text-[10px] uppercase tracking-wider text-[#6E655F]">Amount</p><p className="mt-1 text-sm font-semibold">{price(order.totalAmount)}</p></div>
-            <div><p className="text-[10px] uppercase tracking-wider text-[#6E655F]">Payment status</p><p className="mt-1 text-sm font-semibold capitalize">{order.orderType === "cod" ? "Cash on delivery" : order.paymentStatus}</p></div>
+          <div className="mt-7 grid gap-3 rounded-2xl bg-[var(--page)] p-4 sm:grid-cols-3 sm:p-5">
+            <div><p className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Order number</p><p className="mt-1 text-sm font-semibold">{order.orderNumber}</p></div>
+            <div><p className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Amount</p><p className="mt-1 text-sm font-semibold">{price(order.totalAmount)}</p></div>
+            <div><p className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Payment status</p><p className="mt-1 text-sm font-semibold capitalize">{order.orderType === "cod" ? "Cash on delivery" : order.paymentStatus}</p></div>
           </div>
-          {latestPayment?.transactionId && <p className="mt-4 text-xs text-[#6E655F]">Transaction ID: <span className="font-medium text-[#1E1B18]">{latestPayment.transactionId}</span> · {latestPayment.method}</p>}
-          <section className="mt-7"><h2 className="serif-display text-2xl">Order summary</h2><div className="mt-3 divide-y divide-[#F1EBE1]">{order.items.map((item) => <div key={item.productId} className="flex items-center gap-3 py-3"><div className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-[#F1EBE1]">{item.image ? <Image src={item.image} alt="" fill sizes="48px" className="object-cover" /> : null}</div><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{item.name}</p><p className="mt-1 text-xs text-[#6E655F]">Qty {item.quantity}</p></div><span className="text-sm">{price(item.price * item.quantity)}</span></div>)}</div><div className="mt-3 space-y-1 border-t border-[#E3D8C9] pt-3 text-xs text-[#6E655F]"><p className="flex justify-between"><span>Subtotal</span><span>{price(order.subtotalAmount)}</span></p><p className="flex justify-between"><span>Shipping</span><span>{price(order.shippingAmount)}</span></p><p className="flex justify-between"><span>Discount</span><span>−{price(order.discountAmount)}</span></p><p className="flex justify-between"><span>Tax</span><span>{price(order.taxAmount)}</span></p><p className="flex justify-between pt-1 text-sm font-semibold text-[#1E1B18]"><span>Total</span><span>{price(order.totalAmount)}</span></p></div></section>
-          {order.address && <p className="mt-5 text-xs leading-5 text-[#6E655F]">Delivering to {order.address.fullName}: {order.address.addressLine1} {order.address.addressLine2}, {order.address.city}, {order.address.state} {order.address.postalCode}, {order.address.country}</p>}
+          {latestPayment?.transactionId && <p className="mt-4 text-xs text-[var(--muted)]">Transaction ID: <span className="font-medium text-[var(--ink)]">{latestPayment.transactionId}</span> · {latestPayment.method}</p>}
+          <section className="mt-7"><h2 className="serif-display text-2xl">Order summary</h2><div className="mt-3 divide-y divide-[var(--surface-soft)]">{order.items.map((item) => <div key={item.productId} className="flex items-center gap-3 py-3"><div className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-[var(--surface-soft)]">{item.image ? <Image src={item.image} alt="" fill sizes="48px" className="object-cover" /> : null}</div><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{item.name}</p><p className="mt-1 text-xs text-[var(--muted)]">Qty {item.quantity}</p></div><span className="text-sm">{price(item.price * item.quantity)}</span></div>)}</div><div className="mt-3 space-y-1 border-t border-[var(--line)] pt-3 text-xs text-[var(--muted)]"><p className="flex justify-between"><span>Subtotal</span><span>{price(order.subtotalAmount)}</span></p><p className="flex justify-between"><span>Shipping</span><span>{price(order.shippingAmount)}</span></p><p className="flex justify-between"><span>Discount</span><span>−{price(order.discountAmount)}</span></p><p className="flex justify-between"><span>Tax</span><span>{price(order.taxAmount)}</span></p><p className="flex justify-between pt-1 text-sm font-semibold text-[var(--ink)]"><span>Total</span><span>{price(order.totalAmount)}</span></p></div></section>
+          {order.address && <p className="mt-5 text-xs leading-5 text-[var(--muted)]">Delivering to {order.address.fullName}: {order.address.addressLine1} {order.address.addressLine2}, {order.address.city}, {order.address.state} {order.address.postalCode}, {order.address.country}</p>}
         </>}
         <div className="mt-8 flex flex-wrap gap-3">
-          {actualMode === "failed" && <button type="button" disabled={busy || loading} onClick={retry} className="rounded-full bg-[#B85042] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">{busy ? "Preparing…" : "Retry payment"}</button>}
-          {actualMode === "pending" && <button type="button" disabled={loading} onClick={() => void refresh()} className="rounded-full bg-[#1E1B18] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">Check payment status</button>}
-          <Link href="/products" className="rounded-full border border-[#E3D8C9] px-6 py-3 text-sm font-semibold text-[#1E1B18]">Continue shopping</Link>
-          <Link href="/customer-dashboard" className="rounded-full border border-[#E3D8C9] px-6 py-3 text-sm font-semibold text-[#1E1B18]">View my orders</Link>
+          {actualMode === "failed" && <button type="button" disabled={busy || loading} onClick={retry} className="rounded-full bg-[var(--purple)] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">{busy ? "Preparing…" : "Retry payment"}</button>}
+          {actualMode === "pending" && <button type="button" disabled={loading} onClick={() => void refresh()} className="rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">Check payment status</button>}
+          <Link href="/products" className="rounded-full border border-[var(--line)] px-6 py-3 text-sm font-semibold text-[var(--ink)]">Continue shopping</Link>
+          <Link href="/customer-dashboard" className="rounded-full border border-[var(--line)] px-6 py-3 text-sm font-semibold text-[var(--ink)]">View my orders</Link>
         </div>
-        {actualMode === "failed" && <p className="mt-5 text-xs text-[#6E655F]">Questions? Visit our <Link href="/contact" className="underline underline-offset-2">support page</Link>.</p>}
+        {actualMode === "failed" && <p className="mt-5 text-xs text-[var(--muted)]">Questions? Visit our <Link href="/contact" className="underline underline-offset-2">support page</Link>.</p>}
       </div>
     </main>
   );

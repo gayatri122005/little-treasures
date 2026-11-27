@@ -85,18 +85,18 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#FAF7F2] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
+    <main className="min-h-screen bg-[var(--page)] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-[1440px]">
-        <header className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] px-4 py-3 sm:px-6">
+        <header className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--line)] bg-[var(--page)] px-4 py-3 sm:px-6">
           <Link href="/admin#overview" className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-full bg-[#1E1B18] text-[#F1EBE1]">
+            <span className="flex size-10 items-center justify-center rounded-full bg-[var(--ink)] text-[var(--surface-soft)]">
               <Icon name="sparkle" className="size-5" />
             </span>
             <span>
-              <span className="serif-display block text-xl leading-none text-[#1E1B18]">
+              <span className="serif-display block text-xl leading-none text-[var(--ink)]">
                 OMTreasure
               </span>
-              <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.15em] text-[#6E655F]">
+              <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
                 Admin workspace
               </span>
             </span>
@@ -104,25 +104,25 @@ export default async function AdminDashboardPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/admin/orders"
-              className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#E3D8C9] px-4 text-xs font-semibold text-[#1E1B18] transition-colors hover:border-[#1E1B18]"
+              className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--line)] px-4 text-xs font-semibold text-[var(--ink)] transition-colors hover:border-[var(--ink)]"
             >
               ORDERS &amp; PAYMENTS
             </Link>
             <Link
               href="/admin/products"
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#B85042] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#9A3F33]"
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[var(--purple)] px-4 text-xs font-semibold text-white transition-colors hover:bg-[var(--purple-dark)]"
             >
               MANAGE PRODUCTS
             </Link>
             <Link
               href="/admin/categories"
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#1E1B18] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#342d28]"
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[var(--ink)] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#342d28]"
             >
               MANAGE CATEGORIES
             </Link>
             <Link
               href="/"
-              className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#E3D8C9] px-4 text-xs font-semibold text-[#1E1B18] transition-colors hover:border-[#1E1B18] hover:text-[#1E1B18]"
+              className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--line)] px-4 text-xs font-semibold text-[var(--ink)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
             >
               VIEW STOREFRONT
             </Link>
@@ -131,8 +131,8 @@ export default async function AdminDashboardPage() {
         </header>
 
         <div className="grid gap-5 lg:grid-cols-[210px_minmax(0,1fr)]">
-          <aside className="h-fit rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 lg:sticky lg:top-6">
-            <p className="px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6E655F]">
+          <aside className="h-fit rounded-2xl border border-[var(--line)] bg-[var(--page)] p-4 lg:sticky lg:top-6">
+            <p className="px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
               Workspace
             </p>
             <nav aria-label="Admin dashboard sections" className="flex gap-2 overflow-x-auto lg:grid">
@@ -147,19 +147,19 @@ export default async function AdminDashboardPage() {
                   href={`#${id}`}
                   className={`flex min-h-10 shrink-0 items-center gap-3 rounded-xl px-3 text-xs font-medium transition-colors ${
                     index === 0
-                      ? "bg-[#B85042] text-white"
-                      : "text-[#6E655F] hover:bg-[#FAF7F2] hover:text-[#1E1B18]"
+                      ? "bg-[var(--purple)] text-white"
+                      : "text-[var(--muted)] hover:bg-[var(--page)] hover:text-[var(--ink)]"
                   }`}
                 >
-                  <span className="flex size-5 items-center justify-center rounded-full bg-white/70 text-[9px] text-[#6E655F]">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-white/70 text-[9px] text-[var(--muted)]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   {label}
                 </a>
               ))}
             </nav>
-            <div className="mt-5 hidden rounded-xl bg-[#1E1B18] p-4 text-white lg:block">
-              <Icon name="sparkle" className="size-5 text-[#F1EBE1]" />
+            <div className="mt-5 hidden rounded-xl bg-[var(--ink)] p-4 text-white lg:block">
+              <Icon name="sparkle" className="size-5 text-[var(--surface-soft)]" />
               <p className="mt-3 text-xs font-medium">A little more lovely, every day.</p>
               <p className="mt-1 text-[10px] leading-5 text-white/65">
                 Your store activity at a glance.
@@ -170,9 +170,9 @@ export default async function AdminDashboardPage() {
           <div className="min-w-0">
             <section
               id="overview"
-              className="scroll-mt-6 overflow-hidden rounded-2xl bg-[#1E1B18] px-5 py-7 text-white sm:px-8 sm:py-9"
+              className="scroll-mt-6 overflow-hidden rounded-2xl bg-[var(--ink)] px-5 py-7 text-white sm:px-8 sm:py-9"
             >
-              <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-[#F1EBE1]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-[var(--surface-soft)]">
                 Administration · Overview
               </p>
               <div className="mt-3 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -185,7 +185,7 @@ export default async function AdminDashboardPage() {
                   </p>
                 </div>
                 <span className="inline-flex min-h-9 w-fit items-center gap-2 rounded-full bg-white/10 px-4 text-[10px] font-medium tracking-[0.08em] text-white/85">
-                  <span className="size-1.5 rounded-full bg-[#B85042]" />
+                  <span className="size-1.5 rounded-full bg-[var(--purple)]" />
                   LIVE STORE DATA
                 </span>
               </div>
@@ -198,17 +198,17 @@ export default async function AdminDashboardPage() {
               {metrics.map((metric, index) => (
                 <article
                   key={metric.label}
-                  className={`rounded-2xl border border-[#E3D8C9] p-4 sm:p-5 ${
-                    index === 3 ? "bg-[#F1EBE1]" : "bg-[#FAF7F2]"
+                  className={`rounded-2xl border border-[var(--line)] p-4 sm:p-5 ${
+                    index === 3 ? "bg-[var(--surface-soft)]" : "bg-[var(--page)]"
                   }`}
                 >
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#6E655F]">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
                     {metric.label}
                   </p>
-                  <p className="serif-display mt-3 break-words text-2xl text-[#1E1B18] sm:text-3xl">
+                  <p className="serif-display mt-3 break-words text-2xl text-[var(--ink)] sm:text-3xl">
                     {metric.value}
                   </p>
-                  <p className="mt-1 text-[10px] leading-4 text-[#6E655F]">
+                  <p className="mt-1 text-[10px] leading-4 text-[var(--muted)]">
                     {metric.detail}
                   </p>
                 </article>
@@ -217,26 +217,26 @@ export default async function AdminDashboardPage() {
 
             <section
               id="recent-orders"
-              className="mt-4 scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-6"
+              className="mt-4 scroll-mt-6 rounded-2xl border border-[var(--line)] bg-[var(--page)] p-4 sm:p-6"
             >
               <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
                 <div>
                   <p className="eyebrow">The latest activity</p>
-                  <h2 className="serif-display mt-1 text-3xl text-[#1E1B18]">
+                  <h2 className="serif-display mt-1 text-3xl text-[var(--ink)]">
                     Recent orders
                   </h2>
                 </div>
-                <span className="text-[10px] text-[#6E655F]">Latest 5 orders</span>
+                <span className="text-[10px] text-[var(--muted)]">Latest 5 orders</span>
               </div>
               {recentOrders.length === 0 ? (
-                <p className="rounded-xl bg-[#FAF7F2] px-4 py-8 text-center text-sm text-[#6E655F]">
+                <p className="rounded-xl bg-[var(--page)] px-4 py-8 text-center text-sm text-[var(--muted)]">
                   No recent orders yet.
                 </p>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-[670px] w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-[#E3D8C9] text-[9px] uppercase tracking-[0.12em] text-[#6E655F]">
+                      <tr className="border-b border-[var(--line)] text-[9px] uppercase tracking-[0.12em] text-[var(--muted)]">
                         <th className="px-3 py-3 font-semibold">Order</th>
                         <th className="px-3 py-3 font-semibold">Customer</th>
                         <th className="px-3 py-3 font-semibold">Date</th>
@@ -248,23 +248,23 @@ export default async function AdminDashboardPage() {
                       {recentOrders.map((order) => (
                         <tr
                           key={String(order.id)}
-                          className="border-b border-[#F1EBE1] last:border-0"
+                          className="border-b border-[var(--surface-soft)] last:border-0"
                         >
-                          <td className="px-3 py-3 font-medium text-[#1E1B18]">
+                          <td className="px-3 py-3 font-medium text-[var(--ink)]">
                             {String(order.order_number ?? "N/A")}
                           </td>
-                          <td className="px-3 py-3 text-[#6E655F]">
+                          <td className="px-3 py-3 text-[var(--muted)]">
                             {String(order.customer_name ?? "Customer")}
                           </td>
-                          <td className="px-3 py-3 text-[#6E655F]">
+                          <td className="px-3 py-3 text-[var(--muted)]">
                             {formatDate(order.created_at)}
                           </td>
                           <td className="px-3 py-3">
-                            <span className="inline-flex rounded-full bg-[#B85042] px-3 py-1 text-[10px] font-medium capitalize text-white">
+                            <span className="inline-flex rounded-full bg-[var(--purple)] px-3 py-1 text-[10px] font-medium capitalize text-white">
                               {String(order.status ?? "pending")}
                             </span>
                           </td>
-                          <td className="px-3 py-3 text-right font-medium text-[#1E1B18]">
+                          <td className="px-3 py-3 text-right font-medium text-[var(--ink)]">
                             {formatPrice(order.total_amount)}
                           </td>
                         </tr>
@@ -278,26 +278,26 @@ export default async function AdminDashboardPage() {
             <div className="mt-4 grid gap-4 xl:grid-cols-2">
               <section
                 id="customers"
-                className="scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-6"
+                className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-[var(--page)] p-4 sm:p-6"
               >
                 <div className="mb-4">
                   <p className="eyebrow">Growing community</p>
-                  <h2 className="serif-display mt-1 text-3xl text-[#1E1B18]">
+                  <h2 className="serif-display mt-1 text-3xl text-[var(--ink)]">
                     Latest customers
                   </h2>
                 </div>
                 {latestCustomers.length === 0 ? (
-                  <p className="rounded-xl bg-[#FAF7F2] px-4 py-7 text-sm text-[#6E655F]">
+                  <p className="rounded-xl bg-[var(--page)] px-4 py-7 text-sm text-[var(--muted)]">
                     No registered customers yet.
                   </p>
                 ) : (
-                  <ul className="divide-y divide-[#F1EBE1]">
+                  <ul className="divide-y divide-[var(--surface-soft)]">
                     {latestCustomers.map((customer) => (
                       <li
                         key={String(customer.id)}
                         className="flex min-w-0 items-center gap-3 py-3 first:pt-0 last:pb-0"
                       >
-                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#B85042] text-xs font-medium text-white">
+                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--purple)] text-xs font-medium text-white">
                           {String(customer.full_name ?? "C")
                             .split(/\s+/)
                             .slice(0, 2)
@@ -306,14 +306,14 @@ export default async function AdminDashboardPage() {
                             .toUpperCase()}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-medium text-[#1E1B18]">
+                          <span className="block truncate text-sm font-medium text-[var(--ink)]">
                             {String(customer.full_name ?? "Customer")}
                           </span>
-                          <span className="block truncate text-xs text-[#6E655F]">
+                          <span className="block truncate text-xs text-[var(--muted)]">
                             {String(customer.email ?? "")}
                           </span>
                         </span>
-                        <span className="hidden shrink-0 text-[10px] text-[#6E655F] sm:block">
+                        <span className="hidden shrink-0 text-[10px] text-[var(--muted)] sm:block">
                           {formatDate(customer.created_at)}
                         </span>
                       </li>
@@ -324,38 +324,38 @@ export default async function AdminDashboardPage() {
 
               <section
                 id="inventory"
-                className="scroll-mt-6 rounded-2xl border border-[#E3D8C9] bg-[#FAF7F2] p-4 sm:p-6"
+                className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-[var(--page)] p-4 sm:p-6"
               >
                 <div className="mb-4 flex items-end justify-between gap-2">
                   <div>
                     <p className="eyebrow">Needs a little attention</p>
-                    <h2 className="serif-display mt-1 text-3xl text-[#1E1B18]">
+                    <h2 className="serif-display mt-1 text-3xl text-[var(--ink)]">
                       Low stock
                     </h2>
                   </div>
-                  <span className="rounded-full bg-[#F1EBE1] px-3 py-1 text-[10px] font-semibold text-[#6E655F]">
+                  <span className="rounded-full bg-[var(--surface-soft)] px-3 py-1 text-[10px] font-semibold text-[var(--muted)]">
                     {stats.lowStockCount} items
                   </span>
                 </div>
                 {lowStockProducts.length === 0 ? (
-                  <p className="rounded-xl bg-[#FAF7F2] px-4 py-7 text-sm text-[#6E655F]">
+                  <p className="rounded-xl bg-[var(--page)] px-4 py-7 text-sm text-[var(--muted)]">
                     Nothing is running low right now.
                   </p>
                 ) : (
-                  <ul className="divide-y divide-[#F1EBE1]">
+                  <ul className="divide-y divide-[var(--surface-soft)]">
                     {lowStockProducts.map((product) => (
                       <li
                         key={String(product.id)}
                         className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
                       >
-                        <span className="min-w-0 truncate text-sm font-medium text-[#1E1B18]">
+                        <span className="min-w-0 truncate text-sm font-medium text-[var(--ink)]">
                           {String(product.product_name ?? "Product")}
                         </span>
                         <span
                           className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-semibold ${
                             Number(product.stock_quantity ?? 0) <= 3
                               ? "bg-[#f7e9e6] text-[#9b5545]"
-                              : "bg-[#F1EBE1] text-[#6E655F]"
+                              : "bg-[var(--surface-soft)] text-[var(--muted)]"
                           }`}
                         >
                           {Number(product.stock_quantity ?? 0)} left
@@ -365,7 +365,7 @@ export default async function AdminDashboardPage() {
                   </ul>
                 )}
                 {stats.lowStockCount > lowStockProducts.length && (
-                  <p className="mt-4 text-[10px] text-[#6E655F]">
+                  <p className="mt-4 text-[10px] text-[var(--muted)]">
                     Showing the 5 lowest-stock products.
                   </p>
                 )}

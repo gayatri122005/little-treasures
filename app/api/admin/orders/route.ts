@@ -44,7 +44,7 @@ export async function GET(request: Request) {
     if (params.get("format") === "csv") {
       const header = ["Order number", "Date", "Customer", "Email", "Order type", "Order status", "Payment status", "Transaction ID", "Subtotal", "Shipping", "Discount", "Tax", "Total", "Currency"];
       const lines = [header, ...orders.map((o) => [o.order_number,o.created_at,o.customer_name,o.customer_email,o.order_type,o.status,o.payment_status,o.transaction_id,o.subtotal_amount,o.shipping_amount,o.discount_amount,o.tax_amount,o.total_amount,o.currency])].map((row) => row.map(csvCell).join(","));
-      return new Response(`\uFEFF${lines.join("\r\n")}`, { headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=little-treasures-payment-report.csv", "Cache-Control": "no-store" } });
+      return new Response(`\uFEFF${lines.join("\r\n")}`, { headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=omtreasure-payment-report.csv", "Cache-Control": "no-store" } });
     }
     const ids = orders.map((order) => Number(order.id));
     let items: RowDataPacket[] = [];

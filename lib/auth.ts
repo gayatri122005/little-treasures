@@ -1,20 +1,11 @@
-import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 
+import { createOpaqueToken, hashOpaqueToken } from "@/lib/auth-security";
 import pool from "@/lib/db";
 
 export const SESSION_COOKIE_NAME = "little_treasures_session";
-
-function getSessionSecret() {
-  const value = process.env.JWT_SECRET;
-  if (!value || new TextEncoder().encode(value).byteLength < 32) {
-    throw new Error("JWT_SECRET must be configured with at least 32 bytes.");
-  }
-
-  return new TextEncoder().encode(value);
-}
 
 export type AppUser = {
   id: number;
@@ -84,43 +75,13 @@ export function clearSessionCookie(response: NextResponse) {
 }
 
 export async function createSessionToken(user: AppUser, sessionVersion = 0) {
-  return new SignJWT({
-    userId: user.id,
-    email: user.email,
-    role: user.role,
-    fullName: user.full_name,
-    sessionVersion,
-  })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(getSessionSecret());
-}
-
-export async function verifySessionToken(token: string) {
-  const secret = getSessionSecret();
-  try {
-    const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
-    if (!Number.isSafeInteger(payload.userId) || Number(payload.userId) < 1) {
-      return null;
-    }
-    if (
-      payload.sessionVersion !== undefined &&
-      (!Number.isSafeInteger(payload.sessionVersion) || Number(payload.sessionVersion) < 0)
-    ) {
-      return null;
-    }
-
-    return payload as {
-      userId: number;
-      email: string;
-      role: "customer" | "admin";
-      fullName?: string;
-      sessionVersion?: number;
-    } | null;
-  } catch {
-    return null;
-  }
+  const token = createOpaqueToken();
+  await pool.execute(
+    `INSERT INTO auth_sessions (user_id, token_hash, session_version, expires_at)
+     VALUES (?, ?, ?, DATE_ADD(UTC_TIMESTAMP(3), INTERVAL 7 DAY))`,
+    [user.id, hashOpaqueToken(token), sessionVersion],
+  );
+  return token;
 }
 
 export async function getCurrentUser() {
@@ -131,25 +92,24 @@ export async function getCurrentUser() {
     return null;
   }
 
-  const payload = await verifySessionToken(token);
-
-  if (!payload) {
-    return null;
-  }
-
   const [rows] = await pool.execute<AuthUserRow[]>(
     `SELECT id, full_name, email, mobile, profile_image, role,
             email_verified, account_status, session_version
-     FROM users WHERE id = ? LIMIT 1`,
-    [payload.userId],
+     FROM users u
+     INNER JOIN auth_sessions s ON s.user_id = u.id
+     WHERE s.token_hash = ?
+       AND s.revoked_at IS NULL
+       AND s.expires_at > UTC_TIMESTAMP(3)
+       AND s.session_version = u.session_version
+     LIMIT 1`,
+    [hashOpaqueToken(token)],
   );
   const row = rows[0];
 
   if (
     !row ||
     row.account_status !== "active" ||
-    Number(row.email_verified) !== 1 ||
-    Number(row.session_version) !== Number(payload.sessionVersion ?? 0)
+    Number(row.email_verified) !== 1
   ) {
     return null;
   }

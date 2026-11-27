@@ -44,7 +44,7 @@ export default function Newsletter() {
 
   return (
     <section id="newsletter" className="page-shell py-12 sm:py-16">
-      <div className="relative overflow-hidden rounded-3xl bg-[#1E1B18] px-5 py-10 text-center text-white sm:px-10 sm:py-14">
+      <div className="relative overflow-hidden rounded-3xl bg-[var(--ink)] px-5 py-10 text-center text-white sm:px-10 sm:py-14">
         <span className="absolute -right-8 -top-10 text-white/5">
           <Icon name="sparkle" className="size-44" strokeWidth={0.7} />
         </span>
@@ -74,12 +74,12 @@ export default function Newsletter() {
               required
               autoComplete="email"
               placeholder="Your email address"
-              className="min-h-12 min-w-0 flex-1 rounded-full border border-[#E3D8C9] bg-[#FAF7F2] px-5 text-sm placeholder:text-[#6E655F]"
+              className="min-h-12 min-w-0 flex-1 rounded-full border border-[var(--line)] bg-[var(--page)] px-5 text-sm placeholder:text-[var(--muted)]"
             />
             <button
               type="submit"
               disabled={submitting}
-              className="min-h-12 rounded-full bg-[#B85042] px-6 text-[10px] font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#9A3F33] disabled:cursor-wait disabled:opacity-70"
+              className="min-h-12 rounded-full bg-[var(--purple)] px-6 text-[10px] font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[var(--purple-dark)] disabled:cursor-wait disabled:opacity-70"
             >
               {submitting ? "SAVING…" : "COUNT ME IN"}
             </button>

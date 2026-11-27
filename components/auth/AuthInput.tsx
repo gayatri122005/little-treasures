@@ -22,7 +22,7 @@ export default function AuthInput({
       <div className="mb-2 flex items-center justify-between gap-3">
         <label
           htmlFor={inputId}
-          className="text-xs font-semibold tracking-[0.02em] text-[#1E1B18]"
+          className="text-xs font-semibold tracking-[0.02em] text-[var(--ink)]"
         >
           {label}
         </label>
@@ -32,7 +32,7 @@ export default function AuthInput({
         id={inputId}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? errorId : undefined}
-        className={`min-h-12 w-full rounded-[3px] border border-[#E3D8C9] bg-white px-4 text-sm text-[#1E1B18] outline-none transition placeholder:text-[#aaa398] focus:border-[#B85042] focus:ring-2 focus:ring-[#B85042]/10 ${className}`}
+        className={`min-h-12 w-full rounded-[3px] border border-[var(--line)] bg-white px-4 text-sm text-[var(--ink)] outline-none transition placeholder:text-[#aaa398] focus:border-[var(--purple)] focus:ring-2 focus:ring-[var(--purple)]/10 ${className}`}
         {...props}
       />
       {error && (

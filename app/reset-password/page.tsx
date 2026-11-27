@@ -19,7 +19,7 @@ export default function ResetPasswordPage() {
       alternateLink="Sign in"
       alternateHref="/signin"
     >
-      <Suspense fallback={<div className="min-h-48 animate-pulse rounded bg-[#F1EBE1]" aria-label="Loading password reset form" />}>
+      <Suspense fallback={<div className="min-h-48 animate-pulse rounded bg-[var(--surface-soft)]" aria-label="Loading password reset form" />}>
         <ResetPasswordForm />
       </Suspense>
     </AuthShell>

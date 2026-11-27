@@ -19,7 +19,7 @@ export default function VerifyEmailPage() {
       alternateLink="Sign in"
       alternateHref="/signin"
     >
-      <Suspense fallback={<div className="min-h-36 animate-pulse rounded bg-[#F1EBE1]" aria-label="Loading verification" />}>
+      <Suspense fallback={<div className="min-h-36 animate-pulse rounded bg-[var(--surface-soft)]" aria-label="Loading verification" />}>
         <VerifyEmailAction />
       </Suspense>
     </AuthShell>

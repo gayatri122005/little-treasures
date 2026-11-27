@@ -13,11 +13,11 @@ export default function ContactPage() {
       <main className="page-shell min-h-[65vh] py-12 sm:py-20">
         <p className="eyebrow">Contact Us</p>
         <h1 className="serif-display mt-3 text-4xl sm:text-6xl">How can we help?</h1>
-        <p className="mt-6 max-w-2xl text-base leading-7 text-[#6E655F]">
+        <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--muted)]">
           Contact details have not been provided for this store. You can sign in
           to review your account, saved addresses, and order history.
         </p>
-        <Link href="/login" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#B85042] px-6 text-sm font-semibold text-white hover:bg-[#9A3F33]">
+        <Link href="/login" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--purple)] px-6 text-sm font-semibold text-white hover:bg-[var(--purple-dark)]">
           My Account / Login
         </Link>
       </main>
